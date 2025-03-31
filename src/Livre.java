@@ -18,7 +18,7 @@ public class Livre {
         this.prix = prix;
     }
 
-    public int getIdLivre(){
+    public int getIsbn(){
         return this.isbn;
     }
 
