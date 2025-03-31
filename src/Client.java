@@ -2,7 +2,7 @@ public class Client extends Personne{
 
     private int idCli;
 
-    public Client(String nom, String prenom, String adresse, String codePostal, String ville, int idCli) {
+    public Client(String nom, String prenom, String adresse, int codePostal, String ville, int idCli) {
         super(nom, prenom, adresse, codePostal, ville);
         this.idCli = idCli;
     }
