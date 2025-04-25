@@ -2,7 +2,7 @@ public class Vendeur extends Personne{
     
     private int idVendeur;
 
-    public Vendeur(String nom, String prenom, String adresse, String codePostal, String ville, int idVendeur) {
+    public Vendeur(String nom, String prenom, String adresse, int codePostal, String ville, int idVendeur) {
         super(nom, prenom, adresse, codePostal, ville);
         this.idVendeur = idVendeur;
     }

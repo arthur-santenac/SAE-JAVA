@@ -3,10 +3,10 @@ public abstract class Personne {
     private String nom;
     private String prenom;
     private String adresse;
-    private String codePostal;
+    private int codePostal;
     private String ville;
 
-    public Personne(String nom, String prenom, String adresse, String codePostal, String ville) {
+    public Personne(String nom, String prenom, String adresse, int codePostal, String ville) {
         this.nom = nom;
         this.prenom = prenom;
         this.adresse = adresse;
@@ -38,11 +38,11 @@ public abstract class Personne {
         this.adresse = adresse;
     }
 
-    public String getCodePostal() {
+    public int getCodePostal() {
         return codePostal;
     }
 
-    public void setCodePostal(String codePostal) {
+    public void setCodePostal(int codePostal) {
         this.codePostal = codePostal;
     }
 
