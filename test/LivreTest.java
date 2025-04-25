@@ -13,7 +13,7 @@ public class LivreTest {
         @Test
         public void TestGetTitre(){
             Livre Lelivredelajungle = new Livre(1,"Le livre de la jungle",281,"01/01/1999",19.00);
-            assert Lelivredelajungle.getTitre() == "Le livre de la jungle";
+            assert Lelivredelajungle.getTitre().equals("Le livre de la jungle");
         }
 }
 
