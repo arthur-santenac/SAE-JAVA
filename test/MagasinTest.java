@@ -13,14 +13,14 @@ public class MagasinTest{
     @Test
     public void TestGetNomMag(){
         Magasin leclerc = new Magasin(10,"Leclerc","Olivet");
-        assert leclerc.getNomMag() == "Leclerc";
+        assert leclerc.getNomMag().equals("Leclerc");
     }
 
 
     @Test
     public void TestGetVilleMag(){
         Magasin leclerc = new Magasin(10,"Leclerc","Olivet");
-        assert leclerc.getVilleMag() == "Olivet";
+        assert leclerc.getVilleMag().equals("Olivet");
     }
 
     
