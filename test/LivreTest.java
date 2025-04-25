@@ -1,6 +1,5 @@
 import org.junit.Test;
 
-import junit.*;
 
 public class LivreTest {
         @Test
