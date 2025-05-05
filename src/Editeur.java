@@ -9,5 +9,14 @@ public class Editeur {
         this.nomEditeur = nom;
     }
 
+
+    public int getIdEditeur(){
+        return this.idEditeur;
+    }
+
+    public String getNomEditeur(){
+        return this.nomEditeur;
+    }
+    
     
 }
