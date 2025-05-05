@@ -9,4 +9,11 @@ public class Auteur {
         this.nomAuteur = nom;
     }
 
+    public int getIdAuteur(){
+        return this.idAuteur;
+    }
+
+    public String getNomAuteur(){
+        return this.nomAuteur;
+    }
 }
