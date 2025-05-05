@@ -1,6 +1,110 @@
 public class AppLibrairie {
 
-    public void Client() {
+    public enum Compte {
+        CLIENT, VENDEUR, ADMINISTRATEUR
+    }
+
+    public static boolean continuer = false;
+
+    public AppLibrairie() {}
+
+    public void run() {
+        Compte compte = Connexion();
+        switch (compte) {
+            case CLIENT:
+                runClient();
+                break;
+            case VENDEUR:
+                runVendeur();
+                break;
+            case ADMINISTRATEUR:
+                runAdministrateur();
+                break;
+        }
+    }
+
+    public Compte Connexion() {
+
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+
+        MenuConnexionIdent();
+        String identifiant = System.console().readLine();
+        identifiant = identifiant.strip();
+
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+
+        MenuConnexionMdp();
+        String mdp = System.console().readLine();
+        mdp = mdp.strip();
+
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+
+        if (identifiant.equals("client") && mdp.equals("client")) {return Compte.CLIENT;}
+        else if (identifiant.equals("vendeur") && mdp.equals("vendeur")) {return Compte.VENDEUR;}
+        else if (identifiant.equals("administrateur") && mdp.equals("administrateur")) {return Compte.ADMINISTRATEUR;}
+
+        Erreur();
+        return Connexion();
+    }
+
+    public void runClient() {
+        while (!continuer) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+            MenuClient();
+            String identifiant = System.console().readLine();
+            identifiant = identifiant.strip().toLowerCase();
+        }
+        
+    }
+
+    public void runVendeur() {
+        while (!continuer) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+            MenuVendeur();
+            String identifiant = System.console().readLine();
+            identifiant = identifiant.strip().toLowerCase();
+        }
+        
+    }
+
+    public void runAdministrateur() {
+        while (!continuer) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+            MenuAdmin();
+            String identifiant = System.console().readLine();
+            identifiant = identifiant.strip().toLowerCase();
+        }
+        
+    }
+
+    public void Erreur() {
+        System.out.println("\n" + "Erreur veillez réessayer");
+        System.console().readLine();
+    }
+
+    public void MenuConnexionIdent() {
+        System.out.println("╭────────────────────────────╮");
+        System.out.println("│  Connexion                 │");
+        System.out.println("├────────────────────────────┤");
+        System.out.println("│ Entrez votre identifiant   │");
+        System.out.println("╰────────────────────────────╯");     
+    }
+
+    public void MenuConnexionMdp() {
+        System.out.println("╭────────────────────────────╮");
+        System.out.println("│  Connexion                 │");
+        System.out.println("├────────────────────────────┤");
+        System.out.println("│ Entrez votre mot de passe  │");
+        System.out.println("╰────────────────────────────╯");     
+    }
+        
+    public void MenuClient() {
         System.out.println("╭────────────────────────────╮");
         System.out.println("│  Menu client               │");
         System.out.println("├────────────────────────────┤");
@@ -8,7 +112,7 @@ public class AppLibrairie {
         System.out.println("╰────────────────────────────╯");
     }
 
-    public void Vendeur() {
+    public void MenuVendeur() {
         System.out.println("╭────────────────────────────────────────────────────╮");
         System.out.println("│  Menu vendeur                                      │");
         System.out.println("├────────────────────────────────────────────────────┤");
@@ -20,7 +124,7 @@ public class AppLibrairie {
         System.out.println("╰────────────────────────────────────────────────────╯");
     }
 
-    public void Admin() {
+    public void MenuAdmin() {
         System.out.println("╭────────────────────────────────────────╮");
         System.out.println("│  Menu administrateur                   │");
         System.out.println("├────────────────────────────────────────┤");
@@ -31,5 +135,9 @@ public class AppLibrairie {
         System.out.println("╰────────────────────────────────────────╯");
     }
 
+public static void main(String[] args) {
+    AppLibrairie app = new AppLibrairie();
+    app.run();
+}
 
 }
