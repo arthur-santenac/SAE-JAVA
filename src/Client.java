@@ -1,4 +1,3 @@
-package AppLibrairie;
 public class Client extends Personne{
 
     private int idCli;

@@ -1,4 +1,4 @@
-package AppLibrairie;
+
 public abstract class Personne {
     
     private String nom;

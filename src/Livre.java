@@ -1,4 +1,4 @@
-package AppLibrairie;
+
 public class Livre {
     
     private int isbn;
