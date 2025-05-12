@@ -4,9 +4,15 @@ public class Auteur {
 
     private String nomAuteur;
 
-    public Auteur(int id, String nom){
+    private String anneNaiss;
+
+    private String anneDeces;
+
+    public Auteur(int id, String nom,String anneNaiss, String anneDeces){
         this.idAuteur = id;
         this.nomAuteur = nom;
+        this.anneNaiss = anneNaiss;
+        this.anneDeces = anneDeces;
     }
 
     public int getIdAuteur(){
@@ -16,4 +22,14 @@ public class Auteur {
     public String getNomAuteur(){
         return this.nomAuteur;
     }
+
+    public String getAnneNaiss(){
+        return this.anneNaiss;
+    }
+
+    public String getAnneDeces(){
+        return this.anneDeces;
+    }
+
+
 }
