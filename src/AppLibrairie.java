@@ -69,7 +69,6 @@ public class AppLibrairie {
             String identifiant = System.console().readLine();
             identifiant = identifiant.strip().toLowerCase();
         }
-        
     }
 
     public void runAdministrateur() {
@@ -80,7 +79,6 @@ public class AppLibrairie {
             String identifiant = System.console().readLine();
             identifiant = identifiant.strip().toLowerCase();
         }
-        
     }
 
     public void Erreur() {
@@ -135,9 +133,8 @@ public class AppLibrairie {
         System.out.println("╰────────────────────────────────────────╯");
     }
 
-public static void main(String[] args) {
-    AppLibrairie app = new AppLibrairie();
-    app.run();
-}
-
+    public static void main(String[] args) {
+        AppLibrairie app = new AppLibrairie();
+        app.run();
+    }
 }
