@@ -1,3 +1,7 @@
+package AppLibrairie;
+
+import Exceptions.MauvaisMotDePasseExeption;
+
 public class AppLibrairie {
 
     public enum Compte {

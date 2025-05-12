@@ -1,3 +1,4 @@
+package AppLibrairie;
 public class Vendeur extends Personne{
     
     private int idVendeur;
