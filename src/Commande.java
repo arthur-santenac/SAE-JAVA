@@ -5,12 +5,14 @@ public class Commande {
     private String dateCom;
     private String enLigne;
     private String livraison;
+    private Magasin mag;
 
-    public Commande(int numCom, String dateCom, String enLigne, String livraison){
+    public Commande(int numCom, String dateCom, String enLigne, String livraison, Magasin mag){
         this.numCom = numCom;
         this.dateCom = dateCom;
         this.enLigne = enLigne;
         this.livraison = livraison;
+        this.mag = mag;
     }
 
     public int getNumCom() {
@@ -27,5 +29,9 @@ public class Commande {
 
     public String getLivraison() {
         return this.livraison;
+    }
+
+    public Magasin getMagasin(){
+        return this.mag;
     }
 }
