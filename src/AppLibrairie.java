@@ -9,8 +9,9 @@ public class AppLibrairie {
     public AppLibrairie() {}
 
     public void run() {
-        Compte compte = Connexion();
-        switch (compte) {
+        try {
+            Compte compte = Connexion();
+            switch (compte) {
             case CLIENT:
                 runClient();
                 break;
@@ -20,10 +21,14 @@ public class AppLibrairie {
             case ADMINISTRATEUR:
                 runAdministrateur();
                 break;
+            }
+        }
+        catch (MauvaisMotDePasseExeption e) {
+            run();
         }
     }
 
-    public Compte Connexion() {
+    public Compte Connexion() throws MauvaisMotDePasseExeption {
 
         System.out.print("\033[H\033[2J");
         System.out.flush();
@@ -46,8 +51,7 @@ public class AppLibrairie {
         else if (identifiant.equals("vendeur") && mdp.equals("vendeur")) {return Compte.VENDEUR;}
         else if (identifiant.equals("administrateur") && mdp.equals("administrateur")) {return Compte.ADMINISTRATEUR;}
 
-        Erreur();
-        return Connexion();
+        throw new MauvaisMotDePasseExeption();
     }
 
     public void runClient() {
@@ -87,19 +91,19 @@ public class AppLibrairie {
     }
 
     public void MenuConnexionIdent() {
-        System.out.println("╭────────────────────────────╮");
-        System.out.println("│  Connexion                 │");
-        System.out.println("├────────────────────────────┤");
-        System.out.println("│ Entrez votre identifiant   │");
-        System.out.println("╰────────────────────────────╯");     
+        System.out.println("╭──────────────────────────╮");
+        System.out.println("│  Connexion               │");
+        System.out.println("├──────────────────────────┤");
+        System.out.println("│ Entrez votre identifiant │");
+        System.out.println("╰──────────────────────────╯");     
     }
 
     public void MenuConnexionMdp() {
-        System.out.println("╭────────────────────────────╮");
-        System.out.println("│  Connexion                 │");
-        System.out.println("├────────────────────────────┤");
-        System.out.println("│ Entrez votre mot de passe  │");
-        System.out.println("╰────────────────────────────╯");     
+        System.out.println("╭───────────────────────────╮");
+        System.out.println("│  Connexion                │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrez votre mot de passe │");
+        System.out.println("╰───────────────────────────╯");     
     }
         
     public void MenuClient() {
@@ -132,9 +136,10 @@ public class AppLibrairie {
         System.out.println("│  : Consulter les statistiques de vente │");
         System.out.println("╰────────────────────────────────────────╯");
     }
-
+    
     public static void main(String[] args) {
         AppLibrairie app = new AppLibrairie();
         app.run();
     }
+
 }
