@@ -1,3 +1,4 @@
+package AppLibrairie;
 public class Auteur {
     
     private int idAuteur;

@@ -1,3 +1,4 @@
+package AppLibrairie;
 public class Magasin {
     
     private int idMag;

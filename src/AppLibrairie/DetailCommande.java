@@ -1,3 +1,4 @@
+package AppLibrairie;
 public class DetailCommande {
     
     private int numLig;
