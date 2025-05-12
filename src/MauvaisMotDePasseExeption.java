@@ -1,4 +1,4 @@
-package Exceptions;
+
 public class MauvaisMotDePasseExeption extends Exception {
     public MauvaisMotDePasseExeption() {
         System.out.println("╭───────────────────────────────────────────────────────────────────────────╮");
