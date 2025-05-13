@@ -7,12 +7,14 @@ public class Magasin {
     private String nomMag;
     private String villeMag;
     private List<Commande> commandes;
+    private List<Livre> livres;
 
     public Magasin(int idMag, String nomMag, String villeMag) {
         this.idMag = idMag;
         this.nomMag = nomMag;
         this.villeMag = villeMag;
         this.commandes = new ArrayList<>();
+        this.livres = new ArrayList<>();
     }
 
     public int getIdMag() {
@@ -52,5 +54,11 @@ public class Magasin {
     public List<Commande> getCommandes(){
         return this.commandes;
     }
+
+    public List<Livre> getLivres(){
+        return this.livres;
+    }
+
+    
 
 }
