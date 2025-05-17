@@ -46,6 +46,10 @@ public class Livre {
         return this.prix;
     }
 
+    public void setPrix(double nouvPrix){
+        this.prix = nouvPrix;
+    }
+
     public List<Auteur> getAuteurs(){
         return this.auteurs;
     }
