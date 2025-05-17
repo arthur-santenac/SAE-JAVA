@@ -1,3 +1,4 @@
+import java.util.*;
 
 public class Livre {
     
@@ -11,12 +12,18 @@ public class Livre {
 
     private double prix;
 
+    private List<Auteur> auteurs;
+
+    private List<Editeur> editeurs;
+
     public Livre(int isbn, String titre, int nbPages, String datePubli, double prix){
         this.isbn = isbn;
         this.titre = titre;
         this.nbPages = nbPages;
         this.datePubli = datePubli;
         this.prix = prix;
+        this.auteurs = new ArrayList<>();
+        this.editeurs = new ArrayList<>();
     }
 
     public int getIsbn(){
@@ -38,4 +45,27 @@ public class Livre {
     public double getPrix(){
         return this.prix;
     }
+
+    public List<Auteur> getAuteurs(){
+        return this.auteurs;
+    }
+
+    public List<Editeur> getEditeurs(){
+        return this.editeurs;
+    }
+
+    public void ajouterAuteur(Auteur a){
+        if(!this.auteurs.contains(a)){
+            this.auteurs.add(a);
+        }
+    }
+
+
+    public void ajouterEditeur(Editeur e){
+        if(!this.editeurs.contains(e)){
+            this.editeurs.add(e);
+        }
+    }
+
+
 }
