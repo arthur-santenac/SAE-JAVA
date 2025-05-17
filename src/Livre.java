@@ -54,17 +54,21 @@ public class Livre {
         return this.editeurs;
     }
 
-    public void ajouterAuteur(Auteur a){
+    public boolean ajouterAuteur(Auteur a){
         if(!this.auteurs.contains(a)){
             this.auteurs.add(a);
+            return true;
         }
+        return false;
     }
 
 
-    public void ajouterEditeur(Editeur e){
+    public boolean ajouterEditeur(Editeur e){
         if(!this.editeurs.contains(e)){
             this.editeurs.add(e);
+            return true;
         }
+        return false;
     }
 
 
