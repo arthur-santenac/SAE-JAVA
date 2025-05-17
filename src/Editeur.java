@@ -18,6 +18,21 @@ public class Editeur {
     public String getNomEditeur(){
         return this.nomEditeur;
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == null){
+            return false;
+        }
+        if(o == this){
+            return true;
+        }
+        if(!(o instanceof Editeur)){
+            return false;
+        }
+        Editeur tmp = (Editeur) o;
+        return this.idEditeur == tmp.idEditeur && this.nomEditeur.equals(tmp.nomEditeur);
+    }
     
     
 }
