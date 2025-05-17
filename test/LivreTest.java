@@ -30,13 +30,13 @@ public class LivreTest {
         @Test
         public void testGetDatePubli(){
             Livre leLivreDeLaJungle = new Livre(1,"Le livre de la jungle",281,"01/01/1999",19.00);
-            assertEquals(281, leLivreDeLaJungle.getDatePubli());
+            assertEquals("01/01/1999", leLivreDeLaJungle.getDatePubli());
         }
 
         @Test
         public void testGetPrix(){
-            Livre leLivreDeLaJungle = new Livre(1,"Le livre de la jungle",281,"01/01/1999",19.00);
-            assertEquals(19.00, leLivreDeLaJungle.getPrix());
+            Livre leLivreDeLaJungle = new Livre(1,"Le livre de la jungle",281,"01/01/1999",19.99);
+            assertEquals(19.99, leLivreDeLaJungle.getPrix(),0.001);
         }
 
 
