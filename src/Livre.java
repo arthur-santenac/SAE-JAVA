@@ -75,5 +75,19 @@ public class Livre {
         return false;
     }
 
+    @Override
+    public boolean equals(Object o){
+        if(o == null){
+            return false;
+        }
+        if(o == this){
+            return true;
+        }
+        if(!(o instanceof Livre)){
+            return false;
+        }
+        Livre tmp = (Livre) o;
+        return this.isbn == tmp.isbn && this.titre.equals(tmp.titre) && this.nbPages== tmp.nbPages && this.datePubli.equals(tmp.datePubli) && this.prix == tmp.prix ;
+    }
 
 }
