@@ -4,11 +4,15 @@ public class DetailCommande {
     private int numLig;
     private int qte;
     private double prixVente;
+    private Livre livre;
+    private Commande commande;
 
-    public DetailCommande(int numLig, int qte, double prixVente) {
+    public DetailCommande(int numLig, int qte, double prixVente,Livre livre, Commande com) {
         this.numLig = numLig;
         this.qte = qte;
-        this.prixVente = prixVente;
+        this.prixVente = livre.getPrix()*qte;
+        this.livre = livre;
+        this.commande = com;
     }
 
     public int getNumLig() {
