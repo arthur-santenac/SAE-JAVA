@@ -4,15 +4,15 @@ public class DetailCommande {
     private int numLig;
     private int qte;
     private double prixVente;
-    private int numCom;
     private Livre livre;
+    private Commande commande;
 
-    public DetailCommande(int numLig, int qte, double prixVente, int numCom, Livre livre) {
+    public DetailCommande(int numLig, int qte, double prixVente,Livre livre, Commande com) {
         this.numLig = numLig;
         this.qte = qte;
-        this.prixVente = prixVente;
-        this.numCom = numCom;
+        this.prixVente = livre.getPrix()*qte;
         this.livre = livre;
+        this.commande = null;
     }
 
     public int getNumLig() {
@@ -27,8 +27,8 @@ public class DetailCommande {
         return this.prixVente;
     }
 
-    public int getCommande(){
-        return this.numCom;
+    public Commande getCommande(){
+        return this.commande;
     }
 
 }
