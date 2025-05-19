@@ -1,5 +1,6 @@
 import static org.junit.Assert.assertEquals;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,9 +58,14 @@ public class MagasinTest{
         Magasin leclerc = new Magasin(10,"Leclerc","Olivet");
         Livre lesMiserables = new Livre(1, "Les Misérables", 200, "31/03/1862", 11.90);
         Livre leLivreDeLaJungle = new Livre(1,"Le livre de la jungle",281,"01/01/1999",19.00);
-        assertEquals(true, leclerc.ajouterLivre(leLivreDeLaJungle));
-        assertEquals(true, leclerc.ajouterLivre(lesMiserables));
-        assertEquals(false, leclerc.ajouterLivre(leLivreDeLaJungle));
+        leclerc.ajouterLivre(leLivreDeLaJungle);
+        leclerc.ajouterLivre(lesMiserables);
+        arthur.choisirMagasin(leclerc);
+        Commande com = arthur.commander(lesMiserables,1);
+        List<Commande> listeAttendu;
+        listeAttendu.add(com);
+        assertEquals(listeAttendu, leclerc.getCommandes());
+
     }
     
 
