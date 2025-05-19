@@ -43,7 +43,22 @@ public class Magasin {
 
     public boolean ajouteCommande(Commande c){
         if(c.getMagasin().getNomMag().equals(this.nomMag)){
-            this.commandes.add(c);
+            if(!this.commandes.contains(c)){
+                this.commandes.add(c);
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean ajouterLivre(Livre l){
+        if(!this.livres.contains(l)){
+            this.livres.add(l);
             return true;
         }
         else{

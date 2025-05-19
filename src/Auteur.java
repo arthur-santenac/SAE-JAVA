@@ -32,5 +32,20 @@ public class Auteur {
         return this.anneDeces;
     }
 
+    @Override
+    public boolean equals(Object o){
+        if(o == null){
+            return false;
+        }
+        if(o == this){
+            return true;
+        }
+        if(!(o instanceof Auteur)){
+            return false;
+        }
+        Auteur tmp = (Auteur) o;
+        return this.idAuteur == tmp.idAuteur && this.nomAuteur.equals(tmp.nomAuteur) && this.anneNaiss.equals(tmp.anneNaiss) && this.anneDeces.equals(tmp.anneDeces) ;
+    }
 
+    
 }
