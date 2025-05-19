@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 
 public class Commande {
 
@@ -6,6 +8,7 @@ public class Commande {
     private String enLigne;
     private String livraison;
     private Magasin mag;
+    private List<DetailCommande> detailsCom;
 
     public Commande(int numCom, String dateCom, String enLigne, String livraison, Magasin mag){
         this.numCom = numCom;
@@ -13,6 +16,7 @@ public class Commande {
         this.enLigne = enLigne;
         this.livraison = livraison;
         this.mag = mag;
+        this.detailsCom = new ArrayList<>();
     }
 
     public int getNumCom() {

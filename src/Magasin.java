@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Magasin {
@@ -74,6 +75,24 @@ public class Magasin {
         return this.livres;
     }
 
+    public List<Livre> catalogue(){
+        return this.getLivres();
+    }
+
+    
+/*     public List<Livre> catalogueFiltre(Filtre filtre)throws PasUnTelFiltreException{
+        List<Livre> livresFiltrés = new ArrayList<>();
+        switch (filtre) {
+            case AUTEUR:
+                for(Livre livre: this.livres){
+                    if(livre.getAuteurs().contains())
+                }
+                break;
+        
+            default: throw new PasUnTelFiltreException();
+                break;
+        }
+    } */
     
 
 }

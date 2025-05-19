@@ -2,7 +2,7 @@ public class Executable {
     
     public static void main(String [] args){
 
-        Client arthur = new Client("Santenac", "Arthur", "Rue des champs", 45000, "Orléans", 1);
+        Client arthur = new Client("Santenac", "Arthur", "Rue des champs", 45000, "Orléans",1);
 
         Magasin auchan = new Magasin(1, "Auchan", "Saint-Jean de la ruelle");
 
