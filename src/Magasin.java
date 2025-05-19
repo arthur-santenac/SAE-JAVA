@@ -94,5 +94,24 @@ public class Magasin {
         }
     } */
     
+    @Override
+    public boolean equals(Object o){
+        if(o == null){
+            return false;
+        }
+        if(o == this){
+            return true;
+        }
+        if(!(o instanceof Magasin)){
+            return false;
+        }
+        Magasin tmp = (Magasin) o;
+        return this.idMag == tmp.idMag && this.nomMag.equals(tmp.nomMag) && this.villeMag.equals(tmp.villeMag);
+    }
+
+    @Override
+    public String toString(){
+        return "Le magasin "+this.nomMag+" a pour id :"+this.idMag+" et se situe dans la ville "+this.villeMag;
+    }
 
 }
