@@ -42,7 +42,7 @@ public class Client extends Personne{
                 if(livre.getTitre().equals(nomLivre)){
                     Livre l = new Livre(livre.getIsbn(), nomLivre, livre.getNbPages(), livre.getDatePubli(), livre.getPrix());
                     int numCom = 0;
-                    Commande commande = new Commande(numCom, this.aujourdhui(), this.choixModeReception(this.mode), this.livraison(mode), this.magasin,this);
+                    Commande commande = new Commande(numCom, this.dateActuelle(), this.choixModeReception(this.mode), this.livraison(mode), this.magasin,this);
                     this.panier.put(l,qteChoisit);
                     return commande;
                 }
@@ -53,7 +53,7 @@ public class Client extends Personne{
                 if(livre.getTitre().equals(nomLivre)){
                     Livre l = new Livre(livre.getIsbn(), nomLivre, livre.getNbPages(), livre.getDatePubli(), livre.getPrix());
                     int numCom = this.magasin.getCommandes().size()+1;
-                    Commande commande = new Commande(numCom, this.aujourdhui(), this.choixModeReception(this.mode), this.livraison(mode), this.magasin,this);
+                    Commande commande = new Commande(numCom, this.dateActuelle(), this.choixModeReception(this.mode), this.livraison(mode), this.magasin,this);
                     this.panier.put(l,qteChoisit);
                     return commande;
                 }
@@ -73,7 +73,7 @@ public class Client extends Personne{
         return res;
     }
 
-    private String aujourdhui() {
+    private String dateActuelle() {
        final Date date = new Date();
        return new SimpleDateFormat("dd-MM-yyyy").format(date);
     }
