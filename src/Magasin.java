@@ -38,9 +38,7 @@ public class Magasin {
         return villeMag;
     }
 
-    public void setVilleMag(String villeMag) {
-        this.villeMag = villeMag;
-    }
+
 
     public boolean ajouteCommande(Commande c){
         if(c.getMagasin().getNomMag().equals(this.nomMag)){
