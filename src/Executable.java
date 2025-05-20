@@ -8,8 +8,8 @@ public class Executable {
         Magasin auchan = new Magasin(1, "Auchan", "Saint-Jean de la ruelle");
         System.out.println(auchan);
 
-        Livre lesMiserables = new Livre(1, "Les Misérables", 200, "31/03/1862", 11.90);
-        Livre prince = new Livre(2, "Le Petit Prince", 185, "21/04/1943", 10.50);
+        Livre lesMiserables = new Livre(1, "Les Misérables", 200, "31/03/1862", 11.90, 0, null);
+        Livre prince = new Livre(2, "Le Petit Prince", 185, "21/04/1943", 10.50, 0, null);
 
         auchan.ajouterLivre(lesMiserables);
         auchan.ajouterLivre(prince);

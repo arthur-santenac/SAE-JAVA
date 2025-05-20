@@ -40,7 +40,7 @@ public class Client extends Personne{
         if(this.magasin.getCommandes().isEmpty()){
             for(Livre livre: this.magasin.getLivres()){
                 if(livre.getTitre().equals(nomLivre)){
-                    Livre l = new Livre(livre.getIsbn(), nomLivre, livre.getNbPages(), livre.getDatePubli(), livre.getPrix());
+                    Livre l = new Livre(livre.getIsbn(), nomLivre, livre.getNbPages(), livre.getDatePubli(), livre.getPrix(), 0, "nomClass");
                     int numCom = 0;
                     Commande commande = new Commande(numCom, this.dateActuelle(), this.choixModeReception(this.mode), this.livraison(mode), this.magasin,this);
                     this.panier.put(l,qteChoisit);
@@ -51,7 +51,7 @@ public class Client extends Personne{
         else{
             for(Livre livre: this.magasin.getLivres()){
                 if(livre.getTitre().equals(nomLivre)){
-                    Livre l = new Livre(livre.getIsbn(), nomLivre, livre.getNbPages(), livre.getDatePubli(), livre.getPrix());
+                    Livre l = new Livre(livre.getIsbn(), nomLivre, livre.getNbPages(), livre.getDatePubli(), livre.getPrix(), 0, "nomClass");
                     int numCom = this.magasin.getCommandes().size()+1;
                     Commande commande = new Commande(numCom, this.dateActuelle(), this.choixModeReception(this.mode), this.livraison(mode), this.magasin,this);
                     this.panier.put(l,qteChoisit);

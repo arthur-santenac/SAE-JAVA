@@ -45,8 +45,8 @@ public class MagasinTest{
     @Test
     public void testAjouteLivre(){
         Magasin leclerc = new Magasin(10,"Leclerc","Olivet");
-        Livre lesMiserables = new Livre(1, "Les Misérables", 200, "31/03/1862", 11.90);
-        Livre leLivreDeLaJungle = new Livre(1,"Le livre de la jungle",281,"01/01/1999",19.00);
+        Livre lesMiserables = new Livre(1, "Les Misérables", 200, "31/03/1862", 11.90, 0, null);
+        Livre leLivreDeLaJungle = new Livre(1,"Le livre de la jungle",281,"01/01/1999",19.00, 0, null);
         assertEquals(true, leclerc.ajouterLivre(leLivreDeLaJungle));
         assertEquals(true, leclerc.ajouterLivre(lesMiserables));
         assertEquals(false, leclerc.ajouterLivre(leLivreDeLaJungle));
@@ -58,8 +58,8 @@ public class MagasinTest{
         Client arthur = new Client("Santenac", "Arthur", "Rue des champs", 45000, "Orléans",1);
         Magasin leclerc = new Magasin(10,"Leclerc","Olivet");
         Magasin auchan = new Magasin(2, "Auchan", "Saint-Jean de la ruelle");
-        Livre lesMiserables = new Livre(1, "Les Misérables", 200, "31/03/1862", 11.90);
-        Livre leLivreDeLaJungle = new Livre(1,"Le livre de la jungle",281,"01/01/1999",19.00);
+        Livre lesMiserables = new Livre(1, "Les Misérables", 200, "31/03/1862", 11.90, 0, null);
+        Livre leLivreDeLaJungle = new Livre(1,"Le livre de la jungle",281,"01/01/1999",19.00, 0, null);
         leclerc.ajouterLivre(leLivreDeLaJungle);
         leclerc.ajouterLivre(lesMiserables);
         auchan.ajouterLivre(lesMiserables);
