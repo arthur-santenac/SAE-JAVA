@@ -1,3 +1,7 @@
+import java.time.format.SignStyle;
+import java.util.ArrayList;
+import java.util.List;
+
 public class AppLibrairie {
 
     public enum Compte {
@@ -59,8 +63,33 @@ public class AppLibrairie {
             System.out.print("\033[H\033[2J");
             System.out.flush();
             MenuClient();
-            String identifiant = System.console().readLine();
-            identifiant = identifiant.strip().toLowerCase();
+            String option = System.console().readLine();
+            option = option.strip().toUpperCase();
+            String magasinChoisi = null;
+            String mode = null;
+            if(option.equals("M")){
+                List<String> listeMagasin = new ArrayList<>();
+                System.out.println(listeMagasin);
+                // utiliser une méthode implémenter dans MagasinBD
+            }
+            else if(option.equals("C")){
+                System.out.println("Veuillez entrer le nom du magasin dnas lequel vous souhaitez acheter des livres");
+                magasinChoisi = System.console().readLine();
+                magasinChoisi = magasinChoisi.strip().toLowerCase();
+                System.out.println("Vous avez choisi de commander dans le magasin : "+magasinChoisi);
+            }
+            else if(option.equals("R")){
+                System.out.println("Veuillez choisir le mode de réception de vos futur achats: "+"\n"+" - En Ligne"+"\n"+" - Magasin");
+                String mode_brute = System.console().readLine();
+                mode_brute.strip().toLowerCase();
+                if(mode_brute.equals("enligne")){
+                    mode = "0";
+                }
+                if(mode_brute.equals("magasin")){
+                    mode = "N";
+                }
+            }
+            else if(option.equals("P"));
         }
         
     }
@@ -110,7 +139,11 @@ public class AppLibrairie {
         System.out.println("╭────────────────────────────╮");
         System.out.println("│  Menu client               │");
         System.out.println("├────────────────────────────┤");
-        System.out.println("│  : Passer une commande     │");
+        System.out.println("│ M : Afficher liste magasins│");
+        System.out.println("│ C : Choisir un magasin     │");
+        System.out.println("│ A : Afficher le catalgue   │");
+        System.out.println("│ R : Choisir mode reception │");
+        System.out.println("│ P : Passer une commande    │");
         System.out.println("╰────────────────────────────╯");
     }
 
