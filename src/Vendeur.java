@@ -1,3 +1,5 @@
+
+
 public class Vendeur extends Personne{
     
     private int idVendeur;
@@ -12,7 +14,7 @@ public class Vendeur extends Personne{
     }
 
     public void setIdVendeur(int idVendeur) {
-        this.idVendeur = idVendeur;
+        this.idVendeur = idVendeur;            
     }
 
 }

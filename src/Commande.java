@@ -56,4 +56,4 @@ public static String faireFactures(String requete, int mois, int annee, Connecti
     res.append("Facture du ").append(mois).append("/").append(annee).append("\n");
 }
 
-}
+

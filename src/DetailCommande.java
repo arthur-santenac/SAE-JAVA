@@ -1,3 +1,4 @@
+
 public class DetailCommande {
     private int numLig;
     private int qte;
@@ -21,3 +22,5 @@ public class DetailCommande {
         return prixVente;
     }
 }
+
+
