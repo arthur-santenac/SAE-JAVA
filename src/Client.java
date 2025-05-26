@@ -60,12 +60,12 @@ public class Client extends Personne{
     }
 
 
-    private String dateActuelle() {
+    public String dateActuelle() {
        final Date date = new Date();
        return new SimpleDateFormat("dd-MM-yyyy").format(date);
     }
 
-    private String livraison(String mode){
+    public String livraison(String mode){
         if(mode.equals("O")){
             return "C";
         }

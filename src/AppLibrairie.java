@@ -110,9 +110,27 @@ public class AppLibrairie {
             if(option.equals("P")){
                 if(magasinChoisi == null){
                     System.out.println("\n"+"Veuillez choisir un magasin avant de passer une commande."+"\n");
+                    
                 }
                 else{
-                    System.out.println("\n"+"Veuillez entrer le nom du livre que vous "+"\n");
+                    if(mode == null){
+                        System.out.println("\n"+"Veuillez choisir un mode de reception avant de passer une commande."+"\n");
+                    }
+                    else{
+                        System.out.println("\n"+"Veuillez entrer le nom du livre que vous "+"\n");
+                        String nomLivre = System.console().readLine();
+                        System.out.println("\n"+"Veuillez entrer le nombre d'exemplaire que vous souhaitez acheter."+"\n");
+                        try{
+                            String saisie = System.console().readLine();
+                            Integer qte = Integer.parseInt(saisie);
+                        }
+                        catch(NumberFormatException e){
+                            System.out.println("\n"+"Veuillez entrer un entier pour la quantité de livres."+"\n");
+                        }
+
+                        
+                    }
+                    
                 }
                 
             }
