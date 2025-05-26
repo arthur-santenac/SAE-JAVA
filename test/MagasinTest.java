@@ -64,9 +64,9 @@ public class MagasinTest{
         leclerc.ajouterLivre(lesMiserables);
         auchan.ajouterLivre(lesMiserables);
         arthur.choisirMagasin(leclerc);
-        arthur.PasserUnecommande("Les Miserables", 1,ModeReception.ENLIGNE,leclerc);
+        arthur.PasserUnecommande("Les Miserables", 1,"O",leclerc);
         arthur.choisirMagasin(auchan);
-        arthur.PasserUnecommande("Les Miserables", 1,ModeReception.ENLIGNE,auchan);
+        arthur.PasserUnecommande("Les Miserables", 1,"N",auchan);
         List<Commande> listeAttendu = leclerc.getCommandes();
         assertEquals(listeAttendu, leclerc.getCommandes());
 

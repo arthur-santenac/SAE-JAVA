@@ -67,6 +67,7 @@ public class AppLibrairie {
             option = option.strip().toUpperCase();
             String magasinChoisi = null;
             String mode = null;
+            String livraison = null;
             if(option.equals("M")){
                 List<String> listeMagasin = new ArrayList<>();
                 System.out.println(listeMagasin);
@@ -79,14 +80,18 @@ public class AppLibrairie {
                 System.out.println("Vous avez choisi de commander dans le magasin : "+magasinChoisi);
             }
             else if(option.equals("R")){
-                System.out.println("Veuillez choisir le mode de réception de vos futur achats: "+"\n"+" - En Ligne"+"\n"+" - Magasin");
+                System.out.println("Veuillez choisir le mode de réception de vos futur achats:  - En Ligne - Magasin");
                 String mode_brute = System.console().readLine();
-                mode_brute.strip().toLowerCase();
+                mode_brute = mode_brute.strip().toLowerCase();
                 if(mode_brute.equals("enligne")){
                     mode = "0";
+                    livraison = "C";
+                    System.out.println("Vous avez choisis en ligne.");
                 }
                 if(mode_brute.equals("magasin")){
                     mode = "N";
+                    livraison = "M";
+                    System.out.println("Vous avez choisis en magasin.");
                 }
             }
             else if(option.equals("P"));
@@ -137,13 +142,22 @@ public class AppLibrairie {
         
     public void MenuClient() {
         System.out.println("╭────────────────────────────╮");
-        System.out.println("│  Menu client               │");
+        System.out.println("│         Menu client        │");
         System.out.println("├────────────────────────────┤");
         System.out.println("│ M : Afficher liste magasins│");
         System.out.println("│ C : Choisir un magasin     │");
         System.out.println("│ A : Afficher le catalgue   │");
         System.out.println("│ R : Choisir mode reception │");
         System.out.println("│ P : Passer une commande    │");
+        System.out.println("╰────────────────────────────╯");
+    }
+
+    public void MenuChoixModeRecep() {
+        System.out.println("╭────────────────────────────╮");
+        System.out.println("│         Menu client        │");
+        System.out.println("├────────────────────────────┤");
+        System.out.println("│ O : En ligne               │");
+        System.out.println("│ N : En magasin             │");
         System.out.println("╰────────────────────────────╯");
     }
 

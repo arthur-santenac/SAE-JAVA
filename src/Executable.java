@@ -15,7 +15,7 @@ public class Executable {
         auchan.ajouterLivre(prince);
 
         arthur.choisirMagasin(auchan);
-        Commande commande = arthur.PasserUnecommande("Les Misérables", 2, ModeReception.ENLIGNE,auchan);
+        Commande commande = arthur.PasserUnecommande("Les Misérables", 2, "O",auchan);
         auchan.ajouteCommande(commande);
         System.out.println(auchan.getCommandes());
 
