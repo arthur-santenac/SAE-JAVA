@@ -12,7 +12,7 @@ public class ClientBD {
 		this.laConnexion=laConnexion;
 	}
 
-	int maxNumJoueur() throws SQLException{
+	int maxNumClient() throws SQLException{
 		return -1;
 	}
 
