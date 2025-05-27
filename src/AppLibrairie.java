@@ -153,16 +153,16 @@ public class AppLibrairie {
     public void connexionBD() throws SQLException, ClassNotFoundException{
 
         ConnexionMySQL connexionMySQL= new ConnexionMySQL();
-        MenuConnexionIdent();
+        menuConnexionIdent();
         String identifiant = System.console().readLine();
         System.out.print("\033[H\033[2J");
         System.out.flush();
-        MenuConnexionMdp();
+        menuConnexionMdp();
         String mdp = System.console().readLine();
         System.out.print("\033[H\033[2J");
         System.out.flush();
         String serveur = "servinfo-maria";
-        MenuConnexionNomBase();
+        menuConnexionNomBase();
         String nomBase = System.console().readLine();
         System.out.print("\033[H\033[2J");
         System.out.flush();
@@ -188,7 +188,7 @@ public class AppLibrairie {
         System.out.println("╰──────────────────────────╯");     
     }
 
-    public void MenuConnexionNomBase() {
+    public void menuConnexionNomBase() {
         System.out.println("╭───────────────────────────╮");
         System.out.println("│  Connexion                │");
         System.out.println("├───────────────────────────┤");
