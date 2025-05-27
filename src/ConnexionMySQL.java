@@ -15,6 +15,7 @@ public class ConnexionMySQL {
 		this.connecte = true;
 	}
 
+
 	public void close() throws SQLException {
 		// fermer la connexion
 		this.connecte=false;
