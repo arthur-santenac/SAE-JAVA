@@ -1,6 +1,5 @@
 
 public class DetailCommande {
-    
     private int numLig;
     private int qte;
     private double prixVente;
@@ -16,15 +15,15 @@ public class DetailCommande {
     }
 
     public int getNumLig() {
-        return this.numLig;
+        return numLig;
     }
 
     public int getQte() {
-        return this.qte;
+        return qte;
     }
 
     public double getPrixVente() {
-        return this.prixVente;
+        return prixVente;
     }
 
     public Livre getLivre(){
@@ -50,3 +49,5 @@ public class DetailCommande {
 
 
 }
+
+
