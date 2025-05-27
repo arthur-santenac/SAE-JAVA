@@ -55,4 +55,9 @@ public abstract class Personne {
         this.ville = ville;
     }
 
+    @Override
+    public String toString(){
+        return this.nom+" "+this.prenom+" vit "+this.adresse+" au "+this.codePostal+" à "+this.ville;
+    }
+
 }
