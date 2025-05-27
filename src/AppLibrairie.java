@@ -177,7 +177,7 @@ public class AppLibrairie {
         System.console().readLine();
     }
 
-    public void menuConnexionIdent() {
+    public void MenuConnexionIdent() {
         System.out.println("╭──────────────────────────╮");
         System.out.println("│  Connexion               │");
         System.out.println("├──────────────────────────┤");
@@ -187,7 +187,7 @@ public class AppLibrairie {
         System.out.println("╰──────────────────────────╯");     
     }
 
-    public void menuConnexionMdp() {
+    public void MenuConnexionMdp() {
         System.out.println("╭───────────────────────────╮");
         System.out.println("│  Connexion                │");
         System.out.println("├───────────────────────────┤");
