@@ -228,51 +228,6 @@ public class AppLibrairie {
     }
 
     public void menuClient() {
-        
-    public void menuClient() {
-        System.out.println("╭────────────────────────────╮");
-        System.out.println("│         Menu client        │");
-        System.out.println("├────────────────────────────┤");
-        System.out.println("│ M : Afficher liste magasins│");
-        System.out.println("│ C : Choisir un magasin     │");
-        System.out.println("│ A : Afficher le catalgue   │");
-        System.out.println("│ R : Choisir mode reception │");
-        System.out.println("│ P : Passer une commande    │");
-        System.out.println("╰────────────────────────────╯");
-    }
-
-    public void menuChoixModeRecep() {
-        System.out.println("╭────────────────────────────╮");
-        System.out.println("│         Menu client        │");
-        System.out.println("├────────────────────────────┤");
-        System.out.println("│ O : En ligne               │");
-        System.out.println("│ N : En magasin             │");
-        System.out.println("╰────────────────────────────╯");
-    }
-
-    public void menuVendeur() {
-        System.out.println("╭────────────────────────────────────────────────────╮");
-        System.out.println("│  Menu vendeur                                      │");
-        System.out.println("├────────────────────────────────────────────────────┤");
-        System.out.println("│  : Ajouter un livre                                │");
-        System.out.println("│  : Mettre à jour la quantité disponible d’un livre │");
-        System.out.println("│  : Vérifier la disponibilité d’un livre            │");
-        System.out.println("│  : Passer une commande pour un client en magasin   │");
-        System.out.println("│  : Transférer un livre d’une autre librairie       │");
-        System.out.println("╰────────────────────────────────────────────────────╯");
-    }
-
-    public void menuAdmin() {
-        System.out.println("╭────────────────────────────────────────╮");
-        System.out.println("│  Menu administrateur                   │");
-        System.out.println("├────────────────────────────────────────┤");
-        System.out.println("│  : Créer un compte vendeur             │");
-        System.out.println("│  : Ajouter une nouvelle librairie      │");
-        System.out.println("│  : Gérer les stocks globaux            │");
-        System.out.println("│  : Consulter les statistiques de vente │");
-        System.out.println("╰────────────────────────────────────────╯");
-    }
-    public void MenuClient() {
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
         System.out.println(" ||||                          CLIENT                                |                                                                ||||");
