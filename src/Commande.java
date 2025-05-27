@@ -46,14 +46,6 @@ public class Commande {
         return detailsCommande;
     }
 
-public static String faireFactures(String requete, int mois, int annee, Connection bd) throws SQLException {
-    PreparedStatement ps = bd.prepareStatement(requete);
-    ps.setInt(1, mois);
-    ps.setInt(2, annee);
-    ResultSet rs = ps.executeQuery();
-
-    StringBuilder res = new StringBuilder();
-    res.append("Facture du ").append(mois).append("/").append(annee).append("\n");
 }
 
 
