@@ -22,4 +22,22 @@ public class Client extends Personne{
     public void consulterCatalogue(){
         
     }
+
+
+    @Override
+    public boolean equals(Object o){
+        if(o == null){
+            return false;
+        }
+        if(o == this){
+            return true;
+        }
+        if(!(o instanceof Client)){
+            return false;
+        }
+        Client tmp = (Client) o;
+        return this.idCli == tmp.idCli;
+    }
+
+
 }
