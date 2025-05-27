@@ -335,7 +335,7 @@ public class AppLibrairie {
     public void menuAdmin() {
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
-        System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
+        System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||  : Créer un compte vendeur                                     |                                                                ||||");
