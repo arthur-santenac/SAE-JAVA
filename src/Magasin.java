@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Magasin {
@@ -37,9 +38,7 @@ public class Magasin {
         return villeMag;
     }
 
-    public void setVilleMag(String villeMag) {
-        this.villeMag = villeMag;
-    }
+
 
     public boolean ajouteCommande(Commande c){
         if(c.getMagasin().getNomMag().equals(this.nomMag)){
@@ -74,6 +73,43 @@ public class Magasin {
         return this.livres;
     }
 
+    public List<Livre> catalogue(){
+        return this.getLivres();
+    }
+
     
+/*     public List<Livre> catalogueFiltre(Filtre filtre)throws PasUnTelFiltreException{
+        List<Livre> livresFiltrés = new ArrayList<>();
+        switch (filtre) {
+            case AUTEUR:
+                for(Livre livre: this.livres){
+                    if(livre.getAuteurs().contains())
+                }
+                break;
+        
+            default: throw new PasUnTelFiltreException();
+                break;
+        }
+    } */
+    
+    @Override
+    public boolean equals(Object o){
+        if(o == null){
+            return false;
+        }
+        if(o == this){
+            return true;
+        }
+        if(!(o instanceof Magasin)){
+            return false;
+        }
+        Magasin tmp = (Magasin) o;
+        return this.idMag == tmp.idMag && this.nomMag.equals(tmp.nomMag) && this.villeMag.equals(tmp.villeMag);
+    }
+
+    @Override
+    public String toString(){
+        return "Le magasin "+this.nomMag+" a pour id :"+this.idMag+" et se situe dans la ville "+this.villeMag;
+    }
 
 }
