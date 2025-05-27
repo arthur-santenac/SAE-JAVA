@@ -85,28 +85,21 @@ public class Client extends Personne{
         this.magasin.catalogue();
     }
 
+
     @Override
-    public boolean equals(Object o) {
-        if (o == null) {
+    public boolean equals(Object o){
+        if(o == null){
             return false;
         }
-        if (o == this) {
+        if(o == this){
             return true;
         }
-        if (!(o instanceof Client)) {
+        if(!(o instanceof Client)){
             return false;
         }
         Client tmp = (Client) o;
-    
-        return this.idCli == tmp.idCli  && this.getCodePostal() == tmp.getCodePostal() && this.getNom().equals(tmp.getNom()) && this.getPrenom().equals(tmp.getPrenom())
-            && this.getAdresse().equals(tmp.getAdresse()) && this.getVille().equals(tmp.getVille())  
-            && (this.magasin == null ? tmp.magasin == null : this.magasin.equals(tmp.magasin))
-            && (this.panier == null ? tmp.panier == null : this.panier.equals(tmp.panier));
+        return this.idCli == tmp.idCli;
     }
 
-    @Override
-    public String toString(){
-        return this.idCli+" : "+super.toString();
-    }
-    
+
 }
