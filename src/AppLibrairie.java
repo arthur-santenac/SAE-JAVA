@@ -1,3 +1,5 @@
+import java.sql.SQLException;
+
 public class AppLibrairie {
 
     public static boolean continuer = false;
@@ -8,6 +10,7 @@ public class AppLibrairie {
         boolean quitter = false;
         while (!quitter) {
             try {
+            connexionBD();
             Compte compte = Connexion();
             switch (compte) {
             case CLIENT:
@@ -25,6 +28,14 @@ public class AppLibrairie {
         }
         catch (MauvaisMotDePasseExeption e) {
             run();
+        }
+        catch (SQLException e){
+            System.out.println("La connexion a échouée");
+            run();
+        }
+        catch (ClassNotFoundException e){
+            System.out.println("La classe n'existe pas");
+            break;
         }
         }
         
@@ -99,6 +110,33 @@ public class AppLibrairie {
         System.console().readLine();
     }
 
+    public void connexionBD() throws SQLException, ClassNotFoundException{
+
+        ConnexionMySQL connexionMySQL= new ConnexionMySQL();
+        MenuConnexionIdent();
+        String identifiant = System.console().readLine();
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        MenuConnexionMdp();
+        String mdp = System.console().readLine();
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        String serveur = "servinfo-maria";
+        MenuConnexionNomBase();
+        String nomBase = System.console().readLine();
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+
+        connexionMySQL.connecter(identifiant, mdp, serveur, nomBase);
+	    if (connexionMySQL.isConnecte()){
+		System.out.println("Vous etes connecté");
+        } else {
+            throw new SQLException();
+        }
+	
+
+    }
+
     public void MenuConnexionIdent() {
         System.out.println("╭──────────────────────────╮");
         System.out.println("│  Connexion               │");
@@ -109,7 +147,18 @@ public class AppLibrairie {
         System.out.println("╰──────────────────────────╯");     
     }
 
-    public void MenuConnexionMdp() {
+
+        public void MenuConnexionNomBase() {
+        System.out.println("╭───────────────────────────╮");
+        System.out.println("│  Connexion                │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrez le nom de la BD    │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter   │");
+        System.out.println("╰───────────────────────────╯");     
+    }
+
+        public void MenuConnexionMdp() {
         System.out.println("╭───────────────────────────╮");
         System.out.println("│  Connexion                │");
         System.out.println("├───────────────────────────┤");
