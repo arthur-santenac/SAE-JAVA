@@ -102,13 +102,12 @@ public class AppLibrairie {
         String magasin = System.console().readLine();
         if(magasin.equals("1")){
             try{
-                this.magasinBD.listeDesMagasins();
+                System.out.println(this.magasinBD.listeDesMagasins());
             }
             catch(SQLException ex){
                 System.out.println("La liste de magasins est vide");
             }
         }
-        
         magasin = magasin.strip();
         return magasin;
     }
