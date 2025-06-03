@@ -142,6 +142,8 @@ public class AppLibrairie {
         mdp = mdp.strip();
         if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {return;}
 
+        clear();
+
         creerCompteType();
         String type = System.console().readLine();
         type = type.strip();
@@ -150,6 +152,7 @@ public class AppLibrairie {
         else if (type.equals("2") || type.equals("vendeur")) {type = "vendeur";}
         else if (type.equals("3") || type.equals("administrateur")) {type = "administrateur";}
         else {
+            erreur();
             creerUnCompte();
         }
 
