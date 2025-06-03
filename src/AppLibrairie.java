@@ -1,3 +1,5 @@
+import java.beans.Statement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.format.SignStyle;
 import java.util.ArrayList;
@@ -8,30 +10,37 @@ public class AppLibrairie {
 
     public static boolean continuer = false;
     private ConnexionMySQL connexionMySQL;
+    private Statement st;
     private MagasinBD magasinBD;
     private ClientBD clientBD;
 
     public AppLibrairie() {}
 
     public void run() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
         boolean quitter = false;
         while (!quitter) {
             try {
-            connexionBD();
-            Compte compte = Connexion();
-            switch (compte) {
-            case CLIENT:
-                runClient();
-                break;
-            case VENDEUR:
-                runVendeur();
-                break;
-            case ADMINISTRATEUR:
-                runAdministrateur();
-                break;
-            case QUITTER:
-                quitter = true;
-            }
+                if (connexionBD()) {
+                    Compte compte = Connexion();
+                    switch (compte) {
+                    case CLIENT:
+                        runClient();
+                        break;
+                    case VENDEUR:
+                        runVendeur();
+                        break;
+                    case ADMINISTRATEUR:
+                        runAdministrateur();
+                        break;
+                    case QUITTER:
+                        quitter = true;
+                    }
+                }
+                else {
+                    quitter = true;
+                }
         }
         catch (MauvaisMotDePasseExeption e) {
             run();
@@ -79,25 +88,36 @@ public class AppLibrairie {
     }
 
     public void runClient() {
-        String magasinChoisi = choisirMagasin();
-        boolean commandeEnMagasin = choisirModeLivraison();
-        String livraison = null;
-        while (!continuer) {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
-            logo();
-            menuClient();
-            String option = System.console().readLine();
-            option = option.strip().toLowerCase();
+        try{
+            String magasinChoisi = choisirMagasin();
+            boolean commandeEnMagasin = choisirModeLivraison();
+            String livraison = null;
+            while (!continuer) {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+                logo();
+                menuClient();
+                String option = System.console().readLine();
+                option = option.strip().toLowerCase();
+            }
+        } catch (SQLException e) {
+            
         }
     }
 
-    public String choisirMagasin() {
+    public String choisirMagasin() throws SQLException {
         System.out.print("\033[H\033[2J");
         System.out.flush();
 
+        List<String> listeMagasin = new ArrayList<>();
+        st = (Statement) connexionMySQL.createStatement();
+		ResultSet set = ((java.sql.Statement) st).executeQuery("select * from MAGASIN");
+        while (set.next()) {
+			listeMagasin.add(set.getString(1) + set.getString(2));
+		}
+
         logo();
-        menuChoisirMagasin();
+        menuChoisirMagasin(listeMagasin);
         String magasin = System.console().readLine();
         magasin = magasin.strip();
         return magasin;
@@ -150,33 +170,29 @@ public class AppLibrairie {
         System.console().readLine();
     }
 
-    public void connexionBD() throws SQLException, ClassNotFoundException{
+    public boolean connexionBD() throws SQLException, ClassNotFoundException{
 
         ConnexionMySQL connexionMySQL= new ConnexionMySQL();
-        menuConnexionIdent();
+        menuConnexionIdentBD();
         String identifiant = System.console().readLine();
+        if (identifiant.equals("quitter") || identifiant.equals("q") || identifiant.equals("quit")) {return false;}
         System.out.print("\033[H\033[2J");
         System.out.flush();
-        menuConnexionMdp();
+        menuConnexionMdpBD();
         String mdp = System.console().readLine();
+        if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {return false;}
         System.out.print("\033[H\033[2J");
         System.out.flush();
         String serveur = "servinfo-maria";
-        menuConnexionNomBase();
-        String nomBase = System.console().readLine();
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        String nomBase = "Librairie";
 
         connexionMySQL.connecter(identifiant, mdp, serveur, nomBase);
-	    if (connexionMySQL.isConnecte()){
-		System.out.println("Vous etes connecté");
-        } else {
+	    if (! connexionMySQL.isConnecte()){
             throw new SQLException();
         }
+        return true;
 	
-
     }
-
 
     public void menuConnexionIdent() {
         System.out.println("╭──────────────────────────╮");
@@ -186,16 +202,6 @@ public class AppLibrairie {
         System.out.println("├──────────────────────────┤");
         System.out.println("│ Entrer \"q\" pour quitter  │");
         System.out.println("╰──────────────────────────╯");     
-    }
-
-    public void menuConnexionNomBase() {
-        System.out.println("╭───────────────────────────╮");
-        System.out.println("│  Connexion                │");
-        System.out.println("├───────────────────────────┤");
-        System.out.println("│ Entrez le nom de la BD    │");
-        System.out.println("├───────────────────────────┤");
-        System.out.println("│ Entrer \"q\" pour quitter   │");
-        System.out.println("╰───────────────────────────╯");     
     }
 
 
@@ -208,6 +214,28 @@ public class AppLibrairie {
         System.out.println("├───────────────────────────┤");
         System.out.println("│ Entrer \"q\" pour quitter   │");
         System.out.println("╰───────────────────────────╯");     
+    }
+
+    public void menuConnexionIdentBD() {
+        System.out.println("╭──────────────────────────────────╮");
+        System.out.println("│  Connexion BD                    │");
+        System.out.println("├──────────────────────────────────┤");
+        System.out.println("│ Entrez votre identifiant mariadb │");
+        System.out.println("├──────────────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter          │");
+        System.out.println("╰──────────────────────────────────╯");     
+    }
+
+
+    public void menuConnexionMdpBD() {
+
+        System.out.println("╭───────────────────────────────────╮");
+        System.out.println("│  Connexion BD                     │");
+        System.out.println("├───────────────────────────────────┤");
+        System.out.println("│ Entrez votre mot de passe mariadb │");
+        System.out.println("├───────────────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter           │");
+        System.out.println("╰───────────────────────────────────╯");     
     }
 
     public void menuClient() {
@@ -255,7 +283,7 @@ public class AppLibrairie {
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
 
-    public void menuChoisirMagasin() {
+    public void menuChoisirMagasin(List<String> listeMagasin) {
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
         System.out.println(" ||||                          CLIENT                                |                                                                ||||");
@@ -456,6 +484,16 @@ public class AppLibrairie {
 
     public MagasinBD getFicheJoueur() {
         return magasinBD;
+    }
+
+    public static String ljust(String string, int longeur) {
+        int aAjouter = longeur - string.length();
+        if (aAjouter <= 0) return string;
+        String padding = "";
+        for (int i = 0; i < aAjouter; i++) {
+            padding = padding + " ";
+        }
+        return string + padding;
     }
     
     public static void main(String[] args) {
