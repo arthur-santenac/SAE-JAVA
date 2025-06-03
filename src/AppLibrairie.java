@@ -1,15 +1,17 @@
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
 public class AppLibrairie {
 
     public static boolean continuer = false;
-    private ConnexionMySQL connexionMySQL;
+    private ConnexionMySQL connexionMySQL = null;
     private Statement st;
     private MagasinBD magasinBD;
     private ClientBD clientBD;
@@ -17,12 +19,33 @@ public class AppLibrairie {
     public AppLibrairie() {}
 
     public void run() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        boolean quitter = false;
-        while (!quitter) {
+        clear();
+
+        if (connexionMySQL == null) {
             try {
-                if (connexionBD()) {
+                if (!connexionBD()) {
+                    return;
+                }
+            } catch (SQLException e) {
+                System.out.println("La connexion a échouée");
+                System.console().readLine();
+                run();
+            }
+            catch (ClassNotFoundException e) {
+                System.out.println("La connexion a échouée");
+                System.console().readLine();
+                return;
+            }
+        }
+
+        menuChoisirCreerOuConnecter();
+        String connectionOuCreer = System.console().readLine();
+        connectionOuCreer = connectionOuCreer.strip();
+        if (connectionOuCreer.equals("1")) {
+            clear();
+            boolean quitter = false;
+            while (!quitter) {
+                try {
                     Compte compte = Connexion();
                     switch (compte) {
                     case CLIENT:
@@ -38,29 +61,33 @@ public class AppLibrairie {
                         quitter = true;
                     }
                 }
-                else {
-                    quitter = true;
+                catch (MauvaisMotDePasseExeption e) {
+                    run();
                 }
+                catch (SQLException e){
+                    System.out.println("La connexion a échouée");
+                    run();
+                }
+            }
         }
-        catch (MauvaisMotDePasseExeption e) {
-            run();
+        else if (connectionOuCreer.equals("2")) {
+            try {
+                creerUnCompte();
+                run();
+            } catch (SQLException e) {
+                System.out.println("La création a échouée");
+            }
         }
-        catch (SQLException e){
-            System.out.println("La connexion a échouée");
-            run();
+        else if (connectionOuCreer.equals("quitter") || connectionOuCreer.equals("q") || connectionOuCreer.equals("quit")) {}
+        else {
+            erreur();
+            run();   
         }
-        catch (ClassNotFoundException e){
-            System.out.println("La classe n'existe pas");
-            break;
-        }
-        }
-        
     }
 
-    public Compte Connexion() throws MauvaisMotDePasseExeption {
+    public Compte Connexion() throws MauvaisMotDePasseExeption, SQLException{
 
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        clear();
 
         logo();
         menuConnexionIdent();
@@ -69,22 +96,68 @@ public class AppLibrairie {
 
         if (identifiant.equals("quitter") || identifiant.equals("q") || identifiant.equals("quit")) {return Compte.QUITTER;}
 
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        clear();
 
         logo();
         menuConnexionMdp();
         String mdp = System.console().readLine();
         mdp = mdp.strip();
 
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        clear();
         if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {return Compte.QUITTER;}
-        if (identifiant.equals("client") && mdp.equals("client")) {return Compte.CLIENT;}
-        else if (identifiant.equals("vendeur") && mdp.equals("vendeur")) {return Compte.VENDEUR;}
-        else if (identifiant.equals("administrateur") && mdp.equals("administrateur")) {return Compte.ADMINISTRATEUR;}
+
+        st = connexionMySQL.createStatement();
+		ResultSet set = st.executeQuery("select * from CONNEXION");
+
+        while (set.next()) {
+			if (identifiant.equals(set.getString(1)) && mdp.equals(set.getString(2))) {
+                if ("client".equals(set.getString(3))) {
+                    return Compte.CLIENT;
+                }
+                else if ("vendeur".equals(set.getString(3))) {
+                    return Compte.VENDEUR;
+                }
+                else {
+                    return Compte.ADMINISTRATEUR;
+                }
+            }
+		}
 
         throw new MauvaisMotDePasseExeption();
+    }
+
+    public void creerUnCompte() throws SQLException{
+
+        clear();
+
+        creerCompteIdent();
+        String identifiant = System.console().readLine();
+        identifiant = identifiant.strip();
+        if (identifiant.equals("quitter") || identifiant.equals("q") || identifiant.equals("quit")) {return;}
+
+        clear();
+
+        creerCompteMdp();
+        String mdp = System.console().readLine();
+        mdp = mdp.strip();
+        if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {return;}
+
+        creerCompteType();
+        String type = System.console().readLine();
+        type = type.strip();
+        if (type.equals("quitter") || type.equals("q") || type.equals("quit")) {return;}
+        else if (type.equals("1") || type.equals("client")) {type = "client";}
+        else if (type.equals("2") || type.equals("vendeur")) {type = "vendeur";}
+        else if (type.equals("3") || type.equals("administrateur")) {type = "administrateur";}
+        else {
+            creerUnCompte();
+        }
+
+        PreparedStatement ps = connexionMySQL.prepareStatement("insert into CONNEXION values (?,?,?)");
+		ps.setString(1, identifiant);
+		ps.setString(2, mdp);
+		ps.setString(3, type);
+		ps.executeUpdate();
     }
 
     public void runClient() {
@@ -93,8 +166,7 @@ public class AppLibrairie {
             boolean commandeEnMagasin = choisirModeLivraison();
             String livraison = null;
             while (!continuer) {
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
+                clear();
                 logo();
                 menuClient();
                 String option = System.console().readLine();
@@ -106,8 +178,7 @@ public class AppLibrairie {
     }
 
     public String choisirMagasin() throws SQLException {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        clear();
 
         List<String> listeMagasin = new ArrayList<>();
         st = connexionMySQL.createStatement();
@@ -134,8 +205,7 @@ public class AppLibrairie {
     }
 
     public boolean choisirModeLivraison() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        clear();
 
         logo();
         menuChoisirModeLivraison();
@@ -155,8 +225,7 @@ public class AppLibrairie {
 
     public void runVendeur() {
         while (!continuer) {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+            clear();
             logo();
             menuVendeur();
             String identifiant = System.console().readLine();
@@ -166,8 +235,7 @@ public class AppLibrairie {
 
     public void runAdministrateur() {
         while (!continuer) {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+            clear();
             logo();
             menuAdmin();
             String identifiant = System.console().readLine();
@@ -186,15 +254,13 @@ public class AppLibrairie {
         menuConnexionIdentBD();
         String identifiant = System.console().readLine();
         if (identifiant.equals("quitter") || identifiant.equals("q") || identifiant.equals("quit")) {return false;}
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        clear();
         menuConnexionMdpBD();
         String mdp = System.console().readLine();
         if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {return false;}
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        clear();
         String serveur = "servinfo-maria";
-        String nomBase = "Librairie";
+        String nomBase = "DB" + identifiant;
 
         connexionMySQL.connecter(identifiant, mdp, serveur, nomBase);
 	    if (! connexionMySQL.isConnecte()){
@@ -203,6 +269,47 @@ public class AppLibrairie {
         this.connexionMySQL = connexionMySQL;
         return true;
 	
+    }
+
+    public void menuChoisirCreerOuConnecter() {
+        System.out.println("╭──────────────────────────╮");
+        System.out.println("│ 1 - Se Connecter         │");
+        System.out.println("│ 2 - Créer un compte      │");
+        System.out.println("│ Entrer \"q\" pour quitter  │");
+        System.out.println("╰──────────────────────────╯");     
+    }
+
+    public void creerCompteIdent() {
+        System.out.println("╭───────────────────────────╮");
+        System.out.println("│  Créer un compte          │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrez un identifiant     │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter   │");
+        System.out.println("╰───────────────────────────╯");     
+    }
+
+    public void creerCompteMdp() {
+        System.out.println("╭───────────────────────────╮");
+        System.out.println("│  Créer un compte          │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrez un mot de passe    │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter   │");
+        System.out.println("╰───────────────────────────╯");     
+    }
+
+    public void creerCompteType() {
+        System.out.println("╭────────────────────────────╮");
+        System.out.println("│  Créer un compte           │");
+        System.out.println("├────────────────────────────┤");
+        System.out.println("│ Entrez le type du compte : │");
+        System.out.println("│  1 - Client                │");
+        System.out.println("│  2 - Vendeur               │");
+        System.out.println("│  3 - Administrateur        │");
+        System.out.println("├────────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter    │");
+        System.out.println("╰────────────────────────────╯");     
     }
 
     public void menuConnexionIdent() {
@@ -217,7 +324,6 @@ public class AppLibrairie {
 
 
     public void menuConnexionMdp() {
-
         System.out.println("╭───────────────────────────╮");
         System.out.println("│  Connexion                │");
         System.out.println("├───────────────────────────┤");
@@ -484,6 +590,11 @@ public class AppLibrairie {
             padding = padding + " ";
         }
         return string + padding;
+    }
+
+    public void clear() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
     
     public static void main(String[] args) {
