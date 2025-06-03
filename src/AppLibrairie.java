@@ -11,7 +11,9 @@ public class AppLibrairie {
     private MagasinBD magasinBD;
     private ClientBD clientBD;
 
-    public AppLibrairie() {}
+    public AppLibrairie() {
+        
+    }
 
     public void run() {
         boolean quitter = false;
@@ -95,10 +97,18 @@ public class AppLibrairie {
     public String choisirMagasin() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
-
         logo();
         menuChoisirMagasin();
         String magasin = System.console().readLine();
+        if(magasin.equals("1")){
+            try{
+                this.magasinBD.listeDesMagasins();
+            }
+            catch(SQLException ex){
+                System.out.println("La liste de magasins est vide");
+            }
+        }
+        
         magasin = magasin.strip();
         return magasin;
     }
@@ -151,8 +161,12 @@ public class AppLibrairie {
     }
 
     public void connexionBD() throws SQLException, ClassNotFoundException{
-
-        ConnexionMySQL connexionMySQL= new ConnexionMySQL();
+        try {
+            this.connexionMySQL = new ConnexionMySQL();
+        }catch (ClassNotFoundException ex){
+            System.out.println("Driver MySQL non trouvé!!!");
+            System.exit(1);
+        }
         menuConnexionIdent();
         String identifiant = System.console().readLine();
         System.out.print("\033[H\033[2J");
@@ -167,9 +181,11 @@ public class AppLibrairie {
         System.out.print("\033[H\033[2J");
         System.out.flush();
 
-        connexionMySQL.connecter(identifiant, mdp, serveur, nomBase);
-	    if (connexionMySQL.isConnecte()){
-		System.out.println("Vous etes connecté");
+        this.connexionMySQL.connecter(identifiant, mdp, serveur, nomBase);
+	    if (this.connexionMySQL.isConnecte()){
+		    System.out.println("Vous etes connecté");
+            this.magasinBD = new MagasinBD(this.connexionMySQL);
+            this.clientBD = new ClientBD(this.connexionMySQL);
         } else {
             throw new SQLException();
         }
@@ -264,7 +280,7 @@ public class AppLibrairie {
         System.out.println(" ||||  Veuillez entrer le nom du magasin dans lequel vous souhaiter  |                                                                ||||");
         System.out.println(" ||||  acheter un livre.                                             |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| 1 : Afficher la liste de magasins                              |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");

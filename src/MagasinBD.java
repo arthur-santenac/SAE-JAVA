@@ -15,7 +15,7 @@ public class MagasinBD {
     	throw new SQLException("méthode rechercherJoueurParNum à implémenter");
     }
 
-    ArrayList<Magasin> listeDesMagasins() throws SQLException{
+    List<Magasin> listeDesMagasins() throws SQLException{
 		this.st = this.laConnexion.createStatement();
 		ResultSet rs = this.st.executeQuery("Select * from MAGASIN");
 		List<Magasin> magasins = new ArrayList<>();
@@ -27,7 +27,7 @@ public class MagasinBD {
 			magasins.add(m);
 		}
 		rs.close();
-		return (ArrayList<Magasin>) magasins;
+		return magasins;
 	}
 
     ArrayList<String> listeDesNomDeMags() throws SQLException{
