@@ -1,7 +1,7 @@
-import java.beans.Statement;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.format.SignStyle;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,17 +110,27 @@ public class AppLibrairie {
         System.out.flush();
 
         List<String> listeMagasin = new ArrayList<>();
-        st = (Statement) connexionMySQL.createStatement();
-		ResultSet set = ((java.sql.Statement) st).executeQuery("select * from MAGASIN");
+        st = connexionMySQL.createStatement();
+		ResultSet set = st.executeQuery("select * from MAGASIN");
         while (set.next()) {
-			listeMagasin.add(set.getString(1) + set.getString(2));
+			listeMagasin.add(ljust(set.getString(2), 30) + " " + set.getString(3));
 		}
 
         logo();
         menuChoisirMagasin(listeMagasin);
         String magasin = System.console().readLine();
         magasin = magasin.strip();
-        return magasin;
+        try {
+            if (Integer.parseInt(magasin) >= 1 && Integer.parseInt(magasin) <= listeMagasin.size()) {
+                return magasin;
+            } else {
+                erreur();
+                return choisirMagasin();
+            }
+        } catch (NumberFormatException e) {
+            erreur();
+            return choisirMagasin();
+        }
     }
 
     public boolean choisirModeLivraison() {
@@ -172,7 +182,7 @@ public class AppLibrairie {
 
     public boolean connexionBD() throws SQLException, ClassNotFoundException{
 
-        ConnexionMySQL connexionMySQL= new ConnexionMySQL();
+        ConnexionMySQL connexionMySQL = new ConnexionMySQL();
         menuConnexionIdentBD();
         String identifiant = System.console().readLine();
         if (identifiant.equals("quitter") || identifiant.equals("q") || identifiant.equals("quit")) {return false;}
@@ -190,6 +200,7 @@ public class AppLibrairie {
 	    if (! connexionMySQL.isConnecte()){
             throw new SQLException();
         }
+        this.connexionMySQL = connexionMySQL;
         return true;
 	
     }
@@ -292,38 +303,17 @@ public class AppLibrairie {
         System.out.println(" ||||  Veuillez entrer le nom du magasin dans lequel vous souhaiter  |                                                                ||||");
         System.out.println(" ||||  acheter un livre.                                             |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
+
+        for (int i=1;i<=listeMagasin.size();i++) {
+            String ligne = " ||||   " + i + " - " + listeMagasin.get(i - 1);
+            ligne = ljust(ligne, 69);
+            System.out.println(ligne + "|                                                                ||||");
+        }
+
+        for (int i=0;i<32-listeMagasin.size();i++) {
+            System.out.println(" ||||                                                                |                                                                ||||");
+        }
+
         System.out.println(" ||/================================================================\\|/===============================================================|\\||");
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
