@@ -4,8 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class AppLibrairie {
@@ -14,6 +15,7 @@ public class AppLibrairie {
     private ConnexionMySQL connexionMySQL = null;
     private Statement st;
     private MagasinBD magasinBD;
+    private Client utilisateur;
     private ClientBD clientBD;
 
     public AppLibrairie() {}
@@ -26,6 +28,7 @@ public class AppLibrairie {
                 if (!connexionBD()) {
                     return;
                 }
+
             } catch (SQLException e) {
                 System.out.println("La connexion a échouée");
                 System.console().readLine();
@@ -37,35 +40,39 @@ public class AppLibrairie {
                 return;
             }
         }
+        
+        this.clientBD = new ClientBD(connexionMySQL);
 
         menuChoisirCreerOuConnecter();
         String connectionOuCreer = System.console().readLine();
         connectionOuCreer = connectionOuCreer.strip();
         if (connectionOuCreer.equals("1")) {
             clear();
-            boolean quitter = false;
-            while (!quitter) {
+            while (!AppLibrairie.continuer) {
                 try {
-                    Compte compte = Connexion();
+                    String compte = Connexion();
                     switch (compte) {
-                    case CLIENT:
-                        runClient();
-                        break;
-                    case VENDEUR:
-                        runVendeur();
-                        break;
-                    case ADMINISTRATEUR:
-                        runAdministrateur();
-                        break;
-                    case QUITTER:
-                        quitter = true;
+                        case "client":
+                            runClient();
+                            break;
+                        case "vendeur":
+                            runVendeur();
+                            break;
+                        case "administrateur":
+                            runAdministrateur();
+                            break;
+                        case "quitter":
+                            AppLibrairie.continuer = true;
                     }
                 }
                 catch (MauvaisMotDePasseExeption e) {
+                    System.out.println("Mauvais identifiants");
+                    erreur();
                     run();
                 }
                 catch (SQLException e){
                     System.out.println("La connexion a échouée");
+                    erreur();
                     run();
                 }
             }
@@ -83,18 +90,19 @@ public class AppLibrairie {
             erreur();
             run();   
         }
+        clear();
     }
 
-    public Compte Connexion() throws MauvaisMotDePasseExeption, SQLException{
+    public String Connexion() throws MauvaisMotDePasseExeption, SQLException{
 
         clear();
 
         logo();
-        menuConnexionIdent();
-        String identifiant = System.console().readLine();
-        identifiant = identifiant.strip();
+        menuConnexionEmail();
+        String email = System.console().readLine();
+        email = email.strip();
 
-        if (identifiant.equals("quitter") || identifiant.equals("q") || identifiant.equals("quit")) {return Compte.QUITTER;}
+        if (email.equals("quitter") || email.equals("q") || email.equals("quit")) {return "quitter";}
 
         clear();
 
@@ -104,22 +112,15 @@ public class AppLibrairie {
         mdp = mdp.strip();
 
         clear();
-        if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {return Compte.QUITTER;}
+        if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {return "quitter";}
 
         st = connexionMySQL.createStatement();
-		ResultSet set = st.executeQuery("select * from CONNEXION");
+		ResultSet set = st.executeQuery("select * from CONNEXION natural join CLIENT");
 
         while (set.next()) {
-			if (identifiant.equals(set.getString(1)) && mdp.equals(set.getString(2))) {
-                if ("client".equals(set.getString(3))) {
-                    return Compte.CLIENT;
-                }
-                else if ("vendeur".equals(set.getString(3))) {
-                    return Compte.VENDEUR;
-                }
-                else {
-                    return Compte.ADMINISTRATEUR;
-                }
+			if (email.equals(set.getString(2)) && mdp.equals(set.getString(3))) {
+                this.utilisateur = new Client(set.getString(5), set.getString(6), set.getString(7), set.getInt(9), set.getString(8), set.getInt(1));
+                return set.getString(4);
             }
 		}
 
@@ -130,10 +131,10 @@ public class AppLibrairie {
 
         clear();
 
-        creerCompteIdent();
-        String identifiant = System.console().readLine();
-        identifiant = identifiant.strip();
-        if (identifiant.equals("quitter") || identifiant.equals("q") || identifiant.equals("quit")) {return;}
+        creerCompteEmail();
+        String email = System.console().readLine();
+        email = email.strip();
+        if (email.equals("quitter") || email.equals("q") || email.equals("quit")) {return;}
 
         clear();
 
@@ -144,39 +145,83 @@ public class AppLibrairie {
 
         clear();
 
-        creerCompteType();
-        String type = System.console().readLine();
-        type = type.strip();
-        if (type.equals("quitter") || type.equals("q") || type.equals("quit")) {return;}
-        else if (type.equals("1") || type.equals("client")) {type = "client";}
-        else if (type.equals("2") || type.equals("vendeur")) {type = "vendeur";}
-        else if (type.equals("3") || type.equals("administrateur")) {type = "administrateur";}
-        else {
-            erreur();
-            creerUnCompte();
-        }
+        creerCompteNom();
+        String nom = System.console().readLine();
+        nom = nom.strip();
+        if (nom.equals("quitter") || nom.equals("q") || nom.equals("quit")) {return;}
 
-        PreparedStatement ps = connexionMySQL.prepareStatement("insert into CONNEXION values (?,?,?)");
-		ps.setString(1, identifiant);
+        clear();
+
+        creerComptePrenom();
+        String prenom = System.console().readLine();
+        prenom = prenom.strip();
+        if (prenom.equals("quitter") || prenom.equals("q") || prenom.equals("quit")) {return;}
+
+        clear();
+
+        creerCompteAdresse();
+        String adresse = System.console().readLine();
+        adresse = adresse.strip();
+        if (adresse.equals("quitter") || adresse.equals("q") || adresse.equals("quit")) {return;}
+
+        clear();
+
+        creerCompteVille();
+        String ville = System.console().readLine();
+        ville = ville.strip();
+        if (ville.equals("quitter") || ville.equals("q") || ville.equals("quit")) {return;}
+
+        clear();
+
+        creerCompteCodePostal();
+        String codePostal = System.console().readLine();
+        codePostal = codePostal.strip();
+        if (codePostal.equals("quitter") || codePostal.equals("q") || codePostal.equals("quit")) {return;}
+        int codePostalInt = Integer.parseInt(codePostal);
+
+        clear();
+
+        int idcli = this.clientBD.maxNum();
+
+        PreparedStatement ps = connexionMySQL.prepareStatement("insert into CLIENT values (?,?,?,?,?,?)");
+		ps.setInt(1, idcli);
+		ps.setString(2, nom);
+		ps.setString(3, prenom);
+        ps.setString(4, adresse);
+        ps.setString(5, ville);
+        ps.setInt(6, codePostalInt);
+		ps.executeUpdate();
+
+        ps = connexionMySQL.prepareStatement("insert into CONNEXION values (?,?,?, ?)");
+		ps.setString(1, email);
 		ps.setString(2, mdp);
-		ps.setString(3, type);
+        ps.setInt(3, idcli);
+		ps.setString(4, "client");
 		ps.executeUpdate();
     }
 
     public void runClient() {
         try{
-            String magasinChoisi = choisirMagasin();
-            boolean commandeEnMagasin = choisirModeLivraison();
+            String magasin = choisirMagasin();
+            boolean enLigne = choisirModeLivraison();
             String livraison = null;
-            while (!continuer) {
+            while (!AppLibrairie.continuer) {
                 clear();
                 logo();
                 menuClient();
                 String option = System.console().readLine();
                 option = option.strip().toLowerCase();
+                if (option.equals("1")) {choisirMagasin();}
+                else if (option.equals("2")) {choisirModeLivraison();}
+                else if (option.equals("3")) {commander(magasin, enLigne);}
+                else if (option.equals("4")) {run();}
+                else if (option.equals("5") || option.equals("quitter") || option.equals("q") || option.equals("quit")) {AppLibrairie.continuer = true;}
+                else {
+                    erreur();
+                }
             }
         } catch (SQLException e) {
-            
+        
         }
     }
 
@@ -226,8 +271,67 @@ public class AppLibrairie {
         }
     }
 
+    public void commander(String magasin, boolean enLigne) {
+        clear();
+        logo();
+        menuCommander();
+        String commander = System.console().readLine();
+        commander = commander.strip();
+        if (commander.equals("1")) {
+            try {
+                chercherLivre(magasin, enLigne);
+                commander(magasin, enLigne);
+            } catch (SQLException e) {
+
+            }
+            
+        }
+        else if (commander.equals("2")) {
+            
+            commander(magasin, enLigne);
+        }
+        else if (commander.equals("3")) {
+            meilleursVentes(magasin, enLigne);
+            commander(magasin, enLigne);
+        }
+        else if (commander.equals("4") || commander.equals("quitter") || commander.equals("q") || commander.equals("quit")) {}
+        else {
+            erreur();
+            commander(magasin, enLigne);
+        }
+    }
+
+    public void chercherLivre(String magasin, boolean enLigne) throws SQLException{
+        clear();
+        logo();
+        menuChercherLivre();
+        String chercher = System.console().readLine();
+        chercher = chercher.strip();
+        if (chercher.equals("q") || chercher.equals("quit") || chercher.equals("quitter")) {return;}
+        boolean trouver = false;
+        Map<Integer, String> mapLivre = new HashMap<>();
+        st = connexionMySQL.createStatement();
+		ResultSet set = st.executeQuery("select isbn, titre from LIVRE natural join MAGASIN where nommag = " + magasin);
+        while (set.next()) {
+			if (set.getString(2).equals(chercher)) {
+                mapLivre.put(set.getInt(1), set.getString(2));
+                trouver = true;
+            }
+		}
+        if (!trouver) {
+            System.out.println("le livre n'existe pas");
+            erreur();
+            chercherLivre(magasin, enLigne);
+        }
+        
+    }
+
+    public void meilleursVentes(String magasin, boolean enLigne) {
+
+    }
+
     public void runVendeur() {
-        while (!continuer) {
+        while (!AppLibrairie.continuer) {
             clear();
             logo();
             menuVendeur();
@@ -237,7 +341,7 @@ public class AppLibrairie {
     }
 
     public void runAdministrateur() {
-        while (!continuer) {
+        while (!AppLibrairie.continuer) {
             clear();
             logo();
             menuAdmin();
@@ -282,14 +386,14 @@ public class AppLibrairie {
         System.out.println("╰──────────────────────────╯");     
     }
 
-    public void creerCompteIdent() {
-        System.out.println("╭───────────────────────────╮");
-        System.out.println("│  Créer un compte          │");
-        System.out.println("├───────────────────────────┤");
-        System.out.println("│ Entrez un identifiant     │");
-        System.out.println("├───────────────────────────┤");
-        System.out.println("│ Entrer \"q\" pour quitter   │");
-        System.out.println("╰───────────────────────────╯");     
+    public void creerCompteEmail() {
+        System.out.println("╭────────────────────────────╮");
+        System.out.println("│  Créer un compte           │");
+        System.out.println("├────────────────────────────┤");
+        System.out.println("│ Entrez votre adresse email │");
+        System.out.println("├────────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter    │");
+        System.out.println("╰────────────────────────────╯");     
     }
 
     public void creerCompteMdp() {
@@ -302,27 +406,65 @@ public class AppLibrairie {
         System.out.println("╰───────────────────────────╯");     
     }
 
-    public void creerCompteType() {
+        public void creerCompteNom() {
+        System.out.println("╭───────────────────────────╮");
+        System.out.println("│  Créer un compte          │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrez votre nom          │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter   │");
+        System.out.println("╰───────────────────────────╯");     
+    }
+
+    public void creerComptePrenom() {
+        System.out.println("╭───────────────────────────╮");
+        System.out.println("│  Créer un compte          │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrez votre prenom       │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter   │");
+        System.out.println("╰───────────────────────────╯");     
+    }
+
+        public void creerCompteAdresse() {
+        System.out.println("╭───────────────────────────╮");
+        System.out.println("│  Créer un compte          │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrez votre adresse      │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter   │");
+        System.out.println("╰───────────────────────────╯");     
+    }
+
+    public void creerCompteVille() {
+        System.out.println("╭───────────────────────────╮");
+        System.out.println("│  Créer un compte          │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrez votre ville        │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter   │");
+        System.out.println("╰───────────────────────────╯");     
+    }
+
+    public void creerCompteCodePostal() {
+        System.out.println("╭───────────────────────────╮");
+        System.out.println("│  Créer un compte          │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrez votre code postal  │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter   │");
+        System.out.println("╰───────────────────────────╯");     
+    }
+
+
+    public void menuConnexionEmail() {
         System.out.println("╭────────────────────────────╮");
-        System.out.println("│  Créer un compte           │");
+        System.out.println("│  Connexion                 │");
         System.out.println("├────────────────────────────┤");
-        System.out.println("│ Entrez le type du compte : │");
-        System.out.println("│  1 - Client                │");
-        System.out.println("│  2 - Vendeur               │");
-        System.out.println("│  3 - Administrateur        │");
+        System.out.println("│ Entrez votre adresse email │");
         System.out.println("├────────────────────────────┤");
         System.out.println("│ Entrer \"q\" pour quitter    │");
         System.out.println("╰────────────────────────────╯");     
-    }
-
-    public void menuConnexionIdent() {
-        System.out.println("╭──────────────────────────╮");
-        System.out.println("│  Connexion               │");
-        System.out.println("├──────────────────────────┤");
-        System.out.println("│ Entrez votre identifiant │");
-        System.out.println("├──────────────────────────┤");
-        System.out.println("│ Entrer \"q\" pour quitter  │");
-        System.out.println("╰──────────────────────────╯");     
     }
 
 
@@ -364,11 +506,11 @@ public class AppLibrairie {
         System.out.println(" ||||                          CLIENT                                |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||   : Choisir un autre magasin                                   |                                                                ||||");
-        System.out.println(" ||||   : Choisir un autre mode de réception                         |                                                                ||||");
-        System.out.println(" ||||   : Passer une commande                                        |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| 1 - Choisir un autre magasin                                   |                                                                ||||");
+        System.out.println(" |||| 2 - Choisir un autre mode de réception                         |                                                                ||||");
+        System.out.println(" |||| 3 - Passer une commande                                        |                                                                ||||");
+        System.out.println(" |||| 4 - Changer de compte                                          |                                                                ||||");
+        System.out.println(" |||| 5 - Quitter l'application                                      |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -435,8 +577,98 @@ public class AppLibrairie {
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||  Veuillez choisir un mode de livraison                         |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||   1 : En magasin                                               |                                                                ||||");
-        System.out.println(" ||||   2 : En ligne                                                 |                                                                ||||");
+        System.out.println(" ||||   1 - En magasin                                               |                                                                ||||");
+        System.out.println(" ||||   2 - En ligne                                                 |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+    public void menuCommander() {
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                   COMMANDER UN LIVRE                           |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| 1 - Chercher un livre                                          |                                                                ||||");
+        System.out.println(" |||| 2 - Livres recommandés                                         |                                                                ||||");
+        System.out.println(" |||| 3 - Meilleurs ventes                                           |                                                                ||||");
+        System.out.println(" |||| 4 - Revenir en arrière                                         |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+    public void menuChercherLivre() {
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                   COMMANDER UN LIVRE                           |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||  Veuillez entrer le nom d'un livre                             |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -478,13 +710,13 @@ public class AppLibrairie {
         System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||  : Ajouter un livre                                            |                                                                ||||");
-        System.out.println(" ||||  : Mettre à jour la quantité disponible d’un livre             |                                                                ||||");
-        System.out.println(" ||||  : Vérifier la disponibilité d’un livre                        |                                                                ||||");
-        System.out.println(" ||||  : Passer une commande pour un client en magasin               |                                                                ||||");
-        System.out.println(" ||||  : Transférer un livre d’une autre librairie                   |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| 1 - Ajouter un livre                                           |                                                                ||||");
+        System.out.println(" |||| 2 - Mettre à jour la quantité disponible d’un livre            |                                                                ||||");
+        System.out.println(" |||| 3 - Vérifier la disponibilité d’un livre                       |                                                                ||||");
+        System.out.println(" |||| 4 - Passer une commande pour un client en magasin              |                                                                ||||");
+        System.out.println(" |||| 5 - Transférer un livre d’une autre librairie                  |                                                                ||||");
+        System.out.println(" |||| 6 - Changer de compte                                          |                                                                ||||");
+        System.out.println(" |||| 7 - Quitter l'application                                      |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -523,12 +755,12 @@ public class AppLibrairie {
         System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||  : Créer un compte vendeur                                     |                                                                ||||");
-        System.out.println(" ||||  : Ajouter une nouvelle librairie                              |                                                                ||||");
-        System.out.println(" ||||  : Gérer les stocks globaux                                    |                                                                ||||");
-        System.out.println(" ||||  : Consulter les statistiques de vente                         |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| 1 - Créer un compte vendeur                                    |                                                                ||||");
+        System.out.println(" |||| 2 - Ajouter une nouvelle librairie                             |                                                                ||||");
+        System.out.println(" |||| 3 - Gérer les stocks globaux                                   |                                                                ||||");
+        System.out.println(" |||| 4 - Consulter les statistiques de vente                        |                                                                ||||");
+        System.out.println(" |||| 5 - Changer de compte                                          |                                                                ||||");
+        System.out.println(" |||| 6 - Quitter l'application                                      |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
