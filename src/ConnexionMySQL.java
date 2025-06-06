@@ -5,14 +5,16 @@ public class ConnexionMySQL {
 	private boolean connecte=false;
 	
 	public ConnexionMySQL() throws ClassNotFoundException{
+		this.mysql = null;
+		this.connecte = false;
 		Class.forName("org.mariadb.jdbc.Driver");
 	}
 
 	public void connecter( String nomLogin, String motDePasse, String nomServeur, String nomBase) throws SQLException {
-		this.mysql = null;
-		this.connecte = false;
 		this.mysql=DriverManager.getConnection("jdbc:mysql://" + nomServeur + ":3306/" + nomBase, nomLogin, motDePasse);
 		this.connecte = true;
+		// si tout s'est bien passé la connexion n'est plus nulle
+		this.connecte=this.mysql!=null;
 	}
 
 

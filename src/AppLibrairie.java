@@ -16,7 +16,9 @@ public class AppLibrairie {
     private MagasinBD magasinBD;
     private ClientBD clientBD;
 
-    public AppLibrairie() {}
+    public AppLibrairie() {
+        
+    }
 
     public void run() {
         clear();
@@ -193,6 +195,14 @@ public class AppLibrairie {
         logo();
         menuChoisirMagasin(listeMagasin);
         String magasin = System.console().readLine();
+        if(magasin.equals("1")){
+            try{
+                System.out.println(this.magasinBD.listeDesMagasins());
+            }
+            catch(SQLException ex){
+                System.out.println("La liste de magasins est vide");
+            }
+        }
         magasin = magasin.strip();
         try {
             if (Integer.parseInt(magasin) >= 1 && Integer.parseInt(magasin) <= listeMagasin.size()) {
