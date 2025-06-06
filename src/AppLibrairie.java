@@ -1,13 +1,18 @@
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.format.SignStyle;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
 public class AppLibrairie {
 
     public static boolean continuer = false;
-    private ConnexionMySQL connexionMySQL;
+    private ConnexionMySQL connexionMySQL = null;
+    private Statement st;
     private MagasinBD magasinBD;
     private ClientBD clientBD;
 
@@ -16,44 +21,75 @@ public class AppLibrairie {
     }
 
     public void run() {
-        boolean quitter = false;
-        while (!quitter) {
+        clear();
+
+        if (connexionMySQL == null) {
             try {
-            connexionBD();
-            Compte compte = Connexion();
-            switch (compte) {
-            case CLIENT:
-                runClient();
-                break;
-            case VENDEUR:
-                runVendeur();
-                break;
-            case ADMINISTRATEUR:
-                runAdministrateur();
-                break;
-            case QUITTER:
-                quitter = true;
+                if (!connexionBD()) {
+                    return;
+                }
+            } catch (SQLException e) {
+                System.out.println("La connexion a échouée");
+                System.console().readLine();
+                run();
+            }
+            catch (ClassNotFoundException e) {
+                System.out.println("La connexion a échouée");
+                System.console().readLine();
+                return;
             }
         }
-        catch (MauvaisMotDePasseExeption e) {
-            run();
+
+        menuChoisirCreerOuConnecter();
+        String connectionOuCreer = System.console().readLine();
+        connectionOuCreer = connectionOuCreer.strip();
+        if (connectionOuCreer.equals("1")) {
+            clear();
+            boolean quitter = false;
+            while (!quitter) {
+                try {
+                    Compte compte = Connexion();
+                    switch (compte) {
+                    case CLIENT:
+                        runClient();
+                        break;
+                    case VENDEUR:
+                        runVendeur();
+                        break;
+                    case ADMINISTRATEUR:
+                        runAdministrateur();
+                        break;
+                    case QUITTER:
+                        quitter = true;
+                    }
+                }
+                catch (MauvaisMotDePasseExeption e) {
+                    run();
+                }
+                catch (SQLException e){
+                    System.out.println("La connexion a échouée");
+                    run();
+                }
+            }
         }
-        catch (SQLException e){
-            System.out.println("La connexion a échouée");
-            run();
+        else if (connectionOuCreer.equals("2")) {
+            try {
+                creerUnCompte();
+                run();
+            } catch (SQLException e) {
+                System.out.println("La création a échouée");
+            }
         }
-        catch (ClassNotFoundException e){
-            System.out.println("La classe n'existe pas");
-            break;
+        else if (connectionOuCreer.equals("quitter") || connectionOuCreer.equals("q") || connectionOuCreer.equals("quit")) {}
+        else {
+            erreur();
+            run();   
         }
-        }
-        
     }
 
-    public Compte Connexion() throws MauvaisMotDePasseExeption {
+    public Compte Connexion() throws MauvaisMotDePasseExeption, SQLException{
 
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        clear();
 
         logo();
         menuConnexionIdent();
@@ -62,43 +98,102 @@ public class AppLibrairie {
 
         if (identifiant.equals("quitter") || identifiant.equals("q") || identifiant.equals("quit")) {return Compte.QUITTER;}
 
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        clear();
 
         logo();
         menuConnexionMdp();
         String mdp = System.console().readLine();
         mdp = mdp.strip();
 
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        clear();
         if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {return Compte.QUITTER;}
-        if (identifiant.equals("client") && mdp.equals("client")) {return Compte.CLIENT;}
-        else if (identifiant.equals("vendeur") && mdp.equals("vendeur")) {return Compte.VENDEUR;}
-        else if (identifiant.equals("administrateur") && mdp.equals("administrateur")) {return Compte.ADMINISTRATEUR;}
+
+        st = connexionMySQL.createStatement();
+		ResultSet set = st.executeQuery("select * from CONNEXION");
+
+        while (set.next()) {
+			if (identifiant.equals(set.getString(1)) && mdp.equals(set.getString(2))) {
+                if ("client".equals(set.getString(3))) {
+                    return Compte.CLIENT;
+                }
+                else if ("vendeur".equals(set.getString(3))) {
+                    return Compte.VENDEUR;
+                }
+                else {
+                    return Compte.ADMINISTRATEUR;
+                }
+            }
+		}
 
         throw new MauvaisMotDePasseExeption();
     }
 
+    public void creerUnCompte() throws SQLException{
+
+        clear();
+
+        creerCompteIdent();
+        String identifiant = System.console().readLine();
+        identifiant = identifiant.strip();
+        if (identifiant.equals("quitter") || identifiant.equals("q") || identifiant.equals("quit")) {return;}
+
+        clear();
+
+        creerCompteMdp();
+        String mdp = System.console().readLine();
+        mdp = mdp.strip();
+        if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {return;}
+
+        clear();
+
+        creerCompteType();
+        String type = System.console().readLine();
+        type = type.strip();
+        if (type.equals("quitter") || type.equals("q") || type.equals("quit")) {return;}
+        else if (type.equals("1") || type.equals("client")) {type = "client";}
+        else if (type.equals("2") || type.equals("vendeur")) {type = "vendeur";}
+        else if (type.equals("3") || type.equals("administrateur")) {type = "administrateur";}
+        else {
+            erreur();
+            creerUnCompte();
+        }
+
+        PreparedStatement ps = connexionMySQL.prepareStatement("insert into CONNEXION values (?,?,?)");
+		ps.setString(1, identifiant);
+		ps.setString(2, mdp);
+		ps.setString(3, type);
+		ps.executeUpdate();
+    }
+
     public void runClient() {
-        String magasinChoisi = choisirMagasin();
-        boolean commandeEnMagasin = choisirModeLivraison();
-        String livraison = null;
-        while (!continuer) {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
-            logo();
-            menuClient();
-            String option = System.console().readLine();
-            option = option.strip().toLowerCase();
+        try{
+            String magasinChoisi = choisirMagasin();
+            boolean commandeEnMagasin = choisirModeLivraison();
+            String livraison = null;
+            while (!continuer) {
+                clear();
+                logo();
+                menuClient();
+                String option = System.console().readLine();
+                option = option.strip().toLowerCase();
+            }
+        } catch (SQLException e) {
+            
         }
     }
 
-    public String choisirMagasin() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+    public String choisirMagasin() throws SQLException {
+        clear();
+
+        List<String> listeMagasin = new ArrayList<>();
+        st = connexionMySQL.createStatement();
+		ResultSet set = st.executeQuery("select * from MAGASIN");
+        while (set.next()) {
+			listeMagasin.add(ljust(set.getString(2), 30) + " " + set.getString(3));
+		}
+
         logo();
-        menuChoisirMagasin();
+        menuChoisirMagasin(listeMagasin);
         String magasin = System.console().readLine();
         if(magasin.equals("1")){
             try{
@@ -109,12 +204,21 @@ public class AppLibrairie {
             }
         }
         magasin = magasin.strip();
-        return magasin;
+        try {
+            if (Integer.parseInt(magasin) >= 1 && Integer.parseInt(magasin) <= listeMagasin.size()) {
+                return magasin;
+            } else {
+                erreur();
+                return choisirMagasin();
+            }
+        } catch (NumberFormatException e) {
+            erreur();
+            return choisirMagasin();
+        }
     }
 
     public boolean choisirModeLivraison() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        clear();
 
         logo();
         menuChoisirModeLivraison();
@@ -134,8 +238,7 @@ public class AppLibrairie {
 
     public void runVendeur() {
         while (!continuer) {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+            clear();
             logo();
             menuVendeur();
             String identifiant = System.console().readLine();
@@ -145,8 +248,7 @@ public class AppLibrairie {
 
     public void runAdministrateur() {
         while (!continuer) {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+            clear();
             logo();
             menuAdmin();
             String identifiant = System.console().readLine();
@@ -159,39 +261,69 @@ public class AppLibrairie {
         System.console().readLine();
     }
 
-    public void connexionBD() throws SQLException, ClassNotFoundException{
-        try {
-            this.connexionMySQL = new ConnexionMySQL();
-        }catch (ClassNotFoundException ex){
-            System.out.println("Driver MySQL non trouvé!!!");
-            System.exit(1);
-        }
-        menuConnexionIdent();
-        String identifiant = System.console().readLine();
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        menuConnexionMdp();
-        String mdp = System.console().readLine();
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        String serveur = "servinfo-maria";
-        menuConnexionNomBase();
-        String nomBase = System.console().readLine();
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+    public boolean connexionBD() throws SQLException, ClassNotFoundException{
 
-        this.connexionMySQL.connecter(identifiant, mdp, serveur, nomBase);
-	    if (this.connexionMySQL.isConnecte()){
-		    System.out.println("Vous etes connecté");
-            this.magasinBD = new MagasinBD(this.connexionMySQL);
-            this.clientBD = new ClientBD(this.connexionMySQL);
-        } else {
+        ConnexionMySQL connexionMySQL = new ConnexionMySQL();
+        menuConnexionIdentBD();
+        String identifiant = System.console().readLine();
+        if (identifiant.equals("quitter") || identifiant.equals("q") || identifiant.equals("quit")) {return false;}
+        clear();
+        menuConnexionMdpBD();
+        String mdp = System.console().readLine();
+        if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {return false;}
+        clear();
+        String serveur = "servinfo-maria";
+        String nomBase = "DB" + identifiant;
+
+        connexionMySQL.connecter(identifiant, mdp, serveur, nomBase);
+	    if (! connexionMySQL.isConnecte()){
             throw new SQLException();
         }
+        this.connexionMySQL = connexionMySQL;
+        return true;
 	
-
     }
 
+    public void menuChoisirCreerOuConnecter() {
+        System.out.println("╭──────────────────────────╮");
+        System.out.println("│ 1 - Se Connecter         │");
+        System.out.println("│ 2 - Créer un compte      │");
+        System.out.println("│ Entrer \"q\" pour quitter  │");
+        System.out.println("╰──────────────────────────╯");     
+    }
+
+    public void creerCompteIdent() {
+        System.out.println("╭───────────────────────────╮");
+        System.out.println("│  Créer un compte          │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrez un identifiant     │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter   │");
+        System.out.println("╰───────────────────────────╯");     
+    }
+
+    public void creerCompteMdp() {
+        System.out.println("╭───────────────────────────╮");
+        System.out.println("│  Créer un compte          │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrez un mot de passe    │");
+        System.out.println("├───────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter   │");
+        System.out.println("╰───────────────────────────╯");     
+    }
+
+    public void creerCompteType() {
+        System.out.println("╭────────────────────────────╮");
+        System.out.println("│  Créer un compte           │");
+        System.out.println("├────────────────────────────┤");
+        System.out.println("│ Entrez le type du compte : │");
+        System.out.println("│  1 - Client                │");
+        System.out.println("│  2 - Vendeur               │");
+        System.out.println("│  3 - Administrateur        │");
+        System.out.println("├────────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter    │");
+        System.out.println("╰────────────────────────────╯");     
+    }
 
     public void menuConnexionIdent() {
         System.out.println("╭──────────────────────────╮");
@@ -203,19 +335,8 @@ public class AppLibrairie {
         System.out.println("╰──────────────────────────╯");     
     }
 
-    public void menuConnexionNomBase() {
-        System.out.println("╭───────────────────────────╮");
-        System.out.println("│  Connexion                │");
-        System.out.println("├───────────────────────────┤");
-        System.out.println("│ Entrez le nom de la BD    │");
-        System.out.println("├───────────────────────────┤");
-        System.out.println("│ Entrer \"q\" pour quitter   │");
-        System.out.println("╰───────────────────────────╯");     
-    }
-
 
     public void menuConnexionMdp() {
-
         System.out.println("╭───────────────────────────╮");
         System.out.println("│  Connexion                │");
         System.out.println("├───────────────────────────┤");
@@ -223,6 +344,28 @@ public class AppLibrairie {
         System.out.println("├───────────────────────────┤");
         System.out.println("│ Entrer \"q\" pour quitter   │");
         System.out.println("╰───────────────────────────╯");     
+    }
+
+    public void menuConnexionIdentBD() {
+        System.out.println("╭──────────────────────────────────╮");
+        System.out.println("│  Connexion BD                    │");
+        System.out.println("├──────────────────────────────────┤");
+        System.out.println("│ Entrez votre identifiant mariadb │");
+        System.out.println("├──────────────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter          │");
+        System.out.println("╰──────────────────────────────────╯");     
+    }
+
+
+    public void menuConnexionMdpBD() {
+
+        System.out.println("╭───────────────────────────────────╮");
+        System.out.println("│  Connexion BD                     │");
+        System.out.println("├───────────────────────────────────┤");
+        System.out.println("│ Entrez votre mot de passe mariadb │");
+        System.out.println("├───────────────────────────────────┤");
+        System.out.println("│ Entrer \"q\" pour quitter           │");
+        System.out.println("╰───────────────────────────────────╯");     
     }
 
     public void menuClient() {
@@ -270,7 +413,7 @@ public class AppLibrairie {
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
 
-    public void menuChoisirMagasin() {
+    public void menuChoisirMagasin(List<String> listeMagasin) {
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
         System.out.println(" ||||                          CLIENT                                |                                                                ||||");
@@ -279,38 +422,17 @@ public class AppLibrairie {
         System.out.println(" ||||  Veuillez entrer le nom du magasin dans lequel vous souhaiter  |                                                                ||||");
         System.out.println(" ||||  acheter un livre.                                             |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| 1 : Afficher la liste de magasins                              |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
+
+        for (int i=1;i<=listeMagasin.size();i++) {
+            String ligne = " ||||   " + i + " - " + listeMagasin.get(i - 1);
+            ligne = ljust(ligne, 69);
+            System.out.println(ligne + "|                                                                ||||");
+        }
+
+        for (int i=0;i<32-listeMagasin.size();i++) {
+            System.out.println(" ||||                                                                |                                                                ||||");
+        }
+
         System.out.println(" ||/================================================================\\|/===============================================================|\\||");
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
@@ -471,6 +593,21 @@ public class AppLibrairie {
 
     public MagasinBD getFicheJoueur() {
         return magasinBD;
+    }
+
+    public static String ljust(String string, int longeur) {
+        int aAjouter = longeur - string.length();
+        if (aAjouter <= 0) return string;
+        String padding = "";
+        for (int i = 0; i < aAjouter; i++) {
+            padding = padding + " ";
+        }
+        return string + padding;
+    }
+
+    public void clear() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
     
     public static void main(String[] args) {

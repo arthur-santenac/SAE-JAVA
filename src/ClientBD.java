@@ -22,6 +22,37 @@ public class ClientBD {
 		return res;
 	}
 
+		public List<Livre> getLivresCommandesParClient(int idClient) throws SQLException {
+        List<Livre> livreCommander = new ArrayList<>();
+
+        String requete = "SELECT DISTINCT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix, " +
+                "CLASSIFICATION.iddewey, CLASSIFICATION.nomclass " +
+                "FROM CLIENT " +
+                "JOIN COMMANDE ON CLIENT.idcli = COMMANDE.idcli " +
+                "JOIN LIGNECOMMANDE ON COMMANDE.numcom = LIGNECOMMANDE.numcom " +
+                "JOIN LIVRE ON LIGNECOMMANDE.idlivre = LIVRE.isbn " +
+                "LEFT JOIN THEMES ON LIVRE.isbn = THEMES.isbn " +
+                "LEFT JOIN CLASSIFICATION ON THEMES.iddewey = CLASSIFICATION.iddewey " +
+                "WHERE CLIENT.idcli = ?";
+
+        PreparedStatement pst = this.laConnexion.prepareStatement(requete);
+        pst.setInt(1, idClient);
+
+        ResultSet rs = pst.executeQuery();
+        while (rs.next()) {
+            int isbn = rs.getInt("isbn");
+            String titre = rs.getString("titre");
+            int nbpages = rs.getInt("nbpages");
+            String datepubli = rs.getString("datepubli");
+            double prix = rs.getDouble("prix");
+            int iddewey = rs.getInt("iddewey");
+            String nomclass = rs.getString("nomclass");
+
+            livreCommander.add(new Livre(isbn, titre, nbpages, datepubli, prix, iddewey, nomclass));
+        }
+
+        return livreCommander;
+    }
 
 	/* int insererJoueur( Joueur j) throws  SQLException{
 		PreparedStatement ps = this.laConnexion.prepareStatement("insert into JOUEUR(numJoueur, pseudo, motdepasse, main, abonne, niveau) values(?, ?, ?, ?, ?, ?)");
