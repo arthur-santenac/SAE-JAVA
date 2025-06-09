@@ -1,3 +1,0 @@
-public enum Compte {
-    CLIENT, VENDEUR, ADMINISTRATEUR, QUITTER
-}

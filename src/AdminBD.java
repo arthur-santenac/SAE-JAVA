@@ -11,26 +11,23 @@ public class AdminBD {
 		this.laConnexion=laConnexion;
 	}
 
+    int maxNumMagasin() throws SQLException{
+		this.st=this.laConnexion.createStatement();
+		ResultSet rs = this.st.executeQuery("Select IFNULL(max(idmag),0) from MAGASIN");
+		rs.next();
+		int res = rs.getInt(1);
+		rs.close();
+		return res;
+	}
 
-    /* int insererJoueur( Joueur j) throws  SQLException{
-		PreparedStatement ps = this.laConnexion.prepareStatement("insert into JOUEUR(numJoueur, pseudo, motdepasse, main, abonne, niveau) values(?, ?, ?, ?, ?, ?)");
-		int nouvNum = maxNumJoueur()+1;
+    void insererLibrairie( Magasin m) throws  SQLException{
+		PreparedStatement ps = this.laConnexion.prepareStatement("insert into Magasin(idmag, nommag, villemag) values(?, ?, ?,)");
+		int nouvNum = this.maxNumMagasin()+1;
 		ps.setInt(1, nouvNum);
-		ps.setString(2, j.getPseudo());
-		ps.setString(3, j.getMotdepasse());
-		ps.setString(4, ""+j.getMain());
-		String abo;
-		if(j.isAbonne()){
-			abo="O";
-		}
-		else{
-			abo="N";
-		}
-		ps.setString(5, abo);
-		ps.setInt(6, j.getNiveau());
+		ps.setString(2, m.getNomMag());
+		ps.setString(3, m.getVilleMag());
 		ps.executeUpdate();
 		ps.close();
-		return nouvNum;
-	} */
+	}
 
 }

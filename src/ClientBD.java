@@ -13,14 +13,15 @@ public class ClientBD {
 		this.laConnexion=laConnexion;
 	}
 
-	int maxNumJoueur() throws SQLException{
+	public int maxNum() throws SQLException{
 		this.st=this.laConnexion.createStatement();
-		ResultSet rs = this.st.executeQuery("Select IFNULL(max(numJoueur),0) from JOUEUR");
+		ResultSet rs = this.st.executeQuery("Select IFNULL(max(idcli),0) from CLIENT");
 		rs.next();
 		int res = rs.getInt(1);
 		rs.close();
 		return res;
 	}
+
 
 		public List<Livre> getLivresCommandesParClient(int idClient) throws SQLException {
         List<Livre> livreCommander = new ArrayList<>();
