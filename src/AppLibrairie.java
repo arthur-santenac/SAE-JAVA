@@ -533,10 +533,10 @@ public class AppLibrairie {
         System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||  : Créer un compte vendeur                                     |                                                                ||||");
-        System.out.println(" ||||  : Ajouter une nouvelle librairie                              |                                                                ||||");
-        System.out.println(" ||||  : Gérer les stocks globaux                                    |                                                                ||||");
-        System.out.println(" ||||  : Consulter les statistiques de vente                         |                                                                ||||");
+        System.out.println(" ||||  1 : Créer un compte vendeur                                   |                                                                ||||");
+        System.out.println(" ||||  2 : Ajouter une nouvelle librairie                            |                                                                ||||");
+        System.out.println(" ||||  3 : Gérer les stocks globaux                                  |                                                                ||||");
+        System.out.println(" ||||  4 : Consulter les statistiques de vente                       |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");

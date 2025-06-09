@@ -76,12 +76,6 @@ public class ClientBD {
 	} */
 
 
-	void effacerJoueur(int num) throws SQLException {
-		PreparedStatement ps = this.laConnexion.prepareStatement("delete from JOUEUR where numJoueur=?");
-		ps.setInt(1,num);
-		int nb = ps.executeUpdate();
-		if(nb ==0) throw new SQLException("La suppression du joueur a échoué car aucun joueur n'a ce numéro");
-	}
 
     /* void majJoueur(Joueur j)throws SQLException{
 		PreparedStatement ps = this.laConnexion.prepareStatement("update JOUEUR set numJoueur =?, pseudo=?, motdepasse=?, main=?, abonne=?, niveau=? where numJoueur= ?");
