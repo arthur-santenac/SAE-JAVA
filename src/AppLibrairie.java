@@ -14,9 +14,14 @@ public class AppLibrairie {
     public static boolean continuer = false;
     private ConnexionMySQL connexionMySQL = null;
     private Statement st;
-    private MagasinBD magasinBD;
-    private Client utilisateur;
+
+    private MagasinBD magasinBD; 
     private ClientBD clientBD;
+
+    private Client utilisateur;
+    private Commande panier;
+    private String enLigne;
+    private Magasin magasin;
 
     public AppLibrairie() {
         
@@ -37,7 +42,7 @@ public class AppLibrairie {
                 run();
             }
             catch (ClassNotFoundException e) {
-                System.out.println("La connexion a échouée");
+                System.out.println("La classe n'a pas été trouvé");
                 System.console().readLine();
                 return;
             }
@@ -204,18 +209,18 @@ public class AppLibrairie {
 
     public void runClient() {
         try{
-            String magasin = choisirMagasin();
-            boolean enLigne = choisirModeLivraison();
-            String livraison = null;
+            this.magasin = choisirMagasin();
+            this.enLigne = choisirModeLivraison();
+            this.panier = new Commande(0, null, enLigne, null, magasin, utilisateur);
             while (!AppLibrairie.continuer) {
                 clear();
                 logo();
                 menuClient();
                 String option = System.console().readLine();
-                option = option.strip().toLowerCase();
+                option = option.strip();
                 if (option.equals("1")) {choisirMagasin();}
                 else if (option.equals("2")) {choisirModeLivraison();}
-                else if (option.equals("3")) {commander(magasin, enLigne);}
+                else if (option.equals("3")) {commander();}
                 else if (option.equals("4")) {run();}
                 else if (option.equals("5") || option.equals("quitter") || option.equals("q") || option.equals("quit")) {AppLibrairie.continuer = true;}
                 else {
@@ -223,35 +228,28 @@ public class AppLibrairie {
                 }
             }
         } catch (SQLException e) {
-        
+            
         }
     }
 
-    public String choisirMagasin() throws SQLException {
+    public Magasin choisirMagasin() throws SQLException {
         clear();
 
-        List<String> listeMagasin = new ArrayList<>();
+        List<Magasin> listeMagasin = new ArrayList<>();
         st = connexionMySQL.createStatement();
 		ResultSet set = st.executeQuery("select * from MAGASIN");
         while (set.next()) {
-			listeMagasin.add(ljust(set.getString(2), 30) + " " + set.getString(3));
+			listeMagasin.add(new Magasin(set.getInt(1), set.getString(2), set.getString(3)));
 		}
 
         logo();
         menuChoisirMagasin(listeMagasin);
         String magasin = System.console().readLine();
-        if(magasin.equals("1")){
-            try{
-                System.out.println(this.magasinBD.listeDesMagasins());
-            }
-            catch(SQLException ex){
-                System.out.println("La liste de magasins est vide");
-            }
-        }
         magasin = magasin.strip();
         try {
-            if (Integer.parseInt(magasin) >= 1 && Integer.parseInt(magasin) <= listeMagasin.size()) {
-                return magasin;
+            int numMagasin = Integer.parseInt(magasin);
+            if (numMagasin >= 1 && numMagasin <= listeMagasin.size()) {
+                return listeMagasin.get(numMagasin - 1);
             } else {
                 erreur();
                 return choisirMagasin();
@@ -262,18 +260,17 @@ public class AppLibrairie {
         }
     }
 
-    public boolean choisirModeLivraison() {
+    public String choisirModeLivraison() {
         clear();
-
         logo();
         menuChoisirModeLivraison();
         String modeLivraison = System.console().readLine();
         modeLivraison = modeLivraison.strip();
         if (modeLivraison.equals("1")) {
-            return true;
+            return "0";
         } 
         else if (modeLivraison.equals("2")) {
-            return false;
+            return "1";
         }
         else {
             erreur();
@@ -281,37 +278,35 @@ public class AppLibrairie {
         }
     }
 
-    public void commander(String magasin, boolean enLigne) {
-        clear();
-        logo();
-        menuCommander();
-        String commander = System.console().readLine();
-        commander = commander.strip();
-        if (commander.equals("1")) {
-            try {
-                chercherLivre(magasin, enLigne);
-                commander(magasin, enLigne);
-            } catch (SQLException e) {
+    public void commander() {
+        boolean quitter = false;
+        while (!quitter) {
+            clear();
+            logo();
+            menuCommander();
+            String commander = System.console().readLine();
+            commander = commander.strip();
+            if (commander.equals("1")) {
+                try {
+                    chercherLivre();
+                } catch (SQLException e) {
 
+                }
             }
-            
-        }
-        else if (commander.equals("2")) {
-            
-            commander(magasin, enLigne);
-        }
-        else if (commander.equals("3")) {
-            meilleursVentes(magasin, enLigne);
-            commander(magasin, enLigne);
-        }
-        else if (commander.equals("4") || commander.equals("quitter") || commander.equals("q") || commander.equals("quit")) {}
-        else {
-            erreur();
-            commander(magasin, enLigne);
+            else if (commander.equals("2")) {
+                
+            }
+            else if (commander.equals("3")) {
+                meilleursVentes();
+            }
+            else if (commander.equals("4") || commander.equals("quitter") || commander.equals("q") || commander.equals("quit")) {quitter = true;}
+            else {
+                erreur();
+            }
         }
     }
 
-    public void chercherLivre(String magasin, boolean enLigne) throws SQLException{
+    public void chercherLivre() throws SQLException{
         clear();
         logo();
         menuChercherLivre();
@@ -319,24 +314,50 @@ public class AppLibrairie {
         chercher = chercher.strip();
         if (chercher.equals("q") || chercher.equals("quit") || chercher.equals("quitter")) {return;}
         boolean trouver = false;
-        Map<Integer, String> mapLivre = new HashMap<>();
+        List<Livre> listeLivre = new ArrayList<>();
         st = connexionMySQL.createStatement();
 		ResultSet set = st.executeQuery("select isbn, titre from LIVRE natural join MAGASIN where nommag = " + magasin);
         while (set.next()) {
 			if (set.getString(2).equals(chercher)) {
-                mapLivre.put(set.getInt(1), set.getString(2));
+                listeLivre.add(new Livre(set.getInt(1), set.getString(2), set.getInt(3), set.getString(4), set.getDouble(5)));
                 trouver = true;
             }
 		}
         if (!trouver) {
             System.out.println("le livre n'existe pas");
-            erreur();
-            chercherLivre(magasin, enLigne);
+            System.console().readLine();
+            chercherLivre();
+        } else {
+            proposerChercherLivre(listeLivre);
         }
         
     }
 
-    public void meilleursVentes(String magasin, boolean enLigne) {
+    public void proposerChercherLivre(List<Livre> listeLivre) {
+        try {
+            menuProposerChercherLivre(listeLivre);
+            String quelleLivre = System.console().readLine();
+            quelleLivre = quelleLivre.strip();
+            if (quelleLivre.equals("q") || quelleLivre.equals("quitter") || quelleLivre.equals("quit")) {return;}
+            int numLivre = Integer.parseInt(quelleLivre);
+            if (numLivre >= 1 && numLivre <= listeLivre.size()) {
+                menuQte();
+                String qte = System.console().readLine();
+                qte = qte.strip();
+                if (qte.equals("q") || qte.equals("quitter") || qte.equals("quit")) {return;}
+                int numQte = Integer.parseInt(qte);
+                panier.ajouterDetailsCommande(panier.size(), listeLivre.get(numLivre), numQte);;
+            } else {
+                erreur();
+                proposerChercherLivre(listeLivre);
+            }
+        } catch(NumberFormatException e) {
+            erreur();
+            proposerChercherLivre(listeLivre);
+        }
+    }
+
+    public void meilleursVentes() {
 
     }
 
@@ -346,7 +367,8 @@ public class AppLibrairie {
             logo();
             menuVendeur();
             String identifiant = System.console().readLine();
-            identifiant = identifiant.strip().toLowerCase();
+            identifiant = identifiant.strip();
+            if (identifiant.equals("q") || identifiant.equals("quitter") || identifiant.equals("quit")) {return;}
         }
     }
 
@@ -356,7 +378,8 @@ public class AppLibrairie {
             logo();
             menuAdmin();
             String identifiant = System.console().readLine();
-            identifiant = identifiant.strip().toLowerCase();
+            identifiant = identifiant.strip();
+            if (identifiant.equals("q") || identifiant.equals("quitter") || identifiant.equals("quit")) {return;}
         }
     }
 
@@ -378,7 +401,6 @@ public class AppLibrairie {
         clear();
         String serveur = "servinfo-maria";
         String nomBase = "DB" + identifiant;
-
         connexionMySQL.connecter(identifiant, mdp, serveur, nomBase);
 	    if (! connexionMySQL.isConnecte()){
             throw new SQLException();
@@ -555,14 +577,14 @@ public class AppLibrairie {
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
 
-    public void menuChoisirMagasin(List<String> listeMagasin) {
+    public void menuChoisirMagasin(List<Magasin> listeMagasin) {
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
         System.out.println(" ||||                          CLIENT                                |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||  Veuillez entrer le nom du magasin dans lequel vous souhaiter  |                                                                ||||");
-        System.out.println(" ||||  acheter un livre.                                             |                                                                ||||");
+        System.out.println(" ||||  Veuillez entrer le numéro du magasin dans lequel vous         |                                                                ||||");
+        System.out.println(" ||||  souhaitez acheter un livre.                                   |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
 
         for (int i=1;i<=listeMagasin.size();i++) {
@@ -676,6 +698,75 @@ public class AppLibrairie {
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||  Veuillez entrer le nom d'un livre                             |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+    public void menuProposerChercherLivre(List<Livre> listeLivre) {
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                   COMMANDER UN LIVRE                           |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||  Veuillez entrer le numéro du livre que vous voulez            |                                                                ||||");
+        System.out.println(" ||||  commander si il est dans la liste. q sinon                    |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+
+        for (int i=1;i<=listeLivre.size();i++) {
+            String ligne = " ||||   " + i + " - " + listeLivre.get(i - 1);
+            ligne = ljust(ligne, 69);
+            System.out.println(ligne + "|                                                                ||||");
+        }
+
+        for (int i=0;i<32-listeLivre.size();i++) {
+            System.out.println(" ||||                                                                |                                                                ||||");
+        }
+
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+    public void menuQte() {
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                   COMMANDER UN LIVRE                           |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||  Veuillez entrer le nombre d'exemplaires                       |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");

@@ -12,22 +12,17 @@ public class Livre {
 
     private double prix;
 
-    private int idDeWey;
-
-    private String nomClass;
-
     private List<Auteur> auteurs;
 
     private List<Editeur> editeurs;
 
-    public Livre(int isbn, String titre, int nbPages, String datePubli, double prix, int idDeWey, String nomClass){
+    public Livre(int isbn, String titre, int nbPages, String datePubli, double prix){
         this.isbn = isbn;
         this.titre = titre;
         this.nbPages = nbPages;
         this.datePubli = datePubli;
         this.prix = prix;
-        this.auteurs = new ArrayList<>();
-        this.editeurs = new ArrayList<>();
+
     }
 
     public int getIsbn(){
@@ -48,18 +43,6 @@ public class Livre {
 
     public double getPrix(){
         return this.prix;
-    }
-
-    public void setPrix(double nouvPrix){
-        this.prix = nouvPrix;
-    }
-
-    public int getIdDeWey(){
-        return this.idDeWey;
-    }
-
-    public String getNomClass(){
-        return this.nomClass;
     }
 
     public List<Auteur> getAuteurs(){
