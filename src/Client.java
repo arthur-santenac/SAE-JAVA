@@ -7,24 +7,46 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class Client extends Personne{
+public class Client {
 
     private int idCli;
-    private Magasin magasin;
+    private String nom;
+    private String prenom;
+    private String adresse;
+    private int codePostal;
+    private String ville;
 
     public Client(String nom, String prenom, String adresse, int codePostal, String ville, int idCli) {
-        super(nom, prenom, adresse, codePostal, ville);
+        this.nom = nom;
+        this.prenom = prenom;
+        this.adresse = adresse;
+        this.codePostal = codePostal;
+        this.ville = ville;
         this.idCli = idCli;
-        this.magasin = null;
     }
 
     public int getIdCli() {
         return idCli;
     }
 
-    public String dateActuelle() {
-       final Date date = new Date();
-       return new SimpleDateFormat("dd-MM-yyyy").format(date);
+    public String getAdresse() {
+        return adresse;
+    }
+
+    public int getCodePostal() {
+        return codePostal;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public String getVille() {
+        return ville;
     }
 
     @Override

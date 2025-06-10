@@ -126,7 +126,7 @@ public class AppLibrairie {
 
         while (set.next()) {
 			if (email.equals(set.getString(2)) && mdp.equals(set.getString(3))) {
-                this.utilisateur = new Client(set.getString(5), set.getString(6), set.getString(7), set.getInt(9), set.getString(8), set.getInt(1));
+                this.utilisateur = new Client(set.getString(5), set.getString(6), set.getString(7), set.getInt(8), set.getString(9), set.getInt(1));
                 return set.getString(4);
             }
 		}
@@ -195,8 +195,8 @@ public class AppLibrairie {
 		ps.setString(2, nom);
 		ps.setString(3, prenom);
         ps.setString(4, adresse);
-        ps.setString(5, ville);
-        ps.setInt(6, codePostalInt);
+        ps.setInt(5, codePostalInt);
+        ps.setString(6, ville);
 		ps.executeUpdate();
 
         ps = connexionMySQL.prepareStatement("insert into CONNEXION values (?,?,?, ?)");
@@ -290,7 +290,8 @@ public class AppLibrairie {
                 try {
                     chercherLivre();
                 } catch (SQLException e) {
-
+                    System.out.println("erreur en sql");
+                    System.console().readLine();
                 }
             }
             else if (commander.equals("2")) {
@@ -316,15 +317,16 @@ public class AppLibrairie {
         boolean trouver = false;
         List<Livre> listeLivre = new ArrayList<>();
         st = connexionMySQL.createStatement();
-		ResultSet set = st.executeQuery("select isbn, titre from LIVRE natural join MAGASIN where nommag = " + magasin);
+		ResultSet set = st.executeQuery("select * from LIVRE natural join MAGASIN where nommag = \"" + magasin.getNomMag() + "\"");
         while (set.next()) {
 			if (set.getString(2).equals(chercher)) {
-                listeLivre.add(new Livre(set.getInt(1), set.getString(2), set.getInt(3), set.getString(4), set.getDouble(5)));
+                listeLivre.add(new Livre(set.getInt(1), set.getString(2), set.getInt(3), set.getDate(4).toString(), set.getDouble(5)));
                 trouver = true;
             }
 		}
         if (!trouver) {
             System.out.println("le livre n'existe pas");
+            erreur();
             System.console().readLine();
             chercherLivre();
         } else {
