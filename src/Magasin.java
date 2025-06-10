@@ -109,7 +109,7 @@ public class Magasin {
 
     @Override
     public String toString(){
-        return "Le magasin "+this.nomMag+" a pour id :"+this.idMag+" et se situe dans la ville "+this.villeMag;
+        return AppLibrairie.ljust(nomMag, 30) + this.villeMag;
     }
 
 }

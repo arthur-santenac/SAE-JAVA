@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminBD {
-
     ConnexionMySQL laConnexion;
 	Statement st;
 

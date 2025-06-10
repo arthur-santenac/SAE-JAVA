@@ -46,10 +46,8 @@ public class ClientBD {
             int nbpages = rs.getInt("nbpages");
             String datepubli = rs.getString("datepubli");
             double prix = rs.getDouble("prix");
-            int iddewey = rs.getInt("iddewey");
-            String nomclass = rs.getString("nomclass");
 
-            livreCommander.add(new Livre(isbn, titre, nbpages, datepubli, prix, iddewey, nomclass));
+            livreCommander.add(new Livre(isbn, titre, nbpages, datepubli, prix));
         }
 
         return livreCommander;
