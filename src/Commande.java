@@ -44,13 +44,12 @@ public class Commande {
         return this.detailsCommande;
     }
     
-
-    public void ajouterDetailsCommande(){
-        int cpt = 1;
-        for(Livre livre: this.client.getKey()){
-            DetailCommande detail = new DetailCommande(cpt++, (int) this.client.getValue(livre), this.prixVente(livre, this.client.getValue(livre)), livre, this.getNumCom());
-            this.detailsCommande.add(detail);
-        }
+    public int size() {
+        return this.detailsCommande.size();
+    }
+    
+    public void ajouterDetailsCommande(int id, Livre livre, int qte){
+        this.detailsCommande.add(new DetailCommande(id, qte, livre.getPrix(), livre, numCom));
     }
 
     public double prixVente(Livre livre, Integer qte){

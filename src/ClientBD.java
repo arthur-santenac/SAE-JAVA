@@ -13,6 +13,15 @@ public class ClientBD {
 		this.laConnexion=laConnexion;
 	}
 
+	public int maxNum() throws SQLException{
+		this.st=this.laConnexion.createStatement();
+		ResultSet rs = this.st.executeQuery("Select IFNULL(max(idcli),0) from CLIENT");
+		rs.next();
+		int res = rs.getInt(1);
+		rs.close();
+		return res;
+	}
+
 	int maxNumJoueur() throws SQLException{
 		this.st=this.laConnexion.createStatement();
 		ResultSet rs = this.st.executeQuery("Select IFNULL(max(numJoueur),0) from JOUEUR");
@@ -40,15 +49,13 @@ public class ClientBD {
 
         ResultSet rs = pst.executeQuery();
         while (rs.next()) {
-            int isbn = rs.getInt("isbn");
+            String isbn = rs.getString("isbn");
             String titre = rs.getString("titre");
             int nbpages = rs.getInt("nbpages");
-            String datepubli = rs.getString("datepubli");
+            int datepubli = rs.getInt("datepubli");
             double prix = rs.getDouble("prix");
-            int iddewey = rs.getInt("iddewey");
-            String nomclass = rs.getString("nomclass");
 
-            livreCommander.add(new Livre(isbn, titre, nbpages, datepubli, prix, iddewey, nomclass));
+            livreCommander.add(new Livre(isbn, titre, nbpages, datepubli, prix));
         }
 
         return livreCommander;
