@@ -13,10 +13,15 @@ public class AdminBD {
     int maxNumMagasin() throws SQLException{
 		this.st=this.laConnexion.createStatement();
 		ResultSet rs = this.st.executeQuery("Select IFNULL(max(idmag),0) from MAGASIN");
-		rs.next();
-		int res = rs.getInt(1);
-		rs.close();
-		return res;
+		if(rs.next()){
+			int res = rs.getInt(1);
+			rs.close();
+			return res;
+		}
+		else{
+			throw new SQLException("Il y a un problème avec les magasins");
+		}
+		
 	}
 
     void insererLibrairie( Magasin m) throws  SQLException{
@@ -27,6 +32,17 @@ public class AdminBD {
 		ps.setString(3, m.getVilleMag());
 		ps.executeUpdate();
 		ps.close();
+	}
+
+	void supprimerLibrairie(Magasin m)throws SQLException{
+		PreparedStatement ps = this.laConnexion.prepareStatement("delete from MAGASIN(idmag, nommag, villemag) values(?, ?, ?)");
+		ps.setInt(1, m.getIdMag());
+		ps.setString(2, m.getNomMag());
+		ps.setString(3, m.getVilleMag());
+		int nb = ps.executeUpdate();
+        if(nb ==0){
+			throw new SQLException("La suppression de la librairie a échoué car aucune librairie n'a cet identifiant");
+		} 
 	}
 
 }

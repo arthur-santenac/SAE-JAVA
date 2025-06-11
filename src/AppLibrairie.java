@@ -370,6 +370,9 @@ public class AppLibrairie {
                 creerLib();                 
             }
             else if(option.equals("3")){
+                suppLib();                 
+            }
+            else if(option.equals("4")){
                 runAdministrateurLib();
             }
             else if (option.equals("q") || option.equals("quitter") || option.equals("quit")) {
@@ -398,6 +401,52 @@ public class AppLibrairie {
         catch (SQLException e){
             System.out.println("Problèmes rencontrés dans l'ajout d'une nouvelle librairie");
         }
+        
+    }
+
+
+    public void suppLib() {
+        Magasin lib = null;
+        Integer idMag = null;
+        Menu.adminSupLib();
+        String id = System.console().readLine();
+        id = id.strip();
+        if (id.equals("q") || id.equals("quitter") || id.equals("quit")) {
+            Menu.admin();    
+        }
+        else{
+            try{
+                idMag = Integer.parseInt(id);
+            }
+            catch(NumberFormatException e){
+                System.out.println("Entrez un identifiant valide.");
+            }
+
+            try {
+                lib = this.magasinBD.rechercherMagasinParId(idMag);
+            } catch (SQLException e) {
+                System.out.println("Il n'y a aucune librairie avec cet identifiant");
+            }        
+            Menu.adminComfirmationSup(lib);
+            String confirmation = System.console().readLine();
+            confirmation = confirmation.strip().toLowerCase();
+            if(confirmation.equals("oui")|| confirmation.equals("o")){
+                try{
+                    this.adminBD.supprimerLibrairie(lib);          
+                }
+                catch (SQLException e){
+                System.out.println("Problèmes rencontrés lors de la suppression de la librairie");
+                }
+            }
+            else if(confirmation.equals("non")|| confirmation.equals("n")){
+                Menu.admin();
+            }
+            else{
+                erreur();
+            }
+            
+        }
+        
         
     }
 
