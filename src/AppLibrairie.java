@@ -388,9 +388,9 @@ public class AppLibrairie {
     public void runAdministrateur() {
         Magasin newLibrairie = null;
         while (!AppLibrairie.continuer) {
-            clear();
-            logo();
-            menuAdmin();
+            Menu.clear();
+            Menu.logo();
+            Menu.admin();
             String option = System.console().readLine();
             option = option.strip().toLowerCase();
             if(option.equals("1")){
