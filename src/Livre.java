@@ -2,13 +2,13 @@ import java.util.*;
 
 public class Livre {
     
-    private int isbn;
+    private String isbn;
 
     private String titre;
 
     private int nbPages;
 
-    private String datePubli;
+    private int datePubli;
 
     private double prix;
 
@@ -16,7 +16,7 @@ public class Livre {
 
     private List<Editeur> editeurs;
 
-    public Livre(int isbn, String titre, int nbPages, String datePubli, double prix){
+    public Livre(String isbn, String titre, int nbPages, int datePubli, double prix){
         this.isbn = isbn;
         this.titre = titre;
         this.nbPages = nbPages;
@@ -25,7 +25,7 @@ public class Livre {
 
     }
 
-    public int getIsbn(){
+    public String getIsbn(){
         return this.isbn;
     }
 
@@ -37,7 +37,7 @@ public class Livre {
         return this.nbPages;
     }
 
-    public String getDatePubli(){
+    public int getDatePubli(){
         return this.datePubli;
     }
 
@@ -82,7 +82,7 @@ public class Livre {
             return false;
         }
         Livre tmp = (Livre) o;
-        return this.isbn == tmp.isbn && this.titre.equals(tmp.titre) && this.nbPages== tmp.nbPages && this.datePubli.equals(tmp.datePubli) && this.prix == tmp.prix ;
+        return this.isbn.equals(tmp.isbn) && this.titre.equals(tmp.titre) && this.nbPages== tmp.nbPages && this.datePubli == tmp.datePubli && this.prix == tmp.prix ;
     }
 
 }
