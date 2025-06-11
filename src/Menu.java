@@ -505,6 +505,7 @@ public class Menu {
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
 
+       
     public static void admin() {
         logo();
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
@@ -553,17 +554,14 @@ public class Menu {
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
 
-
-
-    public static void adminNomLib() {
+        public static void vendeurRecupIdLivreAjout() {
         logo();
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
-        System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
+        System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| Veuillez entrer le nom de la nouvelle Libraire                 |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||  - Entrez l'ID du livre à ajouter                              |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -602,18 +600,17 @@ public class Menu {
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
 
-    public static void adminVilleLib(String nomLib) {
+    public static void vendeurRecupIdLivreModif() {
         logo();
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
-        System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
+        System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| Veuillez entrer le nom de la ville dans laquelle               |                                                                ||||");
-        System.out.println(" |||| se trouve la nouvelle Libraire                                 |                                                                ||||");
+        System.out.println(" ||||  - Entrez l'ID du livre dont il faut modifier la quantité      |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||  - "+nomLib+"                                                      |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -650,74 +647,21 @@ public class Menu {
     }
 
 
-    public static void adminListeLib(List<Magasin> listeMagasin) {
+    public static void vendeurRecupIdLivreVerif() {
         logo();
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
-        System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
+        System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| q - Retour                                                     |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        for (int i=1;i<=listeMagasin.size();i++) {
-            String ligne = " ||||   " + i + " - " + listeMagasin.get(i - 1);
-            ligne = AppLibrairie.ljust(ligne, 69);
-            System.out.println(ligne + "|                                                                ||||");
-        }
-
-        for (int i=0;i<32-listeMagasin.size();i++) {
-            System.out.println(" ||||                                                                |                                                                ||||");
-        }
-        
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
-        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
-    }
-
-
-
-    public static void adminSupLib(List<Magasin> listeMagasin) {
-        logo();
-        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
-        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
-        System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
-        System.out.println(" ||||________________________________________________________________|                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| Veuillez entrer le numéro Libraire a supprimée                 |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| q - Annuler la suppression                                     |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        for (int i=1;i<=listeMagasin.size();i++) {
-            String ligne = " ||||   " + i + " - " + listeMagasin.get(i - 1);
-            ligne = AppLibrairie.ljust(ligne, 69);
-            System.out.println(ligne + "|                                                                ||||");
-        }
-
-        for (int i=0;i<31-listeMagasin.size();i++) {
-            System.out.println(" ||||                                                                |                                                                ||||");
-        }
-        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
-        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
-    }
-
-
-    public static void adminComfirmationSup(Magasin mag) {
-        logo();
-        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
-        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
-        System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
-        System.out.println(" ||||________________________________________________________________|                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| Êtes vous sûr de vouloir supprimer la Librairie :              |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| "+mag.getIdMag()+" "+mag.getNomMag()+" "+mag.getVilleMag()+"                                |                                                                ||||");
+        System.out.println(" ||||  - Entrez l'ID du livre souhaité                               |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||   - Oui                                                        |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||   - Non                                                        |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -749,7 +693,281 @@ public class Menu {
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
 
-    
+    public static void vendeurRecupQte() {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||  - Entrez la quantité                                          |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+        public static void vendeurErreurAjout() {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||  - Vous possédez dejà ce livre, modifiez la quantité           |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+        public static void vendeurErreurModif() {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||  - Vous ne possédez pas ce livre, ajoutez le.                  |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+            public static void vendeurModifReussi() {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||  - Quantité modifier avec succès                               |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||  - Appuyez sur n'importe quelle touche pour retourner en       |                                                                ||||");
+        System.out.println(" ||||    arrière.                                                    |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+        public static void vendeurDispo() {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||  - Nous avons ca en stock !                                    |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+public static void vendeurPasDispo(int quantite) {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| - Nous n'avons pas " + quantite + " exemplaire du livre voulu  |                                                             ||||");
+        System.out.println(" ||||   en réserve                                                   |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
 
     public static void logo() {
         clear();

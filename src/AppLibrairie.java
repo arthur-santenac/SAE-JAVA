@@ -22,10 +22,9 @@ public class AppLibrairie {
     private Client utilisateur;
     private Commande panier;
     private String enLigne;
+    private String compte;
 
     private Magasin magasin;
-
-
 
     public AppLibrairie() {
 
@@ -60,15 +59,15 @@ public class AppLibrairie {
 
             while (!AppLibrairie.quitterAppli) {
                 try {
-                    String compte = Connexion();
-                    if (compte.equals("client")) {
+                    this.compte = Connexion();
+                    if (this.compte.equals("client")) {
                         runClient();
-                    } else if (compte.substring(0, 6).equals("vendeur")) {
+                    } else if (this.compte.substring(0, 7).equals("vendeur")) {
                         // a faire
                         runVendeur();
-                    } else if (compte.equals("administrateur")) {
+                    } else if (this.compte.equals("administrateur")) {
                         runAdministrateur();
-                    } else if (compte.equals("quitter")) {
+                    } else if (this.compte.equals("quitter")) {
                         AppLibrairie.quitterAppli = true;
                     }
                 } catch (MauvaisMotDePasseExeption e) {
@@ -573,39 +572,36 @@ public class AppLibrairie {
     }
 
     public boolean ajouteLivre() throws SQLException {
-        System.out.println("entrez l'id du magasin");
-        String idmag = System.console().readLine();
-        int idmagInt = Integer.parseInt(idmag);
-        System.out.println("entrez l'id du livre");
+        char idMag = this.compte.charAt(this.compte.length() - 1);
+        int idMagInt = Character.getNumericValue(idMag);
+        Menu.vendeurRecupIdLivreAjout();
         String idlivre = System.console().readLine();
-        System.out.println("entrez la quantité à ajouter");
+        Menu.vendeurRecupQte();
         String quantite = System.console().readLine();
         int quantiteInt = Integer.parseInt(quantite);
-        return (this.vendeurBD.ajouteLivre(idmagInt, idlivre, quantiteInt));
+        return (this.vendeurBD.ajouteLivre(idMagInt, idlivre, quantiteInt));
     }
 
     public boolean majQte() throws SQLException {
-        System.out.println("entrez l'id du magasin");
-        String idmag = System.console().readLine();
-        int idmagInt = Integer.parseInt(idmag);
-        System.out.println("entrez l'id du livre");
+        char idMag = this.compte.charAt(this.compte.length() - 1);
+        int idMagInt = Character.getNumericValue(idMag);
+        Menu.vendeurRecupIdLivreModif();
         String idlivre = System.console().readLine();
-        System.out.println("entrez la quantité à ajouter");
+        Menu.vendeurRecupQte();
         String quantite = System.console().readLine();
         int quantiteInt = Integer.parseInt(quantite);
-        return (this.vendeurBD.majQte(idmagInt, idlivre, quantiteInt));
+        return (this.vendeurBD.majQte(idMagInt, idlivre, quantiteInt));
     }
 
     public boolean dispo() throws SQLException {
-        System.out.println("entrez l'id du magasin");
-        String idmag = System.console().readLine();
-        int idmagInt = Integer.parseInt(idmag);
-        System.out.println("entrez l'id du livre voulu");
+        char idMag = this.compte.charAt(this.compte.length() - 1);
+        int idMagInt = Character.getNumericValue(idMag);
+        Menu.vendeurRecupIdLivreVerif();
         String idlivre = System.console().readLine();
-        System.out.println("entrez la quantité désirée");
+        Menu.vendeurRecupQte();
         String quantite = System.console().readLine();
         int quantiteInt = Integer.parseInt(quantite);
-        return (this.vendeurBD.dispo(idmagInt, idlivre, quantiteInt));
+        return (this.vendeurBD.dispo(idMagInt, idlivre, quantiteInt));
     }
 
     public static void main(String[] args) {
