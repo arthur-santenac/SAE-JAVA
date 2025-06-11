@@ -40,7 +40,15 @@ public class MagasinBD {
 		return magasins;
 	}
 
-    ArrayList<String> listeDesNomDeMags() throws SQLException{
-		throw new SQLException("méthode listeDesJoueurs à implémenter");
+    List<String> listeDesNomDeMags() throws SQLException{
+		this.st = this.laConnexion.createStatement();
+		ResultSet rs = this.st.executeQuery("Select  from MAGASIN");
+		List<String> magasins = new ArrayList<>();
+		while(rs.next()){
+			String nomM = rs.getString(1);
+			magasins.add(nomM);
+		}
+		rs.close();
+		return magasins;
 	}
 }

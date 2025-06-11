@@ -375,6 +375,18 @@ public class AppLibrairie {
             else if(option.equals("4")){
                 runAdministrateurLib();
             }
+            else if(option.equals("5")){
+                
+            }
+            else if(option.equals("6")){
+                
+            }
+            else if(option.equals("7")){
+                
+            }
+            else if(option.equals("8")){
+                
+            }
             else if (option.equals("q") || option.equals("quitter") || option.equals("quit")) {
                 return;
             }
@@ -413,7 +425,11 @@ public class AppLibrairie {
         Menu.adminVilleLib(nomLib);
         String ville = System.console().readLine();
         ville = ville.strip();
+
         try{
+            if(this.magasinBD.listeDesNomDeMags().contains(nom)){
+                runAdministrateur(); // si jamais le magasin existe déja
+            }
             int idmag = this.adminBD.maxNumMagasin();
             newLibrairie = new Magasin(idmag, nom, ville);
             this.adminBD.insererLibrairie(newLibrairie); 
@@ -429,7 +445,13 @@ public class AppLibrairie {
     public void suppLib() {
         Magasin lib = null;
         Integer idMag = null;
-        Menu.adminSupLib();
+        try{
+            List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
+            Menu.adminSupLib(listeMagasin);
+        }
+        catch(SQLException ex){
+            System.out.println("Erreur SQL !");
+        }
         String id = System.console().readLine();
         id = id.strip();
         if (id.equals("q") || id.equals("quitter") || id.equals("quit")) {
@@ -442,12 +464,12 @@ public class AppLibrairie {
             catch(NumberFormatException e){
                 System.out.println("Entrez un identifiant valide.");
             }
-
             try {
                 lib = this.magasinBD.rechercherMagasinParId(idMag);
             } catch (SQLException e) {
                 System.out.println("Il n'y a aucune librairie avec cet identifiant");
-            }        
+                suppLib();
+            }      
             comfSuppLib(lib);
             
         }
@@ -461,15 +483,15 @@ public class AppLibrairie {
         if(confirmation.equals("oui")|| confirmation.equals("o")){
             try{
                 Integer id = mag.getIdMag();
-                this.adminBD.supprimerLibrairie(id);
-                runAdministrateur();          
+                this.adminBD.supprimerLibrairie(id);         
             }
             catch (SQLException e){
                 System.out.println("Problèmes rencontrés lors de la suppression de la librairie");
             }
+            runAdministrateur(); 
         }
         else if(confirmation.equals("non")|| confirmation.equals("n")){
-            Menu.admin();
+            runAdministrateur();
         }
         else{
             erreur();
