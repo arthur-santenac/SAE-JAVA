@@ -354,18 +354,6 @@ public class AppLibrairie {
 
     }
 
-
-    public void runVendeur() {
-        while (!AppLibrairie.quitterAppli) {
-            Menu.vendeur();
-            String identifiant = System.console().readLine();
-            identifiant = identifiant.strip();
-            if (identifiant.equals("q") || identifiant.equals("quitter") || identifiant.equals("quit")) {
-                return;
-            }
-        }
-    }
-
     public void runAdministrateur() {
         while (!AppLibrairie.quitterAppli) {
             Menu.admin();
@@ -422,10 +410,8 @@ public class AppLibrairie {
         this.vendeurBD = new VendeurBD(connexionMySQL);
         try {
             this.panier = new Commande(0, null, enLigne, null, magasin, utilisateur);
-            while (!AppLibrairie.continuer) {
-                clear();
-                logo();
-                menuVendeur();
+            while (!AppLibrairie.quitterAppli) {
+                Menu.vendeur();
                 String option = System.console().readLine();
                 option = option.strip();
                 if (option.equals("1")) {
@@ -440,13 +426,13 @@ public class AppLibrairie {
                 // else if (option.equals("6")) {changerCompte();}
                 else if (option.equals("7") || option.equals("quitter") || option.equals("q")
                         || option.equals("quit")) {
-                    AppLibrairie.continuer = true;
+                    AppLibrairie.quitterAppli = true;
                 } else {
                     erreur();
                 }
             }
         } catch (SQLException e) {
-            System.out.println("erreur fdp");
+            System.out.println("erreur");
         }
 
     }
