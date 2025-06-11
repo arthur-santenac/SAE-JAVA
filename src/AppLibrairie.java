@@ -10,17 +10,21 @@ import java.util.Map;
 
 public class AppLibrairie {
 
-    public static boolean continuer = false;
+    public static boolean quitterAppli = false;
     private ConnexionMySQL connexionMySQL = null;
     private Statement st;
 
     private MagasinBD magasinBD;
     private ClientBD clientBD;
+    private VendeurBD vendeurBD;
 
     private Client utilisateur;
     private Commande panier;
     private String enLigne;
+
     private Magasin magasin;
+
+
 
     public AppLibrairie() {
 
@@ -33,7 +37,6 @@ public class AppLibrairie {
                 if (!connexionBD()) {
                     return;
                 }
-
             } catch (SQLException e) {
                 System.out.println("La connexion a échouée");
                 System.console().readLine();
@@ -51,21 +54,18 @@ public class AppLibrairie {
         connectionOuCreer = connectionOuCreer.strip();
         if (connectionOuCreer.equals("1")) {
 
-            while (!AppLibrairie.continuer) {
+            while (!AppLibrairie.quitterAppli) {
                 try {
                     String compte = Connexion();
-                    switch (compte) {
-                        case "client":
-                            runClient();
-                            break;
-                        case "vendeur":
-                            runVendeur();
-                            break;
-                        case "administrateur":
-                            runAdministrateur();
-                            break;
-                        case "quitter":
-                            AppLibrairie.continuer = true;
+                    if (compte.equals("client")) {
+                        runClient();
+                    } else if (compte.substring(0, 6).equals("vendeur")) {
+                        // a faire
+                        runVendeur();
+                    } else if (compte.equals("administrateur")) {
+                        runAdministrateur();
+                    } else if (compte.equals("quitter")) {
+                        AppLibrairie.quitterAppli = true;
                     }
                 } catch (MauvaisMotDePasseExeption e) {
                     System.out.println("Mauvais identifiants");
@@ -191,7 +191,7 @@ public class AppLibrairie {
             this.magasin = choisirMagasin();
             this.enLigne = choisirModeLivraison();
             this.panier = new Commande(0, null, enLigne, null, magasin, utilisateur);
-            while (!AppLibrairie.continuer) {
+            while (!AppLibrairie.quitterAppli) {
                 Menu.client();
                 String option = System.console().readLine();
                 option = option.strip();
@@ -205,7 +205,7 @@ public class AppLibrairie {
                     run();
                 } else if (option.equals("5") || option.equals("quitter") || option.equals("q")
                         || option.equals("quit")) {
-                    AppLibrairie.continuer = true;
+                    AppLibrairie.quitterAppli = true;
                 } else {
                     erreur();
                 }
@@ -339,7 +339,7 @@ public class AppLibrairie {
                 }
                 int numQte = Integer.parseInt(qte);
                 panier.ajouterDetailsCommande(panier.size(), listeLivre.get(numLivre - 1), numQte);
-                ;
+
             } else {
                 erreur();
                 proposerChercherLivre(listeLivre);
@@ -354,19 +354,8 @@ public class AppLibrairie {
 
     }
 
-    public void runVendeur() {
-        while (!AppLibrairie.continuer) {
-            Menu.vendeur();
-            String identifiant = System.console().readLine();
-            identifiant = identifiant.strip();
-            if (identifiant.equals("q") || identifiant.equals("quitter") || identifiant.equals("quit")) {
-                return;
-            }
-        }
-    }
-
     public void runAdministrateur() {
-        while (!AppLibrairie.continuer) {
+        while (!AppLibrairie.quitterAppli) {
             Menu.admin();
             String identifiant = System.console().readLine();
             identifiant = identifiant.strip();
@@ -415,6 +404,73 @@ public class AppLibrairie {
             padding = padding + " ";
         }
         return string + padding;
+    }
+
+    public void runVendeur() {
+        this.vendeurBD = new VendeurBD(connexionMySQL);
+        try {
+            this.panier = new Commande(0, null, enLigne, null, magasin, utilisateur);
+            while (!AppLibrairie.quitterAppli) {
+                Menu.vendeur();
+                String option = System.console().readLine();
+                option = option.strip();
+                if (option.equals("1")) {
+                    ajouteLivre();
+                } else if (option.equals("2")) {
+                    majQte();
+                } else if (option.equals("3")) {
+                    dispo();
+                }
+                // else if (option.equals("4")) {passerCommande();}
+                // else if (option.equals("5")) {transfereLivre();}
+                // else if (option.equals("6")) {changerCompte();}
+                else if (option.equals("7") || option.equals("quitter") || option.equals("q")
+                        || option.equals("quit")) {
+                    AppLibrairie.quitterAppli = true;
+                } else {
+                    erreur();
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("erreur");
+        }
+
+    }
+
+    public boolean ajouteLivre() throws SQLException {
+        System.out.println("entrez l'id du magasin");
+        String idmag = System.console().readLine();
+        int idmagInt = Integer.parseInt(idmag);
+        System.out.println("entrez l'id du livre");
+        String idlivre = System.console().readLine();
+        System.out.println("entrez la quantité à ajouter");
+        String quantite = System.console().readLine();
+        int quantiteInt = Integer.parseInt(quantite);
+        return (this.vendeurBD.ajouteLivre(idmagInt, idlivre, quantiteInt));
+    }
+
+    public boolean majQte() throws SQLException {
+        System.out.println("entrez l'id du magasin");
+        String idmag = System.console().readLine();
+        int idmagInt = Integer.parseInt(idmag);
+        System.out.println("entrez l'id du livre");
+        String idlivre = System.console().readLine();
+        System.out.println("entrez la quantité à ajouter");
+        String quantite = System.console().readLine();
+        int quantiteInt = Integer.parseInt(quantite);
+        return (this.vendeurBD.majQte(idmagInt, idlivre, quantiteInt));
+    }
+
+    public boolean dispo() throws SQLException {
+        System.out.println("entrez l'id du magasin");
+        String idmag = System.console().readLine();
+        int idmagInt = Integer.parseInt(idmag);
+        System.out.println("entrez l'id du livre voulu");
+        String idlivre = System.console().readLine();
+        System.out.println("entrez la quantité désirée");
+        String quantite = System.console().readLine();
+        int quantiteInt = Integer.parseInt(quantite);
+        return (this.vendeurBD.dispo(idmagInt, idlivre, quantiteInt));
     }
 
     public static void main(String[] args) {
