@@ -12,7 +12,7 @@ insert into CLIENT(idcli, nomcli, prenomcli, adressecli, codepostal, villecli) v
 	(1, "deoliveira", "hugo", "rue", 45000, "orleans");
 
 insert into CONNEXION(adresseemail, motdepasse, idcli, compte )values
-	("hugdeoliveira1@gmail.com", "mdp", 1, "administrateur" );
+	("hugo", "mdp", 1, "administrateur" );
 
 
 

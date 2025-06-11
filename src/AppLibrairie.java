@@ -47,6 +47,7 @@ public class AppLibrairie {
         }
 
         this.clientBD = new ClientBD(connexionMySQL);
+        this.magasinBD = new MagasinBD(connexionMySQL);
         this.adminBD = new AdminBD(connexionMySQL);
 
         Menu.choisirCreerOuConnecter();
@@ -369,59 +370,58 @@ public class AppLibrairie {
     }
 
     public void runAdministrateur() {
-        Magasin newLibrairie = null;
         while (!AppLibrairie.continuer) {
-            Menu.clear();
-            Menu.logo();
             Menu.admin();
             String option = System.console().readLine();
             option = option.strip().toLowerCase();
             if(option.equals("1")){
-
-            }
-            else if(option.equals("2")){
-                System.out.println("Veuillez entrer le nom de la nouvelle librairie");
-                String nom = System.console().readLine();
-                nom = option.strip().toLowerCase();
-                System.out.println("Veuillez entrer la ville dans laquelle se trouve cette nouvelle librairie");
-                String ville = System.console().readLine();
-                ville = option.strip().toLowerCase();
-                try{
-                    int idmag = this.adminBD.maxNumMagasin();
-                    newLibrairie = new Magasin(idmag, nom, ville);
-                    this.adminBD.insererLibrairie(newLibrairie);
-                }
-                catch (SQLException e){
-                    System.out.println("Problèmes rencontrés dans l'ajout d'une nouvelle librairie");
-                }              
                 
             }
+            else if(option.equals("2")){
+                creerLib();                 
+            }
             else if(option.equals("3")){
-                try{
-                    List<Magasin> listeMagasin = new ArrayList<>();
-                    st = connexionMySQL.createStatement();
-                    ResultSet set = st.executeQuery("select * from MAGASIN");
-                    while (set.next()) {
-                        listeMagasin.add(new Magasin(set.getInt(1), set.getString(2), set.getString(3)));
-                    }
-                    Menu.adminListeLib(listeMagasin);
-                }
-                catch(SQLException ex){
-                    System.out.println("Erreur SQL !");
-                }
+                runAdministrateurLib();
+            }
+            else if (option.equals("q") || option.equals("quitter") || option.equals("quit")) {
+                return;
             }
             else{
                 this.erreur();
             }
-
-            Menu.admin();
-            String identifiant = System.console().readLine();
-            identifiant = identifiant.strip();
-            if (identifiant.equals("q") || identifiant.equals("quitter") || identifiant.equals("quit")) {
-                return;
-            }
         }
     }
+
+    public void creerLib(){
+        Magasin newLibrairie = null;
+        Menu.adminNomLib();
+        String nom = System.console().readLine();
+        nom = nom.strip();
+        String nomLib = nom;
+        Menu.adminVilleLib(nomLib);
+        String ville = System.console().readLine();
+        ville = ville.strip();
+        try{
+            int idmag = this.adminBD.maxNumMagasin();
+            newLibrairie = new Magasin(idmag, nom, ville);
+            this.adminBD.insererLibrairie(newLibrairie);            
+        }
+        catch (SQLException e){
+            System.out.println("Problèmes rencontrés dans l'ajout d'une nouvelle librairie");
+        }
+        
+    }
+
+    public void runAdministrateurLib(){
+        try{
+            List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
+            Menu.adminListeLib(listeMagasin);
+        }
+        catch(SQLException ex){
+            System.out.println("Erreur SQL !");
+        }
+    }
+
 
     public void erreur() {
         System.out.println("\n" + "Erreur veillez réessayer");

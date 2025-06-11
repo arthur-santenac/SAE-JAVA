@@ -20,7 +20,7 @@ public class AdminBD {
 	}
 
     void insererLibrairie( Magasin m) throws  SQLException{
-		PreparedStatement ps = this.laConnexion.prepareStatement("insert into Magasin(idmag, nommag, villemag) values(?, ?, ?,)");
+		PreparedStatement ps = this.laConnexion.prepareStatement("insert into MAGASIN(idmag, nommag, villemag) values(?, ?, ?)");
 		int nouvNum = this.maxNumMagasin()+1;
 		ps.setInt(1, nouvNum);
 		ps.setString(2, m.getNomMag());
