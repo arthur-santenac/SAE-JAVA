@@ -657,14 +657,9 @@ public class Menu {
         System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| 1 - Créer un compte vendeur                                    |                                                                ||||");
-        System.out.println(" |||| 2 - Ajouter une nouvelle librairie                             |                                                                ||||");
-        System.out.println(" |||| 3 - Afficher la liste des librairies                           |                                                                ||||");
-        System.out.println(" |||| 4 - Gérer les stocks globaux                                   |                                                                ||||");
-        System.out.println(" |||| 5 - Consulter les statistiques de vente                        |                                                                ||||");
-        System.out.println(" |||| 6 - Changer de compte                                          |                                                                ||||");
-        System.out.println(" |||| 7 - Quitter l'application                                      |                                                                ||||");
-
+        System.out.println(" |||| q - Retour                                                     |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
         for (int i=1;i<=listeMagasin.size();i++) {
             String ligne = " ||||   " + i + " - " + listeMagasin.get(i - 1);
             ligne = AppLibrairie.ljust(ligne, 69);
@@ -739,7 +734,7 @@ public class Menu {
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| Êtes vous sûr de vouloir supprimer la Librairie :              |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| "+mag.getIdMag()+" "+mag.getNomMag()+" "+mag.getVilleMag()+"                         |                                                                ||||");
+        System.out.println(" |||| "+mag.getIdMag()+" "+mag.getNomMag()+" "+mag.getVilleMag()+"                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");

@@ -359,8 +359,8 @@ public class AppLibrairie {
     }
 
     public void runAdministrateur() {
+        Menu.admin();
         while (!AppLibrairie.quitterAppli) {
-            Menu.admin();
             String option = System.console().readLine();
             option = option.strip().toLowerCase();
             if(option.equals("1")){
@@ -384,6 +384,26 @@ public class AppLibrairie {
         }
     }
 
+    public void runAdministrateurLib(){
+        try{
+            List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
+            Menu.adminListeLib(listeMagasin);
+        }
+        catch(SQLException ex){
+            System.out.println("Erreur SQL !");
+        }
+        String option = System.console().readLine();
+        option = option.strip().toLowerCase();
+        if(option.equals("q")|| option.equals("quitter") ){
+            runAdministrateur();
+        }
+        else{
+            erreur();
+        }
+
+        
+    }
+
     public void creerLib(){
         Magasin newLibrairie = null;
         Menu.adminNomLib();
@@ -396,7 +416,8 @@ public class AppLibrairie {
         try{
             int idmag = this.adminBD.maxNumMagasin();
             newLibrairie = new Magasin(idmag, nom, ville);
-            this.adminBD.insererLibrairie(newLibrairie);            
+            this.adminBD.insererLibrairie(newLibrairie); 
+            this.runAdministrateur();           
         }
         catch (SQLException e){
             System.out.println("Problèmes rencontrés dans l'ajout d'une nouvelle librairie");
@@ -427,38 +448,35 @@ public class AppLibrairie {
             } catch (SQLException e) {
                 System.out.println("Il n'y a aucune librairie avec cet identifiant");
             }        
-            Menu.adminComfirmationSup(lib);
-            String confirmation = System.console().readLine();
-            confirmation = confirmation.strip().toLowerCase();
-            if(confirmation.equals("oui")|| confirmation.equals("o")){
-                try{
-                    this.adminBD.supprimerLibrairie(lib);          
-                }
-                catch (SQLException e){
-                System.out.println("Problèmes rencontrés lors de la suppression de la librairie");
-                }
-            }
-            else if(confirmation.equals("non")|| confirmation.equals("n")){
-                Menu.admin();
-            }
-            else{
-                erreur();
-            }
+            comfSuppLib(lib);
             
         }
         
-        
     }
 
-    public void runAdministrateurLib(){
-        try{
-            List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
-            Menu.adminListeLib(listeMagasin);
+    public void comfSuppLib(Magasin mag){
+        Menu.adminComfirmationSup(mag);
+        String confirmation = System.console().readLine();
+        confirmation = confirmation.strip().toLowerCase();
+        if(confirmation.equals("oui")|| confirmation.equals("o")){
+            try{
+                Integer id = mag.getIdMag();
+                this.adminBD.supprimerLibrairie(id);
+                runAdministrateur();          
+            }
+            catch (SQLException e){
+                System.out.println("Problèmes rencontrés lors de la suppression de la librairie");
+            }
         }
-        catch(SQLException ex){
-            System.out.println("Erreur SQL !");
+        else if(confirmation.equals("non")|| confirmation.equals("n")){
+            Menu.admin();
+        }
+        else{
+            erreur();
         }
     }
+
+    
 
 
     public void erreur() {

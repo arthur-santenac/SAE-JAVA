@@ -34,11 +34,9 @@ public class AdminBD {
 		ps.close();
 	}
 
-	void supprimerLibrairie(Magasin m)throws SQLException{
-		PreparedStatement ps = this.laConnexion.prepareStatement("delete from MAGASIN(idmag, nommag, villemag) values(?, ?, ?)");
-		ps.setInt(1, m.getIdMag());
-		ps.setString(2, m.getNomMag());
-		ps.setString(3, m.getVilleMag());
+	void supprimerLibrairie(Integer id)throws SQLException{
+		PreparedStatement ps = this.laConnexion.prepareStatement("delete from MAGASIN where idmag =?");
+		ps.setInt(1, id);
 		int nb = ps.executeUpdate();
         if(nb ==0){
 			throw new SQLException("La suppression de la librairie a échoué car aucune librairie n'a cet identifiant");
