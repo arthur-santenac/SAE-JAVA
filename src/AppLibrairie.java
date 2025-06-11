@@ -17,6 +17,7 @@ public class AppLibrairie {
 
     private MagasinBD magasinBD; 
     private ClientBD clientBD;
+    private AdminBD adminBD;
 
     private Client utilisateur;
     private Commande panier;
@@ -375,13 +376,37 @@ public class AppLibrairie {
     }
 
     public void runAdministrateur() {
+        Magasin newLibrairie = null;
         while (!AppLibrairie.continuer) {
             clear();
             logo();
             menuAdmin();
-            String identifiant = System.console().readLine();
-            identifiant = identifiant.strip();
-            if (identifiant.equals("q") || identifiant.equals("quitter") || identifiant.equals("quit")) {return;}
+            String option = System.console().readLine();
+            option = option.strip().toLowerCase();
+            if(option.equals("1")){
+
+            }
+            else if(option.equals("2")){
+                System.out.println("Veuillez entrer le nom de la nouvelle librairie");
+                String nom = System.console().readLine();
+                nom = option.strip().toLowerCase();
+                System.out.println("Veuillez entrer la ville dans laquelle se trouve cette nouvelle librairie");
+                String ville = System.console().readLine();
+                ville = option.strip().toLowerCase();
+                try{
+                    int idmag = this.adminBD.maxNumMagasin();
+                    newLibrairie = new Magasin(idmag, nom, ville);
+                    this.adminBD.insererLibrairie(newLibrairie);
+                }
+                catch (SQLException e){
+                    System.out.println("Problèmes rencontrés dans l'ajout d'une nouvelle librairie");
+                }              
+                
+            }
+            else{
+                this.erreur();
+            }
+
         }
     }
 
