@@ -413,6 +413,20 @@ public class AppLibrairie {
                 }              
                 
             }
+            else if(option.equals("3")){
+                try{
+                    List<Magasin> listeMagasin = new ArrayList<>();
+                    st = connexionMySQL.createStatement();
+                    ResultSet set = st.executeQuery("select * from MAGASIN");
+                    while (set.next()) {
+                        listeMagasin.add(new Magasin(set.getInt(1), set.getString(2), set.getString(3)));
+                    }
+                    Menu.adminListeLib(listeMagasin);
+                }
+                catch(SQLException ex){
+                    System.out.println("Erreur SQL !");
+                }
+            }
             else{
                 this.erreur();
             }
