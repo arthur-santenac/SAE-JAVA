@@ -50,6 +50,7 @@ public class AppLibrairie {
         }
         
         this.clientBD = new ClientBD(connexionMySQL);
+        this.adminBD = new AdminBD(connexionMySQL);
 
         menuChoisirCreerOuConnecter();
         String connectionOuCreer = System.console().readLine();
