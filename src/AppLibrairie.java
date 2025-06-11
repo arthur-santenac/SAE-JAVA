@@ -46,7 +46,6 @@ public class AppLibrairie {
         }
 
         this.clientBD = new ClientBD(connexionMySQL);
-
         Menu.choisirCreerOuConnecter();
         String connectionOuCreer = System.console().readLine();
         connectionOuCreer = connectionOuCreer.strip();
@@ -95,7 +94,6 @@ public class AppLibrairie {
     }
 
     public String Connexion() throws MauvaisMotDePasseExeption, SQLException {
-
         Menu.connexionEmail();
         String email = System.console().readLine();
         email = email.strip();
