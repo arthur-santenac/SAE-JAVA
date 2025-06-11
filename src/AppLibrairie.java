@@ -109,10 +109,8 @@ public class AppLibrairie {
         if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {
             return "quitter";
         }
-
         st = connexionMySQL.createStatement();
         ResultSet set = st.executeQuery("select * from CONNEXION natural join CLIENT");
-
         while (set.next()) {
             if (email.equals(set.getString(2)) && mdp.equals(set.getString(3))) {
                 this.utilisateur = new Client(set.getString(5), set.getString(6), set.getString(7), set.getInt(8),
