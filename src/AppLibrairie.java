@@ -16,6 +16,7 @@ public class AppLibrairie {
 
     private MagasinBD magasinBD;
     private ClientBD clientBD;
+    private VendeurBD vendeurBD;
 
     private Client utilisateur;
     private Commande panier;
@@ -354,16 +355,7 @@ public class AppLibrairie {
 
     }
 
-    public void runVendeur() {
-        while (!AppLibrairie.continuer) {
-            Menu.vendeur();
-            String identifiant = System.console().readLine();
-            identifiant = identifiant.strip();
-            if (identifiant.equals("q") || identifiant.equals("quitter") || identifiant.equals("quit")) {
-                return;
-            }
-        }
-    }
+
 
     public void runAdministrateur() {
         while (!AppLibrairie.continuer) {
@@ -415,6 +407,75 @@ public class AppLibrairie {
             padding = padding + " ";
         }
         return string + padding;
+    }
+
+    public void runVendeur() {
+        this.vendeurBD = new VendeurBD(connexionMySQL);
+        try {
+            this.panier = new Commande(0, null, enLigne, null, magasin, utilisateur);
+            while (!AppLibrairie.continuer) {
+                clear();
+                logo();
+                menuVendeur();
+                String option = System.console().readLine();
+                option = option.strip();
+                if (option.equals("1")) {
+                    ajouteLivre();
+                } else if (option.equals("2")) {
+                    majQte();
+                } else if (option.equals("3")) {
+                    dispo();
+                }
+                // else if (option.equals("4")) {passerCommande();}
+                // else if (option.equals("5")) {transfereLivre();}
+                // else if (option.equals("6")) {changerCompte();}
+                else if (option.equals("7") || option.equals("quitter") || option.equals("q")
+                        || option.equals("quit")) {
+                    AppLibrairie.continuer = true;
+                } else {
+                    erreur();
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("erreur fdp");
+        }
+
+    }
+
+    public boolean ajouteLivre() throws SQLException {
+        System.out.println("entrez l'id du magasin");
+        String idmag = System.console().readLine();
+        int idmagInt = Integer.parseInt(idmag);
+        System.out.println("entrez l'id du livre");
+        String idlivre = System.console().readLine();
+        System.out.println("entrez la quantité à ajouter");
+        String quantite = System.console().readLine();
+        int quantiteInt = Integer.parseInt(quantite);
+        return (this.vendeurBD.ajouteLivre(idmagInt, idlivre, quantiteInt));
+    }
+
+    public boolean majQte() throws SQLException {
+        System.out.println("entrez l'id du magasin");
+        String idmag = System.console().readLine();
+        int idmagInt = Integer.parseInt(idmag);
+        System.out.println("entrez l'id du livre");
+        String idlivre = System.console().readLine();
+        System.out.println("entrez la quantité à ajouter");
+        String quantite = System.console().readLine();
+        int quantiteInt = Integer.parseInt(quantite);
+        return (this.vendeurBD.majQte(idmagInt, idlivre, quantiteInt));
+    }
+
+    public boolean dispo() throws SQLException {
+        System.out.println("entrez l'id du magasin");
+        String idmag = System.console().readLine();
+        int idmagInt = Integer.parseInt(idmag);
+        System.out.println("entrez l'id du livre voulu");
+        String idlivre = System.console().readLine();
+        System.out.println("entrez la quantité désirée");
+        String quantite = System.console().readLine();
+        int quantiteInt = Integer.parseInt(quantite);
+        return (this.vendeurBD.dispo(idmagInt, idlivre, quantiteInt));
     }
 
     public static void main(String[] args) {
