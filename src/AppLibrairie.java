@@ -46,7 +46,6 @@ public class AppLibrairie {
         }
 
         this.clientBD = new ClientBD(connexionMySQL);
-
         Menu.choisirCreerOuConnecter();
         String connectionOuCreer = System.console().readLine();
         connectionOuCreer = connectionOuCreer.strip();
@@ -95,7 +94,6 @@ public class AppLibrairie {
     }
 
     public String Connexion() throws MauvaisMotDePasseExeption, SQLException {
-
         Menu.connexionEmail();
         String email = System.console().readLine();
         email = email.strip();
@@ -111,10 +109,8 @@ public class AppLibrairie {
         if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {
             return "quitter";
         }
-
         st = connexionMySQL.createStatement();
         ResultSet set = st.executeQuery("select * from CONNEXION natural join CLIENT");
-
         while (set.next()) {
             if (email.equals(set.getString(2)) && mdp.equals(set.getString(3))) {
                 this.utilisateur = new Client(set.getString(5), set.getString(6), set.getString(7), set.getInt(8),
@@ -127,14 +123,12 @@ public class AppLibrairie {
     }
 
     public void creerUnCompte() throws SQLException {
-
         Menu.creerCompteEmail();
         String email = System.console().readLine();
         email = email.strip();
         if (email.equals("quitter") || email.equals("q") || email.equals("quit")) {
             return;
         }
-
         Menu.creerCompteMdp();
         String mdp = System.console().readLine();
         mdp = mdp.strip();
@@ -148,28 +142,24 @@ public class AppLibrairie {
         if (nom.equals("quitter") || nom.equals("q") || nom.equals("quit")) {
             return;
         }
-
         Menu.creerComptePrenom();
         String prenom = System.console().readLine();
         prenom = prenom.strip();
         if (prenom.equals("quitter") || prenom.equals("q") || prenom.equals("quit")) {
             return;
         }
-
         Menu.creerCompteAdresse();
         String adresse = System.console().readLine();
         adresse = adresse.strip();
         if (adresse.equals("quitter") || adresse.equals("q") || adresse.equals("quit")) {
             return;
         }
-
         Menu.creerCompteVille();
         String ville = System.console().readLine();
         ville = ville.strip();
         if (ville.equals("quitter") || ville.equals("q") || ville.equals("quit")) {
             return;
         }
-
         Menu.creerCompteCodePostal();
         String codePostal = System.console().readLine();
         codePostal = codePostal.strip();
@@ -177,7 +167,6 @@ public class AppLibrairie {
             return;
         }
         int codePostalInt = Integer.parseInt(codePostal);
-
         int idcli = this.clientBD.maxNum();
 
         PreparedStatement ps = connexionMySQL.prepareStatement("insert into CLIENT values (?,?,?,?,?,?)");
@@ -203,7 +192,6 @@ public class AppLibrairie {
             this.enLigne = choisirModeLivraison();
             this.panier = new Commande(0, null, enLigne, null, magasin, utilisateur);
             while (!AppLibrairie.continuer) {
-
                 Menu.client();
                 String option = System.console().readLine();
                 option = option.strip();
@@ -228,14 +216,12 @@ public class AppLibrairie {
     }
 
     public Magasin choisirMagasin() throws SQLException {
-
         List<Magasin> listeMagasin = new ArrayList<>();
         st = connexionMySQL.createStatement();
         ResultSet set = st.executeQuery("select * from MAGASIN");
         while (set.next()) {
             listeMagasin.add(new Magasin(set.getInt(1), set.getString(2), set.getString(3)));
         }
-
         Menu.choisirMagasin(listeMagasin);
         String magasin = System.console().readLine();
         magasin = magasin.strip();
@@ -254,7 +240,6 @@ public class AppLibrairie {
     }
 
     public String choisirModeLivraison() {
-
         Menu.choisirModeLivraison();
         String modeLivraison = System.console().readLine();
         modeLivraison = modeLivraison.strip();
@@ -271,7 +256,6 @@ public class AppLibrairie {
     public void commander() {
         boolean quitter = false;
         while (!quitter) {
-
             Menu.commander();
             String commander = System.console().readLine();
             commander = commander.strip();
@@ -298,7 +282,6 @@ public class AppLibrairie {
     }
 
     public void consulterPanier() {
-
         if (Menu.consulterPanier(panier)) {
             System.console().readLine();
         } else {
@@ -307,7 +290,6 @@ public class AppLibrairie {
     }
 
     public void chercherLivre() throws SQLException {
-
         Menu.chercherLivre();
         String chercher = System.console().readLine();
         chercher = chercher.strip();
