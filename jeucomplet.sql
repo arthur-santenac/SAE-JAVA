@@ -12544,3 +12544,7 @@ insert into POSSEDER(idmag, isbn, qte) values
 	(1, '9782226085962', 10),
 	(1, '9782081271654', 9),
 	(7, '9782070570669', 6);
+
+INSERT INTO CLIENT VALUES (1, 'louis', 'louis', 'louis', 75000, 'louis');
+
+INSERT INTO CONNEXION VALUES ('louis', 'azerty', 1, 'vendeur1');

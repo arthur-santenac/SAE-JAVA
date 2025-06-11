@@ -15,21 +15,20 @@ public class VendeurBD {
 
 	public boolean ajouteLivre(int idmag, String isbn, int qte)
 			throws SQLException {
-		System.out.println("test1");
 		this.st = this.laConnexion.createStatement();
-		System.out.println("test2");
 		ResultSet verif = this.st.executeQuery(
 				"SELECT * FROM POSSEDER WHERE idmag = '" + idmag + "' AND isbn = '" + isbn + "';");
 
 		if (!verif.next()) {
-			System.out.println("test3");
 			this.st.executeUpdate(
 					"INSERT INTO POSSEDER(idmag, isbn, qte) VALUES ('" + idmag + "', '" + isbn + "', " + qte + ");");
-			System.out.println("Le livre a bien été ajouté");
+			Menu.vendeurModifReussi();
+			System.console().readLine();
 			return true;
 		} else {
 
-			System.out.println("Vous possédez déjà ce livre, mettez la quantité à jour");
+			Menu.vendeurErreurAjout();
+			System.console().readLine();
 			return false;
 		}
 	}
@@ -43,10 +42,12 @@ public class VendeurBD {
 			this.st.executeUpdate(
 					"UPDATE POSSEDER SET qte = qte + " + qte +
 							" WHERE isbn = '" + isbn + "' AND idmag = '" + idmag + "';");
-			System.out.println("Quantité mise à jour");
+			Menu.vendeurModifReussi();
+			System.console().readLine();
 			return true;
 		} else {
-			System.out.println("Vous ne possédez pas ce livre, ajoutez-le");
+			Menu.vendeurErreurModif();
+			System.console().readLine();
 			return false;
 		}
 	}
@@ -59,10 +60,12 @@ public class VendeurBD {
 						+ ");");
 
 		if (verif.next()) {
-			System.out.println("Le livre est disponible !");
+			Menu.vendeurDispo();
+			System.console().readLine();
 			return true;
 		} else {
-			System.out.println("Nous n'avons pas " + quantite + " exemplaire(s) du livre voulu en réserve");
+			Menu.vendeurPasDispo(quantite);
+			System.console().readLine();
 			return false;
 		}
 	}
