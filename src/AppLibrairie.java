@@ -427,13 +427,12 @@ public class AppLibrairie {
         ville = ville.strip();
 
         try{
-            if(this.magasinBD.listeDesNomDeMags().contains(nom)){
-                runAdministrateur(); // si jamais le magasin existe déja
-            }
-            int idmag = this.adminBD.maxNumMagasin();
-            newLibrairie = new Magasin(idmag, nom, ville);
-            this.adminBD.insererLibrairie(newLibrairie); 
-            this.runAdministrateur();           
+            
+                int idmag = this.adminBD.maxNumMagasin();
+                newLibrairie = new Magasin(idmag, nom, ville);
+                this.adminBD.insererLibrairie(newLibrairie); 
+                this.runAdministrateur(); 
+     
         }
         catch (SQLException e){
             System.out.println("Problèmes rencontrés dans l'ajout d'une nouvelle librairie");
