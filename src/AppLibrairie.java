@@ -331,7 +331,6 @@ public class AppLibrairie {
                     }
                     supprPanier();
                 }
-                
             } catch (NumberFormatException e) {
                 erreur();
                 supprPanier();
