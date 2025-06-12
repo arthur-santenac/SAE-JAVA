@@ -969,124 +969,6 @@ public class Menu {
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
 
-    public static void transferFail() {
-        logo();
-        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
-        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
-        System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
-        System.out.println(" ||||________________________________________________________________|                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| - Transfert échoué. Appuyez sur une touche                     |                                                             ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
-        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
-    }
-  
-    public static void tranfertReussi() {
-        logo();
-        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
-        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
-        System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
-        System.out.println(" ||||________________________________________________________________|                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| - Transfert effectué                                           |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
-        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
-    }
-
-    public static void choisirMagasinTransfet(List<Magasin> listeMagasin) {
-        logo();
-        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
-        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
-        System.out.println(" ||||                          CLIENT                                |                                                                ||||");
-        System.out.println(" ||||________________________________________________________________|                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||  Veuillez entrer le numéro du magasin possédant le livre à     |                                                                ||||");
-        System.out.println(" ||||  tranférer.                                                    |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-
-        for (int i=1;i<=listeMagasin.size();i++) {
-            String ligne = " ||||   " + i + " - " + listeMagasin.get(i - 1);
-            ligne = AppLibrairie.ljust(ligne, 69);
-            System.out.println(ligne + "|                                                                ||||");
-        }
-
-        for (int i=0;i<32-listeMagasin.size();i++) {
-            System.out.println(" ||||                                                                |                                                                ||||");
-        }
-
-        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
-        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
-    }
-
-
     public static void admin() {
         logo();
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
@@ -1471,7 +1353,7 @@ public class Menu {
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
 
-        public static void choisirMagasinTransfet(List<Magasin> listeMagasin) {
+    public static void choisirMagasinTransfet(List<Magasin> listeMagasin) {
         logo();
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");

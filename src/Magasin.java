@@ -18,7 +18,7 @@ public class Magasin {
         this.livres = new ArrayList<>();
     }
 
-    public int getIdMag() {
+    public String getIdMag() {
         return this.idMag;
     }
 

@@ -491,7 +491,7 @@ public class AppLibrairie {
         String nomLib = nomLib();
         String ville = villeLib(nomLib);
         try{
-            int idmag = this.adminBD.maxNumMagasin();
+            String idmag = this.adminBD.maxNumMagasin();
             newLibrairie = new Magasin(idmag, nomLib, ville);
             this.adminBD.insererLibrairie(newLibrairie); 
             this.runAdministrateur(); 
@@ -564,7 +564,7 @@ public class AppLibrairie {
         confirmation = confirmation.strip().toLowerCase();
         if(confirmation.equals("oui")|| confirmation.equals("o")){
             try{
-                Integer id = mag.getIdMag();
+                String id = mag.getIdMag();
                 this.adminBD.supprimerLibrairie(id);         
             }
             catch (SQLException e){
@@ -670,7 +670,7 @@ public class AppLibrairie {
 
     public boolean majQte() throws SQLException {
         char idMag = this.compte.charAt(this.compte.length() - 1);
-        int idMagInt = Character.getNumericValue(idMag);
+        String idMagInt = String.valueOf(idMag);
         Menu.vendeurRecupIdLivreModif();
         String idlivre = System.console().readLine();
         Menu.vendeurRecupQte();
@@ -695,7 +695,7 @@ public class AppLibrairie {
         st = connexionMySQL.createStatement();
         ResultSet set = st.executeQuery("select * from POSSEDER natural join MAGASIN where isbn = " + idlivre +" AND qte >= " + quantiteInt + ";");
         while (set.next()) {
-            listeMagasin.add(new Magasin(set.getInt(1), set.getString(2), set.getString(3)));
+            listeMagasin.add(new Magasin(set.getString(1), set.getString(2), set.getString(3)));
         }
         Menu.choisirMagasinTransfet(listeMagasin);
         String magasin = System.console().readLine();
@@ -716,7 +716,7 @@ public class AppLibrairie {
 
     public boolean transfert() throws SQLException {
         char idMag = this.compte.charAt(this.compte.length() - 1);
-        int idMagInt = Character.getNumericValue(idMag);
+        String idMagInt = String.valueOf(idMag);
         Menu.vendeurRecupIdLivreVerif();
         String idlivre = System.console().readLine();
         Menu.vendeurRecupQte();

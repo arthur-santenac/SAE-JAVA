@@ -33,7 +33,7 @@ public class VendeurBD {
 		}
 	}
 
-	public boolean majQte(int idmag, String isbn, int qte) throws SQLException {
+	public boolean majQte(String idmag, String isbn, int qte) throws SQLException {
 		this.st = this.laConnexion.createStatement();
 		ResultSet verif = this.st.executeQuery(
 				"SELECT * FROM POSSEDER WHERE idmag = '" + idmag + "' AND isbn = '" + isbn + "';");
@@ -70,7 +70,7 @@ public class VendeurBD {
 		}
 	}
 
-	public boolean transfer(int idMag, int idMagDestination, String isbn, int quantite) throws SQLException {
+	public boolean transfer(String idMag, String idMagDestination, String isbn, int quantite) throws SQLException {
 		this.st = this.laConnexion.createStatement();
 
 		ResultSet verif = this.st.executeQuery(
