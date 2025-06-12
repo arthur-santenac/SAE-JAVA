@@ -415,6 +415,21 @@ public class AppLibrairie {
         
     }
 
+    public void creerVendeur(){
+        Integer idVendeur = null;
+        String nomVendeur = null;
+        String prenomVendeur = null;
+        String addresseVendeur = null;
+        String codePostalVendeur = null;
+        try{
+            idVendeur = this.clientBD.maxNum()+1;
+        }
+        catch(SQLException e){
+            System.out.println("Il y a une erreur avec l'id du vendeur");
+        }
+
+    }
+
     public void creerLib(){
         Magasin newLibrairie = null;
         Menu.adminNomLib();
