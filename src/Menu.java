@@ -150,9 +150,9 @@ public class Menu {
         System.out.println(" |||| 1 - Choisir un autre magasin                                   |                                                                ||||");
         System.out.println(" |||| 2 - Choisir un autre mode de réception                         |                                                                ||||");
         System.out.println(" |||| 3 - Passer une commande                                        |                                                                ||||");
-        System.out.println(" |||| 4 - Changer de compte                                          |                                                                ||||");
-        System.out.println(" |||| 5 - Quitter l'application                                      |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| 4 - Vérifier les stocks du magasin                             |                                                                ||||");
+        System.out.println(" |||| 5 - Changer de compte                                          |                                                                ||||");
+        System.out.println(" |||| 6 - Quitter l'application                                      |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -221,7 +221,7 @@ public class Menu {
         System.out.println(" ||||  Veuillez choisir un mode de livraison                         |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||   1 - En magasin                                               |                                                                ||||");
-        System.out.println(" ||||   2 - En ligne                                                 |                                                                ||||");
+        System.out.println(" ||||   2 - Chez soi                                                 |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -307,9 +307,9 @@ public class Menu {
         logo();
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
-        System.out.println(" ||||                   COMMANDER UN LIVRE                           |                                                                ||||");
-        System.out.println(" ||||________________________________________________________________|                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                   COMMANDER UN LIVRE                           |     1 - Finaliser la commande                                  ||||");
+        System.out.println(" ||||________________________________________________________________|     2 - Supprimer des élément du panier                        ||||");
+        System.out.println(" ||||                                                                |     3 - Retour en arrière                                      ||||");
         boolean res = false;
         if (panier.size() == 0) {
             
@@ -333,6 +333,53 @@ public class Menu {
         System.out.println(" ||/================================================================\\|/===============================================================|\\||");
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''"); 
         return res;
+    }
+
+
+    public static void supprPanier(Commande panier) {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                   COMMANDER UN LIVRE                           |     1 - Tout supprimer                                         ||||");
+        System.out.println(" ||||________________________________________________________________|     2 - Supprimer un élément                                   ||||");
+        System.out.println(" ||||                                                                |     3 - Retour en arrière                                      ||||");
+        System.out.println(" |||| Voici votre panier :                                           |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        for (int i=1;i<=panier.size();i++) {
+            String ligne = AppLibrairie.ljust((" ||||   " + i + " - " + panier.getDetailsCommande().get(i - 1).getLivre().getTitre()), 45) + panier.getDetailsCommande().get(i - 1).getQte();
+            ligne = AppLibrairie.ljust(ligne, 69);
+            System.out.println(ligne + "|                                                                ||||");
+        }
+
+        for (int i=0;i<33-panier.size();i++) {
+            System.out.println(" ||||                                                                |                                                                ||||");
+        }
+
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''"); 
+    }
+
+    public static void supprPanierUneCom(Commande panier) {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                   COMMANDER UN LIVRE                           |     Entrez le numéro de l'élément a supprimer                  ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| Voici votre panier :                                           |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        for (int i=1;i<=panier.size();i++) {
+            String ligne = AppLibrairie.ljust((" ||||   " + i + " - " + panier.getDetailsCommande().get(i - 1).getLivre().getTitre()), 45) + panier.getDetailsCommande().get(i - 1).getQte();
+            ligne = AppLibrairie.ljust(ligne, 69);
+            System.out.println(ligne + "|                                                                ||||");
+        }
+
+        for (int i=0;i<33-panier.size();i++) {
+            System.out.println(" ||||                                                                |                                                                ||||");
+        }
+
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''"); 
     }
 
     public static void chercherLivre() {
@@ -458,7 +505,7 @@ public class Menu {
         System.out.println(" ||/================================================================\\|/===============================================================|\\||");
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
-
+ 
     public static void vendeur() {
         logo();
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");

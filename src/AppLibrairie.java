@@ -17,13 +17,14 @@ public class AppLibrairie {
     private MagasinBD magasinBD;
     private ClientBD clientBD;
     private VendeurBD vendeurBD;
+    private CommandeBD commandeBD;
 
     private Client utilisateur;
     private Commande panier;
-    private String enLigne;
+    private char modeLivraison;
+    private char enLigne;
 
     private Magasin magasin;
-
 
 
     public AppLibrairie() {
@@ -49,6 +50,8 @@ public class AppLibrairie {
         }
 
         this.clientBD = new ClientBD(connexionMySQL);
+        this.commandeBD = new CommandeBD(connexionMySQL);
+        this.magasinBD = new MagasinBD(connexionMySQL);
         Menu.choisirCreerOuConnecter();
         String connectionOuCreer = System.console().readLine();
         connectionOuCreer = connectionOuCreer.strip();
@@ -59,7 +62,7 @@ public class AppLibrairie {
                     String compte = Connexion();
                     if (compte.equals("client")) {
                         runClient();
-                    } else if (compte.substring(0, 6).equals("vendeur")) {
+                    } else if (compte.substring(0, 7).equals("vendeur")) {
                         // a faire
                         runVendeur();
                     } else if (compte.equals("administrateur")) {
@@ -69,10 +72,6 @@ public class AppLibrairie {
                     }
                 } catch (MauvaisMotDePasseExeption e) {
                     System.out.println("Mauvais identifiants");
-                    erreur();
-                    run();
-                } catch (SQLException e) {
-                    System.out.println("La connexion a échouée");
                     erreur();
                     run();
                 }
@@ -93,7 +92,7 @@ public class AppLibrairie {
 
     }
 
-    public String Connexion() throws MauvaisMotDePasseExeption, SQLException {
+    public String Connexion() throws MauvaisMotDePasseExeption {
         Menu.connexionEmail();
         String email = System.console().readLine();
         email = email.strip();
@@ -109,17 +108,13 @@ public class AppLibrairie {
         if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {
             return "quitter";
         }
-        st = connexionMySQL.createStatement();
-        ResultSet set = st.executeQuery("select * from CONNEXION natural join CLIENT");
-        while (set.next()) {
-            if (email.equals(set.getString(2)) && mdp.equals(set.getString(3))) {
-                this.utilisateur = new Client(set.getString(5), set.getString(6), set.getString(7), set.getInt(8),
-                        set.getString(9), set.getInt(1));
-                return set.getString(4);
-            }
-        }
 
-        throw new MauvaisMotDePasseExeption();
+        String rep = this.clientBD.Connexion(email, mdp, this);
+        if (rep.equals("mauvaisMdp")) {
+            throw new MauvaisMotDePasseExeption();
+        }
+        return rep;
+        
     }
 
     public void creerUnCompte() throws SQLException {
@@ -178,7 +173,7 @@ public class AppLibrairie {
         ps.setString(6, ville);
         ps.executeUpdate();
 
-        ps = connexionMySQL.prepareStatement("insert into CONNEXION values (?,?,?, ?)");
+        ps = connexionMySQL.prepareStatement("insert into CONNEXION values (?,?,?,?)");
         ps.setString(1, email);
         ps.setString(2, mdp);
         ps.setInt(3, idcli);
@@ -188,9 +183,10 @@ public class AppLibrairie {
 
     public void runClient() {
         try {
+            this.enLigne = '1';
             this.magasin = choisirMagasin();
-            this.enLigne = choisirModeLivraison();
-            this.panier = new Commande(0, null, enLigne, null, magasin, utilisateur);
+            this.modeLivraison = choisirModeLivraison();
+            this.panier = new Commande('1', modeLivraison, magasin, utilisateur);
             while (!AppLibrairie.quitterAppli) {
                 Menu.client();
                 String option = System.console().readLine();
@@ -202,8 +198,10 @@ public class AppLibrairie {
                 } else if (option.equals("3")) {
                     commander();
                 } else if (option.equals("4")) {
+                    verifierStock();
+                } else if (option.equals("5")) {
                     run();
-                } else if (option.equals("5") || option.equals("quitter") || option.equals("q")
+                } else if (option.equals("6") || option.equals("quitter") || option.equals("q")
                         || option.equals("quit")) {
                     AppLibrairie.quitterAppli = true;
                 } else {
@@ -216,12 +214,7 @@ public class AppLibrairie {
     }
 
     public Magasin choisirMagasin() throws SQLException {
-        List<Magasin> listeMagasin = new ArrayList<>();
-        st = connexionMySQL.createStatement();
-        ResultSet set = st.executeQuery("select * from MAGASIN");
-        while (set.next()) {
-            listeMagasin.add(new Magasin(set.getInt(1), set.getString(2), set.getString(3)));
-        }
+        List<Magasin> listeMagasin = this.magasinBD.listeDesMagasins();
         Menu.choisirMagasin(listeMagasin);
         String magasin = System.console().readLine();
         magasin = magasin.strip();
@@ -239,14 +232,14 @@ public class AppLibrairie {
         }
     }
 
-    public String choisirModeLivraison() {
+    public char choisirModeLivraison() {
         Menu.choisirModeLivraison();
         String modeLivraison = System.console().readLine();
         modeLivraison = modeLivraison.strip();
         if (modeLivraison.equals("1")) {
-            return "0";
+            return '0';
         } else if (modeLivraison.equals("2")) {
-            return "1";
+            return '1';
         } else {
             erreur();
             return choisirModeLivraison();
@@ -283,10 +276,69 @@ public class AppLibrairie {
 
     public void consulterPanier() {
         if (Menu.consulterPanier(panier)) {
-            System.console().readLine();
+            String option = System.console().readLine();
+            option = option.strip();
+            if (option.equals("1")) {
+                finaliserCommande();
+            } else if (option.equals("2")) {
+                supprPanier();
+            } else if (option.equals("3") || option.equals("q") || option.equals("quitter") || option.equals("quit")) {
+            } else {
+                erreur();
+                consulterPanier();
+            }
         } else {
             System.console().readLine();
         }
+    }
+
+    public void finaliserCommande() {
+        try {
+            int maxNumCom  = this.commandeBD.maxNumCom() + 1;
+            this.commandeBD.insererCommande(maxNumCom, enLigne, modeLivraison, this.utilisateur.getIdCli(), this.magasin.getIdMag());
+            for (int i=0;i<this.panier.size();i++) {
+                this.commandeBD.insererDetailCommande(maxNumCom, i + 1, this.panier.getDetailsCommande().get(i).getQte(), this.panier.getDetailsCommande().get(i).getPrixVente(), this.panier.getDetailsCommande().get(i).getLivre().getIsbn());
+            }
+            this.panier = new Commande('1', modeLivraison, magasin, utilisateur); 
+        } catch (SQLException e) {
+            System.out.println("erreur sql");
+            System.console().readLine();
+        }
+    }
+
+    public void supprPanier() {
+        Menu.supprPanier(this.panier);
+        String option = System.console().readLine();
+        option = option.strip();
+        if (option.equals("1")) {
+            this.panier = new Commande(enLigne, modeLivraison, magasin, utilisateur);
+        } else if (option.equals("2")) {
+            try {   
+                Menu.supprPanierUneCom(this.panier);
+                option = System.console().readLine();
+                option = option.strip();
+                if (!(option.equals("q") || option.equals("quitter") || option.equals("quit"))) {
+                    if (Integer.parseInt(option) > 0 && Integer.parseInt(option) <= this.panier.size()) {
+                        this.panier.getDetailsCommande().remove(Integer.parseInt(option) - 1);
+                    } else {
+                        erreur();
+                    }
+                    supprPanier();
+                }
+                
+            } catch (NumberFormatException e) {
+                erreur();
+                supprPanier();
+            }
+        } else if (option.equals("3") || option.equals("q") || option.equals("quitter") || option.equals("quit")) {
+        } else {
+            erreur();
+            supprPanier();
+        }
+    }
+
+    public void verifierStock() {
+                
     }
 
     public void chercherLivre() throws SQLException {
@@ -300,7 +352,7 @@ public class AppLibrairie {
         List<Livre> listeLivre = new ArrayList<>();
         st = connexionMySQL.createStatement();
         ResultSet set = st.executeQuery(
-                "select * from LIVRE natural join MAGASIN where nommag = \"" + magasin.getNomMag() + "\"");
+                "select * from LIVRE");
         while (set.next()) {
             if (set.getString(2).equals(chercher)) {
                 listeLivre.add(
@@ -316,7 +368,6 @@ public class AppLibrairie {
         } else {
             proposerChercherLivre(listeLivre);
         }
-
     }
 
     public void proposerChercherLivre(List<Livre> listeLivre) {
@@ -338,8 +389,7 @@ public class AppLibrairie {
                     return;
                 }
                 int numQte = Integer.parseInt(qte);
-                panier.ajouterDetailsCommande(panier.size(), listeLivre.get(numLivre - 1), numQte);
-
+                panier.ajouterDetailsCommande(listeLivre.get(numLivre - 1), numQte);
             } else {
                 erreur();
                 proposerChercherLivre(listeLivre);
@@ -409,7 +459,7 @@ public class AppLibrairie {
     public void runVendeur() {
         this.vendeurBD = new VendeurBD(connexionMySQL);
         try {
-            this.panier = new Commande(0, null, enLigne, null, magasin, utilisateur);
+            this.panier = new Commande('1', modeLivraison, magasin, utilisateur);
             while (!AppLibrairie.quitterAppli) {
                 Menu.vendeur();
                 String option = System.console().readLine();
@@ -471,6 +521,10 @@ public class AppLibrairie {
         String quantite = System.console().readLine();
         int quantiteInt = Integer.parseInt(quantite);
         return (this.vendeurBD.dispo(idmagInt, idlivre, quantiteInt));
+    }
+
+    public void setUtilisateur(Client utilisateur) {
+        this.utilisateur = utilisateur;
     }
 
     public static void main(String[] args) {

@@ -4,15 +4,13 @@ import java.util.List;
 public class Commande {
     private int numCom;
     private String dateCom;
-    private String enLigne;
-    private String livraison;
+    private char enLigne;
+    private char livraison;
     private Magasin magasin;
     private List<DetailCommande> detailsCommande;
     private Client client;
 
-    public Commande(int numCom, String dateCom, String enLigne, String livraison, Magasin magasin,Client client) {
-        this.numCom = numCom;
-        this.dateCom = dateCom;
+    public Commande(char enLigne, char livraison, Magasin magasin,Client client) {
         this.enLigne = enLigne;
         this.livraison = livraison;
         this.client = client;
@@ -28,11 +26,11 @@ public class Commande {
         return dateCom;
     }
 
-    public String getEnLigne() {
+    public char getEnLigne() {
         return enLigne;
     }
 
-    public String getLivraison() {
+    public char getLivraison() {
         return livraison;
     }
 
@@ -48,8 +46,8 @@ public class Commande {
         return this.detailsCommande.size();
     }
     
-    public void ajouterDetailsCommande(int id, Livre livre, int qte){
-        this.detailsCommande.add(new DetailCommande(id, qte, livre.getPrix(), livre, numCom));
+    public void ajouterDetailsCommande(Livre livre, int qte){
+        this.detailsCommande.add(new DetailCommande(qte, livre.getPrix(), livre, numCom));
     }
 
     public double prixVente(Livre livre, Integer qte){
@@ -69,7 +67,7 @@ public class Commande {
             return false;
         }
         Commande tmp = (Commande) o;
-        return this.numCom == tmp.numCom && this.dateCom.equals(tmp.dateCom) && this.enLigne.equals(tmp.enLigne) && this.livraison.equals(tmp.livraison) && this.magasin.equals(tmp.magasin) && this.client.equals(tmp.client) ;
+        return this.numCom == tmp.numCom && this.dateCom.equals(tmp.dateCom) && this.enLigne == tmp.enLigne && this.livraison == tmp.livraison && this.magasin.equals(tmp.magasin) && this.client.equals(tmp.client) ;
     }
 
     @Override

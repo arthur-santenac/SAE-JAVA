@@ -1,7 +1,41 @@
 import java.sql.*;
 
 public class CommandeBD {
+        ConnexionMySQL laConnexion;
         Statement st;
+
+        public CommandeBD(ConnexionMySQL laConnexion) {
+            this.laConnexion = laConnexion;
+        }
+
+        public int maxNumCom() throws SQLException{
+            this.st = this.laConnexion.createStatement();
+            ResultSet rs = this.st.executeQuery("Select IFNULL(max(numcom),1) from COMMANDE");
+            rs.next();
+            int res = rs.getInt(1);
+            rs.close();
+            return res;
+        }
+
+        public void insererCommande(int numcom, char enLigne, char livraison, int idcli, String idmag) throws SQLException{
+            PreparedStatement ps = laConnexion.prepareStatement("insert into COMMANDE values (?,CURDATE(),?,?,?,?)");
+            ps.setInt(1, numcom);
+            ps.setString(2, String.valueOf(enLigne));
+            ps.setString(3, String.valueOf(livraison));
+            ps.setInt(4, idcli);
+            ps.setString(5, idmag);
+            ps.executeUpdate();
+        }
+
+        public void insererDetailCommande(int numcom, int numlig, int qte, double prixvente, String isbn) throws SQLException{
+            PreparedStatement ps = laConnexion.prepareStatement("insert into DETAILCOMMANDE values (?,?,?,?,?)");
+            ps.setInt(1, numcom);
+            ps.setInt(2, numlig);
+            ps.setInt(3, qte);
+            ps.setDouble(4, prixvente);
+            ps.setString(5, isbn);
+            ps.executeUpdate();
+        }
 
         public static String editerFacture(String requete, int mois, int annee, Connection bd) throws SQLException {
         String res = "Facture du " + mois + "/" + annee + "\n";
