@@ -1075,8 +1075,11 @@ public static void vendeurPasDispo(int quantite) {
         System.out.println(" |||| Veuillez entrer le nom de la ville dans laquelle               |                                                                ||||");
         System.out.println(" |||| se trouve la nouvelle Libraire                                 |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||  - "+nomLib+"                                                      |                                                                ||||");
+        
+        String ligne = " ||||    " + " - " + nomLib;
+                ligne = AppLibrairie.ljust(ligne, 69);
+                System.out.println(ligne + "|                                                                ||||");
+
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -1133,7 +1136,6 @@ public static void vendeurPasDispo(int quantite) {
             System.out.println(" ||||                                                                |                                                                ||||");
         }
         
-        System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||/================================================================\\|/===============================================================|\\||");
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
@@ -1174,7 +1176,7 @@ public static void vendeurPasDispo(int quantite) {
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| Êtes vous sûr de vouloir supprimer la Librairie :              |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| "+mag.getIdMag()+" "+mag.getNomMag()+" "+mag.getVilleMag()+"                                |                                                                ||||");
+        System.out.println(" |||| "+mag.getIdMag()+" "+mag.getNomMag()+" "+mag.getVilleMag()+AppLibrairie.ljust(" ", 15)+"                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");

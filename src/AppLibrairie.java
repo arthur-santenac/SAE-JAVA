@@ -432,26 +432,39 @@ public class AppLibrairie {
 
     public void creerLib(){
         Magasin newLibrairie = null;
-        Menu.adminNomLib();
-        String nom = System.console().readLine();
-        nom = nom.strip();
-        String nomLib = nom;
-        Menu.adminVilleLib(nomLib);
-        String ville = System.console().readLine();
-        ville = ville.strip();
-
+        String nomLib = nomLib();
+        String ville = villeLib(nomLib);
         try{
-            
-                int idmag = this.adminBD.maxNumMagasin();
-                newLibrairie = new Magasin(idmag, nom, ville);
-                this.adminBD.insererLibrairie(newLibrairie); 
-                this.runAdministrateur(); 
-     
+            int idmag = this.adminBD.maxNumMagasin();
+            newLibrairie = new Magasin(idmag, nomLib, ville);
+            this.adminBD.insererLibrairie(newLibrairie); 
+            this.runAdministrateur(); 
         }
         catch (SQLException e){
             System.out.println("Problèmes rencontrés dans l'ajout d'une nouvelle librairie");
+            Menu.adminNomLib();
         }
         
+    }
+
+    public String nomLib(){
+        Menu.adminNomLib();
+        String nom = System.console().readLine();
+        nom = nom.strip();
+        String nomLib = null;
+        if(nom.equals("q")|| nom.equals("quitter")|| nom.equals("Quitter")){
+            runAdministrateur();
+        }
+        nomLib = nom;
+        return nomLib;
+    }
+
+    public String villeLib(String nom){
+        Menu.adminVilleLib(nom);
+        String ville = System.console().readLine();
+        ville = ville.strip();
+        String villeLib = ville;
+        return villeLib; 
     }
 
 
