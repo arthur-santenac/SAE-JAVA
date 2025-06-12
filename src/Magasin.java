@@ -18,8 +18,8 @@ public class Magasin {
         this.livres = new ArrayList<>();
     }
 
-    public String getIdMag() {
-        return idMag;
+    public int getIdMag() {
+        return this.idMag;
     }
 
     public void setIdMag(String idMag) {
@@ -27,7 +27,7 @@ public class Magasin {
     }
 
     public String getNomMag() {
-        return nomMag;
+        return this.nomMag;
     }
 
     public void setNomMag(String nomMag) {
@@ -35,7 +35,7 @@ public class Magasin {
     }
 
     public String getVilleMag() {
-        return villeMag;
+        return this.villeMag;
     }
 
 

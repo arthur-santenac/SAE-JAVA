@@ -16,6 +16,7 @@ public class AppLibrairie {
 
     private MagasinBD magasinBD;
     private ClientBD clientBD;
+    private AdminBD adminBD;
     private VendeurBD vendeurBD;
     private CommandeBD commandeBD;
 
@@ -50,8 +51,10 @@ public class AppLibrairie {
         }
 
         this.clientBD = new ClientBD(connexionMySQL);
-        this.commandeBD = new CommandeBD(connexionMySQL);
         this.magasinBD = new MagasinBD(connexionMySQL);
+        this.adminBD = new AdminBD(connexionMySQL);
+        this.commandeBD = new CommandeBD(connexionMySQL);
+
         Menu.choisirCreerOuConnecter();
         String connectionOuCreer = System.console().readLine();
         connectionOuCreer = connectionOuCreer.strip();
@@ -410,17 +413,173 @@ public class AppLibrairie {
     }
 
     public void runAdministrateur() {
+        Menu.admin();
         while (!AppLibrairie.quitterAppli) {
-            Menu.admin();
-            String identifiant = System.console().readLine();
-            identifiant = identifiant.strip();
-            if (identifiant.equals("q") || identifiant.equals("quitter") || identifiant.equals("quit")) {
+            String option = System.console().readLine();
+            option = option.strip().toLowerCase();
+            if(option.equals("1")){
+                
+            }
+            else if(option.equals("2")){
+                creerLib();                 
+            }
+            else if(option.equals("3")){
+                suppLib();                 
+            }
+            else if(option.equals("4")){
+                runAdministrateurLib();
+            }
+            else if(option.equals("5")){
+                
+            }
+            else if(option.equals("6")){
+                
+            }
+            else if(option.equals("7")){
+                
+            }
+            else if(option.equals("8")){
+                
+            }
+            else if (option.equals("q") || option.equals("quitter") || option.equals("quit")) {
                 return;
+            }
+            else{
+                this.erreur();
             }
         }
     }
 
-    
+    public void runAdministrateurLib(){
+        try{
+            List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
+            Menu.adminListeLib(listeMagasin);
+        }
+        catch(SQLException ex){
+            System.out.println("Erreur SQL !");
+        }
+        String option = System.console().readLine();
+        option = option.strip().toLowerCase();
+        if(option.equals("q")|| option.equals("quitter") ){
+            runAdministrateur();
+        }
+        else{
+            erreur();
+        }
+
+        
+    }
+
+    public void creerVendeur(){
+        Integer idVendeur = null;
+        String nomVendeur = null;
+        String prenomVendeur = null;
+        String addresseVendeur = null;
+        String codePostalVendeur = null;
+        try{
+            idVendeur = this.clientBD.maxNum()+1;
+        }
+        catch(SQLException e){
+            System.out.println("Il y a une erreur avec l'id du vendeur");
+            runAdministrateur();
+        }
+
+    }
+
+    public void creerLib(){
+        Magasin newLibrairie = null;
+        String nomLib = nomLib();
+        String ville = villeLib(nomLib);
+        try{
+            int idmag = this.adminBD.maxNumMagasin();
+            newLibrairie = new Magasin(idmag, nomLib, ville);
+            this.adminBD.insererLibrairie(newLibrairie); 
+            this.runAdministrateur(); 
+        }
+        catch (SQLException e){
+            System.out.println("Problèmes rencontrés dans l'ajout d'une nouvelle librairie");
+            Menu.adminNomLib();
+        }
+        
+    }
+
+    public String nomLib(){
+        Menu.adminNomLib();
+        String nom = System.console().readLine();
+        nom = nom.strip();
+        String nomLib = null;
+        if(nom.equals("q")|| nom.equals("quitter")|| nom.equals("Quitter")){
+            runAdministrateur();
+        }
+        nomLib = nom;
+        return nomLib;
+    }
+
+    public String villeLib(String nom){
+        Menu.adminVilleLib(nom);
+        String ville = System.console().readLine();
+        ville = ville.strip();
+        String villeLib = ville;
+        return villeLib; 
+    }
+
+
+    public void suppLib() {
+        Magasin lib = null;
+        Integer idMag = null;
+        try{
+            List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
+            Menu.adminSupLib(listeMagasin);
+        }
+        catch(SQLException ex){
+            System.out.println("Erreur SQL !");
+        }
+        String id = System.console().readLine();
+        id = id.strip();
+        if (id.equals("q") || id.equals("quitter") || id.equals("quit")) {
+            Menu.admin();    
+        }
+        else{
+            try{
+                idMag = Integer.parseInt(id);
+            }
+            catch(NumberFormatException e){
+                System.out.println("Entrez un identifiant valide.");
+            }
+            try {
+                lib = this.magasinBD.rechercherMagasinParId(idMag);
+            } catch (SQLException e) {
+                System.out.println("Il n'y a aucune librairie avec cet identifiant");
+                suppLib();
+            }      
+            comfSuppLib(lib);
+            
+        }
+        
+    }
+
+    public void comfSuppLib(Magasin mag){
+        Menu.adminComfirmationSup(mag);
+        String confirmation = System.console().readLine();
+        confirmation = confirmation.strip().toLowerCase();
+        if(confirmation.equals("oui")|| confirmation.equals("o")){
+            try{
+                Integer id = mag.getIdMag();
+                this.adminBD.supprimerLibrairie(id);         
+            }
+            catch (SQLException e){
+                System.out.println("Problèmes rencontrés lors de la suppression de la librairie");
+            }
+            runAdministrateur(); 
+        }
+        else if(confirmation.equals("non")|| confirmation.equals("n")){
+            runAdministrateur();
+        }
+        else{
+            erreur();
+        }
+    }
+
 
     public void erreur() {
         System.out.println("\n" + "Erreur veillez réessayer");
