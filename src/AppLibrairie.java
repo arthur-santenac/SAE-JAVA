@@ -24,8 +24,6 @@ public class AppLibrairie {
     private char enLigne;
     private char modeLivraison;
     private String compte;
-    private String enLigne;
-    private String compte;
 
     private Magasin magasin;
 
@@ -63,19 +61,20 @@ public class AppLibrairie {
                 try {
                     this.compte = Connexion();
                     if (this.compte.equals("client")) {
-                    this.compte = Connexion();
-                    if (this.compte.equals("client")) {
-                        runClient();
-                    } else if (this.compte.substring(0, 7).equals("vendeur")) {
-                    } else if (this.compte.substring(0, 7).equals("vendeur")) {
-                        // a faire
-                        runVendeur();
-                    } else if (this.compte.equals("administrateur")) {
-                    } else if (this.compte.equals("administrateur")) {
-                        runAdministrateur();
-                    } else if (this.compte.equals("quitter")) {
-                    } else if (this.compte.equals("quitter")) {
-                        AppLibrairie.quitterAppli = true;
+                        this.compte = Connexion();
+                        if (this.compte.equals("client")) {
+                            runClient();
+                        } else if (this.compte.substring(0, 7).equals("vendeur")) {
+                        } else if (this.compte.substring(0, 7).equals("vendeur")) {
+                            // a faire
+                            runVendeur();
+                        } else if (this.compte.equals("administrateur")) {
+                        } else if (this.compte.equals("administrateur")) {
+                            runAdministrateur();
+                        } else if (this.compte.equals("quitter")) {
+                        } else if (this.compte.equals("quitter")) {
+                            AppLibrairie.quitterAppli = true;
+                        }
                     }
                 } catch (MauvaisMotDePasseExeption e) {
                     System.out.println("Mauvais identifiants");
@@ -422,6 +421,8 @@ public class AppLibrairie {
         }
     }
 
+    
+
     public void erreur() {
         System.out.println("\n" + "Erreur veillez réessayer");
         System.console().readLine();
@@ -492,6 +493,10 @@ public class AppLibrairie {
             System.out.println("erreur");
         }
 
+    }
+
+    public void setUtilisateur(Client utilisateur) {
+        this.utilisateur = utilisateur;
     }
 
     public boolean ajouteLivre() throws SQLException {
