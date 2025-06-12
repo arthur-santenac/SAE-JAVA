@@ -426,6 +426,7 @@ public class AppLibrairie {
         }
         catch(SQLException e){
             System.out.println("Il y a une erreur avec l'id du vendeur");
+            runAdministrateur();
         }
 
     }
