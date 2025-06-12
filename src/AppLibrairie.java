@@ -24,6 +24,8 @@ public class AppLibrairie {
     private char enLigne;
     private char modeLivraison;
     private String compte;
+    private String enLigne;
+    private String compte;
 
     private Magasin magasin;
 
@@ -61,12 +63,17 @@ public class AppLibrairie {
                 try {
                     this.compte = Connexion();
                     if (this.compte.equals("client")) {
+                    this.compte = Connexion();
+                    if (this.compte.equals("client")) {
                         runClient();
+                    } else if (this.compte.substring(0, 7).equals("vendeur")) {
                     } else if (this.compte.substring(0, 7).equals("vendeur")) {
                         // a faire
                         runVendeur();
                     } else if (this.compte.equals("administrateur")) {
+                    } else if (this.compte.equals("administrateur")) {
                         runAdministrateur();
+                    } else if (this.compte.equals("quitter")) {
                     } else if (this.compte.equals("quitter")) {
                         AppLibrairie.quitterAppli = true;
                     }
@@ -518,10 +525,6 @@ public class AppLibrairie {
         String quantite = System.console().readLine();
         int quantiteInt = Integer.parseInt(quantite);
         return (this.vendeurBD.dispo(idMagInt, idlivre, quantiteInt));
-    }
-
-    public void setUtilisateur(Client utilisateur) {
-        this.utilisateur = utilisateur;
     }
 
     public static void main(String[] args) {
