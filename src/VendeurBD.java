@@ -41,7 +41,7 @@ public class VendeurBD {
 		if (verif.next()) {
 			this.st.executeUpdate(
 					"UPDATE POSSEDER SET qte = qte + " + qte +
-							" WHERE isbn = '" + isbn + "' AND idmag = '" + idmag + "';");
+							" WHERE isbn = '" + isbn + "' AND idmag = " + idmag + " AND qte + " + qte + " >= 0;");
 			Menu.vendeurModifReussi();
 			System.console().readLine();
 			return true;
@@ -65,6 +65,26 @@ public class VendeurBD {
 			return true;
 		} else {
 			Menu.vendeurPasDispo(quantite);
+			System.console().readLine();
+			return false;
+		}
+	}
+
+	public boolean transfer(int idMag, int idMagDestination, String isbn, int quantite) throws SQLException {
+		this.st = this.laConnexion.createStatement();
+
+		ResultSet verif = this.st.executeQuery(
+				"SELECT * FROM POSSEDER WHERE idmag = '" + idMag + "' AND isbn = '" + isbn + "' AND (qte >= " + quantite
+						+ ");");
+
+		if (verif.next()) {
+			majQte(idMagDestination, isbn, quantite);
+			majQte(idMag, isbn, -quantite);
+			Menu.tranfertReussi();
+			System.console().readLine();
+			return true;
+		} else {
+			Menu.transferFail();
 			System.console().readLine();
 			return false;
 		}
