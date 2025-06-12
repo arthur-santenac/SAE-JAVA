@@ -331,7 +331,6 @@ public class AppLibrairie {
                     }
                     supprPanier();
                 }
-                
             } catch (NumberFormatException e) {
                 erreur();
                 supprPanier();
@@ -531,6 +530,45 @@ public class AppLibrairie {
         int quantiteInt = Integer.parseInt(quantite);
         return (this.vendeurBD.dispo(idMagInt, idlivre, quantiteInt));
     }
+
+    public Magasin choisirMagasinTransfert(String idlivre, int quantiteInt) throws SQLException {
+       List<Magasin> listeMagasin = new ArrayList<>();
+       st = connexionMySQL.createStatement();
+       ResultSet set = st.executeQuery("select * from POSSEDER natural join MAGASIN where isbn = " + idlivre
+               + " AND qte >= " + quantiteInt + ";");
+       while (set.next()) {
+           listeMagasin.add(new Magasin(set.getString(1), set.getString(2), set.getString(3)));
+       }
+       Menu.choisirMagasinTransfet(listeMagasin);
+       String magasin = System.console().readLine();
+       magasin = magasin.strip();
+       try {
+           int numMagasin = Integer.parseInt(magasin);
+           if (numMagasin >= 1 && numMagasin <= listeMagasin.size()) {
+               return listeMagasin.get(numMagasin - 1);
+           } else {
+               erreur();
+               return choisirMagasinTransfert(idlivre, quantiteInt);
+           }
+       } catch (NumberFormatException e) {
+           erreur();
+           return choisirMagasinTransfert(idlivre, quantiteInt);
+       }
+   }
+
+
+   public boolean transfert() throws SQLException {
+       char idMag = this.compte.charAt(this.compte.length() - 1);
+       int idMagInt = Character.getNumericValue(idMag);
+       Menu.vendeurRecupIdLivreVerif();
+       String idlivre = System.console().readLine();
+       Menu.vendeurRecupQte();
+       String quantite = System.console().readLine();
+       int quantiteInt = Integer.parseInt(quantite);
+       Magasin MagPossede = choisirMagasinTransfert(idlivre, quantiteInt);
+       return (this.vendeurBD.transfer(MagPossede.getIdMag(), idMagInt, idlivre, quantiteInt));
+   }
+
 
     public static void main(String[] args) {
         AppLibrairie app = new AppLibrairie();
