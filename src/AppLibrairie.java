@@ -449,35 +449,153 @@ public class AppLibrairie {
             String option = System.console().readLine();
             option = option.strip().toLowerCase();
             if (option.equals("1")) {
-
+                creerVendeur();
             } else if (option.equals("2")) {
-                creerLib();
+                
             } else if (option.equals("3")) {
-                suppLib();
+                listeVendeurs();
             } else if (option.equals("4")) {
-                runAdministrateurLib();
+                creerLib();
             } else if (option.equals("5")) {
-
+                suppLib();
             } else if (option.equals("6")) {
-
+                listeLibs();
             } else if (option.equals("7")) {
 
             } else if (option.equals("8")) {
 
-            } else if (option.equals("q") || option.equals("quitter") || option.equals("quit")) {
-                return;
+            } else if (option.equals("9")) {
+
+            } else if (option.equals("10")) {
+                AppLibrairie.quitterAppli = true;
             } else {
                 this.erreur();
             }
         }
     }
 
-    public void runAdministrateurLib() {
+    
+
+    public void creerVendeur() {
+        Integer idV = null;
+        String nomV = null;
+        String prenomV = null;
+        String adresseV = null;
+        String codePostalV = null;
+        String villeV = null;
+        String emailV = null;
+        String mdp = null;
         try {
-            List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
-            Menu.adminListeLib(listeMagasin);
+            idV = this.clientBD.maxNum() + 1;
+        } catch (SQLException e) {
+            System.out.println("Il y a une erreur avec l'id du vendeur");
+            runAdministrateur();
+        }
+        nomV = nomVendeur();
+        prenomV = prenomVendeur(nomV);
+        adresseV = adresseVendeur(nomV, prenomV);
+        codePostalV = codePostalVendeur(nomV, prenomV, adresseV);
+        villeV = villeVendeur(nomV, prenomV, adresseV, codePostalV);
+        emailV = emailVendeur(nomV, prenomV, adresseV, codePostalV, villeV);
+        mdp = mdpVendeur(nomV, prenomV, adresseV, codePostalV, villeV, emailV);
+        Client vendeur = new Client(nomV, prenomV, adresseV, codePostalV, villeV, idV);
+        try{
+            this.clientBD.insererVendeur(vendeur,emailV, mdp);
+        }catch(SQLException e){
+            System.out.println("Il y a une erreur avec l'insertion du vendeur");
+            runAdministrateur();
+        }
+        runAdministrateur();
+        
+    }
+
+    private String nomVendeur(){
+        Menu.adminNomVendeur();
+        String option = System.console().readLine();
+        option = option.strip();
+        String nomVendeur = null;
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        else{
+            nomVendeur = option;
+        }
+        return nomVendeur;
+    }
+
+    private String prenomVendeur(String nom){
+        Menu.adminPrenomVendeur(nom);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String prenomVendeur = option;
+        return prenomVendeur;
+    }
+
+    private String adresseVendeur(String nom, String prenom){
+        Menu.adminAdresseVendeur(nom,prenom);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String adresseVendeur = option;
+        return adresseVendeur;
+    }
+
+    private String codePostalVendeur(String nom, String prenom, String adresse){
+        Menu.adminCodePostalVendeur(nom, prenom, adresse);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String codePostalV = option;
+        return codePostalV;
+    }
+
+    private String villeVendeur(String nom, String prenom, String adresse, String codePostal){
+        Menu.adminVilleVendeur(nom, prenom, adresse, codePostal);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String villeVendeur = option;
+        return villeVendeur;
+    }
+
+    private String emailVendeur(String nom, String prenom, String adresse, String codePostal, String ville){
+        Menu.adminEmailVendeur(nom, prenom, adresse, codePostal, ville);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String emailVendeur = option;
+        return emailVendeur;
+    }
+
+    private String mdpVendeur(String nom, String prenom, String adresse, String codePostal, String ville, String email){
+        Menu.adminMdpVendeur(nom, prenom, adresse, codePostal, ville, email);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String mdpVendeur = option;
+        return mdpVendeur;
+    }
+
+
+    public void listeVendeurs() {
+        try {
+            List<Client> listeMagasin = clientBD.listeDesVendeurs();
+            Menu.adminListeVendeur(listeMagasin);
         } catch (SQLException ex) {
-            System.out.println("Erreur SQL !");
+            System.out.println("Erreur d'affichage de la liste des vendeurs !");
         }
         String option = System.console().readLine();
         option = option.strip().toLowerCase();
@@ -486,22 +604,6 @@ public class AppLibrairie {
         } else {
             erreur();
         }
-
-    }
-
-    public void creerVendeur() {
-        Integer idVendeur = null;
-        String nomVendeur = null;
-        String prenomVendeur = null;
-        String addresseVendeur = null;
-        String codePostalVendeur = null;
-        try {
-            idVendeur = this.clientBD.maxNum() + 1;
-        } catch (SQLException e) {
-            System.out.println("Il y a une erreur avec l'id du vendeur");
-            runAdministrateur();
-        }
-
     }
 
     public void creerLib() {
@@ -520,7 +622,7 @@ public class AppLibrairie {
 
     }
 
-    public String nomLib() {
+    private String nomLib() {
         Menu.adminNomLib();
         String nom = System.console().readLine();
         nom = nom.strip();
@@ -532,7 +634,7 @@ public class AppLibrairie {
         return nomLib;
     }
 
-    public String villeLib(String nom) {
+    private String villeLib(String nom) {
         Menu.adminVilleLib(nom);
         String ville = System.console().readLine();
         ville = ville.strip();
@@ -584,6 +686,22 @@ public class AppLibrairie {
             }
             runAdministrateur();
         } else if (confirmation.equals("non") || confirmation.equals("n")) {
+            runAdministrateur();
+        } else {
+            erreur();
+        }
+    }
+
+    public void listeLibs() {
+        try {
+            List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
+            Menu.adminListeLib(listeMagasin);
+        } catch (SQLException ex) {
+            System.out.println("Erreur SQL !");
+        }
+        String option = System.console().readLine();
+        option = option.strip().toLowerCase();
+        if (option.equals("q") || option.equals("quitter")) {
             runAdministrateur();
         } else {
             erreur();

@@ -13,10 +13,10 @@ public class Client {
     private String nom;
     private String prenom;
     private String adresse;
-    private int codePostal;
+    private String codePostal;
     private String ville;
 
-    public Client(String nom, String prenom, String adresse, int codePostal, String ville, int idCli) {
+    public Client(String nom, String prenom, String adresse, String codePostal, String ville, int idCli) {
         this.nom = nom;
         this.prenom = prenom;
         this.adresse = adresse;
@@ -33,7 +33,7 @@ public class Client {
         return adresse;
     }
 
-    public int getCodePostal() {
+    public String getCodePostal() {
         return codePostal;
     }
 
@@ -49,6 +49,13 @@ public class Client {
         return ville;
     }
 
+    @Override
+    public String toString(){
+        return this.idCli+" "+this.nom+" "+this.prenom+" "+this.adresse+" "+this.codePostal+" "+this.ville;
+
+    }
+
+    
     @Override
     public boolean equals(Object o){
         if(o == null){
