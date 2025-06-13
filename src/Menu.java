@@ -836,7 +836,7 @@ public class Menu {
         System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||  - Vous ne possédez pas ce livre, ajoutez le.                  |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||  - Quantité modifier avec succès                               |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||  - Appuyez sur n'importe quelle touche pour retourner en       |                                                                ||||");
