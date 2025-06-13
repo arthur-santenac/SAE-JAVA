@@ -50,6 +50,13 @@ public class Client {
     }
 
     @Override
+    public String toString(){
+        return this.idCli+" "+this.nom+" "+this.prenom+" "+this.adresse+" "+this.codePostal+" "+this.ville;
+
+    }
+
+    
+    @Override
     public boolean equals(Object o){
         if(o == null){
             return false;

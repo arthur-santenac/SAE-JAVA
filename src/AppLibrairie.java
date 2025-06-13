@@ -470,7 +470,7 @@ public class AppLibrairie {
             this.clientBD.insererVendeur(vendeur,emailV, mdp);
         }catch(SQLException e){
             System.out.println("Il y a une erreur avec l'insertion du vendeur");
-            creerVendeur();
+            runAdministrateur();
         }
         runAdministrateur();
         

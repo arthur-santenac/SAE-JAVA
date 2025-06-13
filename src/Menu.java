@@ -1103,7 +1103,7 @@ public class Menu {
         System.out.println(" |||| 7 - Gérer les stocks globaux                                   |                                                                ||||");
         System.out.println(" |||| 8 - Consulter les statistiques de vente                        |                                                                ||||");
         System.out.println(" |||| 9 - Changer de compte                                          |                                                                ||||");
-        System.out.println(" |||| 10 - Quitter l'application                                      |                                                                ||||");
+        System.out.println(" |||| 10 - Quitter l'application                                     |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
