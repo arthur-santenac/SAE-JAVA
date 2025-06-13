@@ -33,7 +33,7 @@ public class VendeurBD {
 		}
 	}
 
-	public boolean majQte(int idmag, String isbn, int qte) throws SQLException {
+	public boolean majQte(int idmag, String isbn, int qte, boolean afficheMenu) throws SQLException {
 		this.st = this.laConnexion.createStatement();
 		ResultSet verif = this.st.executeQuery(
 				"SELECT * FROM POSSEDER WHERE idmag = '" + idmag + "' AND isbn = '" + isbn + "';");
@@ -42,17 +42,23 @@ public class VendeurBD {
 			this.st.executeUpdate(
 					"UPDATE POSSEDER SET qte = qte + " + qte +
 							" WHERE isbn = '" + isbn + "' AND idmag = " + idmag + " AND qte + " + qte + " >= 0;");
-			Menu.vendeurModifReussi();
-			System.console().readLine();
+			if (afficheMenu) {
+				Menu.vendeurModifReussi();
+				System.console().readLine();
+			}
+
 			return true;
 		} else {
-			Menu.vendeurErreurModif();
-			System.console().readLine();
+			if (afficheMenu) {
+				Menu.vendeurErreurModif();
+				System.console().readLine();
+			}
+
 			return false;
 		}
 	}
 
-	public boolean dispo(int idmag, String isbn, int quantite) throws SQLException {
+	public boolean dispo(int idmag, String isbn, int quantite, boolean afficheMenu) throws SQLException {
 		this.st = this.laConnexion.createStatement();
 
 		ResultSet verif = this.st.executeQuery(
@@ -60,12 +66,18 @@ public class VendeurBD {
 						+ ");");
 
 		if (verif.next()) {
-			Menu.vendeurDispo();
-			System.console().readLine();
+			if (afficheMenu) {
+				Menu.vendeurDispo();
+				System.console().readLine();
+			}
+
 			return true;
 		} else {
-			Menu.vendeurPasDispo(quantite);
-			System.console().readLine();
+			if (afficheMenu) {
+				Menu.vendeurPasDispo(quantite);
+				System.console().readLine();
+			}
+
 			return false;
 		}
 	}
@@ -78,8 +90,12 @@ public class VendeurBD {
 						+ ");");
 
 		if (verif.next()) {
-			majQte(idMagDestination, isbn, quantite);
-			majQte(idMag, isbn, -quantite);
+			if (!dispo(idMagDestination, isbn, quantite, false)) {
+				ajouteLivre(idMagDestination, isbn, quantite);
+			} else {
+				majQte(idMagDestination, isbn, quantite, false);
+			}
+			majQte(idMag, isbn, -quantite, false);
 			Menu.tranfertReussi();
 			System.console().readLine();
 			return true;

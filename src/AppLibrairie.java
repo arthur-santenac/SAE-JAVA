@@ -681,7 +681,7 @@ public class AppLibrairie {
         Menu.vendeurRecupQte();
         String quantite = System.console().readLine();
         int quantiteInt = Integer.parseInt(quantite);
-        return (this.vendeurBD.majQte(idMagInt, idlivre, quantiteInt));
+        return (this.vendeurBD.majQte(idMagInt, idlivre, quantiteInt, true));
     }
 
     public boolean dispo() throws SQLException {
@@ -692,7 +692,7 @@ public class AppLibrairie {
         Menu.vendeurRecupQte();
         String quantite = System.console().readLine();
         int quantiteInt = Integer.parseInt(quantite);
-        return (this.vendeurBD.dispo(idMagInt, idlivre, quantiteInt));
+        return (this.vendeurBD.dispo(idMagInt, idlivre, quantiteInt, true));
     }
 
     public Magasin choisirMagasinTransfert(String idlivre, int quantiteInt) throws SQLException {
@@ -707,14 +707,17 @@ public class AppLibrairie {
         String magasin = System.console().readLine();
         magasin = magasin.strip();
         try {
+            System.out.println("caca");
             int numMagasin = Integer.parseInt(magasin);
-            if (numMagasin >= 1 && numMagasin <= listeMagasin.size()) {
-                return listeMagasin.get(numMagasin - 1);
+            if (numMagasin >= 1 && numMagasin <= magasinBD.listeDesMagasins().size()) {
+                return magasinBD.listeDesMagasins().get(numMagasin-1);
             } else {
+                System.out.println("cacaa");
                 erreur();
                 return choisirMagasinTransfert(idlivre, quantiteInt);
             }
         } catch (NumberFormatException e) {
+            System.out.println("caca1");
             erreur();
             return choisirMagasinTransfert(idlivre, quantiteInt);
         }
