@@ -267,8 +267,10 @@ public class AppLibrairie {
             } else if (commander.equals("3")) {
                 meilleursVentes();
             } else if (commander.equals("4")) {
+                consulterCatalogue();  
+            } else if (commander.equals("5")) {
                 consulterPanier();
-            } else if (commander.equals("5") || commander.equals("quitter") || commander.equals("q")
+            } else if (commander.equals("6") || commander.equals("quitter") || commander.equals("q")
                     || commander.equals("quit")) {
                 quitter = true;
             } else {
@@ -276,6 +278,10 @@ public class AppLibrairie {
             }
         }
     }
+
+    public void consulterCatalogue() {
+        
+    } 
 
     public void consulterPanier() {
         if (Menu.consulterPanier(panier)) {
@@ -343,9 +349,36 @@ public class AppLibrairie {
         }
     }
 
-    public void verifierStock() {
+    public void verifierStock() throws SQLException{
+       Menu.chercherLivre();
+       String chercher = System.console().readLine();
+       chercher = chercher.strip();
+       if (chercher.equals("q") || chercher.equals("quit") || chercher.equals("quitter")) {
+           return;
+       }
+       boolean trouve = false;
+       List<Livre> listeLivre = new ArrayList<>();
+       st = connexionMySQL.createStatement();
+       ResultSet set = st.executeQuery(
+               "select * from LIVRE natural join MAGASIN where nommag = \"" + magasin.getNomMag() + "\"");
+       while (set.next()) {
+           if (set.getString(2).equals(chercher)) {
+               listeLivre.add(
+                       new Livre(set.getString(1), set.getString(2), set.getInt(3), set.getInt(4), set.getDouble(5)));
+               trouve = true;
+           }
+       }
+       if (!trouve) {
+           System.out.println("le livre n'existe pas");
+           erreur();
+           System.console().readLine();
+           chercherLivre();
+       } else {
+           Menu.livreEnMagasin();
+           System.console().readLine();
+       }
+   }
 
-    }
 
     public void chercherLivre() throws SQLException {
         Menu.chercherLivre();
@@ -772,7 +805,7 @@ public class AppLibrairie {
         Menu.vendeurRecupQte();
         String quantite = System.console().readLine();
         int quantiteInt = Integer.parseInt(quantite);
-        return (this.vendeurBD.majQte(idMagInt, idlivre, quantiteInt));
+        return (this.vendeurBD.majQte(idMagInt, idlivre, quantiteInt, true));
     }
 
     public boolean dispo() throws SQLException {
@@ -783,7 +816,7 @@ public class AppLibrairie {
         Menu.vendeurRecupQte();
         String quantite = System.console().readLine();
         int quantiteInt = Integer.parseInt(quantite);
-        return (this.vendeurBD.dispo(idMagInt, idlivre, quantiteInt));
+        return (this.vendeurBD.dispo(idMagInt, idlivre, quantiteInt, true));
     }
 
     public Magasin choisirMagasinTransfert(String idlivre, int quantiteInt) throws SQLException {
@@ -799,8 +832,8 @@ public class AppLibrairie {
         magasin = magasin.strip();
         try {
             int numMagasin = Integer.parseInt(magasin);
-            if (numMagasin >= 1 && numMagasin <= listeMagasin.size()) {
-                return listeMagasin.get(numMagasin - 1);
+            if (numMagasin >= 1 && numMagasin <= magasinBD.listeDesMagasins().size()) {
+                return magasinBD.listeDesMagasins().get(numMagasin-1);
             } else {
                 erreur();
                 return choisirMagasinTransfert(idlivre, quantiteInt);
