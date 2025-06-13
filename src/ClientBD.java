@@ -42,6 +42,24 @@ public class ClientBD {
 		ps2.close();
 	}
 
+	List<Client> listeDesVendeurs() throws SQLException{
+		this.st = this.laConnexion.createStatement();
+		ResultSet rs = this.st.executeQuery("Select * from CLIENT Where idcli in { select idcl from Client cl natural left join CONNEXION co Where cl.idcli = co.idcli and co.compte = 'vendeur' }");
+		List<Client> clients = new ArrayList<>();
+		while(rs.next()){
+			int id = rs.getInt(1);
+			String nomV = rs.getString(2);
+			String prenomV = rs.getString(3);
+			String adresseV = rs.getString(4);
+			String codePostalV = rs.getString(5);
+			String villeV = rs.getString(6);
+			Client c = new Client(nomV, prenomV, adresseV, codePostalV, villeV, id);
+			clients.add(c);
+		}
+		rs.close();
+		return clients;
+	}
+
 	public String Connexion(String email, String mdp, AppLibrairie app) {
 		try {
 			st = laConnexion.createStatement();

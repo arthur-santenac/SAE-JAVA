@@ -1545,7 +1545,7 @@ public class Menu {
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| Veuillez entrer le nom de la nouvelle Libraire                 |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||    q - Quitter                                                 |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -1593,12 +1593,10 @@ public class Menu {
         System.out.println(" |||| Veuillez entrer le nom de la ville dans laquelle               |                                                                ||||");
         System.out.println(" |||| se trouve la nouvelle Libraire                                 |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        
+        System.out.println(" ||||    q - Quitter                                                 |                                                                ||||");
         String ligne = " ||||    " + " - " + nomLib;
                 ligne = AppLibrairie.ljust(ligne, 69);
                 System.out.println(ligne + "|                                                                ||||");
-
-        System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
