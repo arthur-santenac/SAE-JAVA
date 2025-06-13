@@ -263,14 +263,16 @@ public class AppLibrairie {
                     System.console().readLine();
                 }
             } else if (commander.equals("2")) {
-
+                livresRecommande();
             } else if (commander.equals("3")) {
-                meilleursVentes();
+                try {
+                    consulterCatalogue();  
+                } catch (SQLException e) {
+                    erreur();
+                }
             } else if (commander.equals("4")) {
-                consulterCatalogue();  
-            } else if (commander.equals("5")) {
                 consulterPanier();
-            } else if (commander.equals("6") || commander.equals("quitter") || commander.equals("q")
+            } else if (commander.equals("5") || commander.equals("quitter") || commander.equals("q")
                     || commander.equals("quit")) {
                 quitter = true;
             } else {
@@ -279,7 +281,95 @@ public class AppLibrairie {
         }
     }
 
-    public void consulterCatalogue() {
+    public void livresRecommande() {
+        try {
+            boolean quitter = false;
+            List<Livre> livresRec = this.clientBD.onVousRecommande(this.utilisateur.getIdCli());
+            List<Livre> sousLivres;
+            if (livresRec.size() >= 34) {
+                sousLivres = livresRec.subList(0, 34);
+            } else {
+                sousLivres = livresRec;
+            }
+            while (!quitter) {
+                try {
+                    Menu.livresRecommande(livresRec);
+                    String option = System.console().readLine();
+                    option = option.strip();
+                    if (option.equals("quitter") || option.equals("q") || option.equals("quit")) {
+                        quitter = true;
+                    } else {
+                        int optionInt = Integer.parseInt(option);
+                        if (optionInt > 0 && optionInt < sousLivres.size()) {
+                            Menu.qte();;
+                            String qte = System.console().readLine();
+                            qte = qte.strip();
+                            int qteInt = Integer.parseInt(qte);
+                            this.panier.ajouterDetailsCommande(sousLivres.get(optionInt - 1), qteInt);
+                        } else {
+                            erreur();
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    erreur();
+                }
+            }
+
+        } catch (SQLException e) {
+            erreur();
+        }
+    }
+
+    public void consulterCatalogue() throws SQLException{
+        st = connexionMySQL.createStatement();
+        ResultSet set = st.executeQuery(
+               "select * from LIVRE natural join MAGASIN where nommag = \"" + magasin.getNomMag() + "\"");
+        int pageActuel = 1;
+        List<Livre> listeLivre = new ArrayList<>();
+        while (set.next()) {
+			listeLivre.add(new Livre(set.getString("isbn"), set.getString("titre"), set.getInt("nbpages"), set.getInt("datepubli"), set.getDouble("prix")));
+		}
+        int nbPageMax = (int) (listeLivre.size() / 34 + 1);
+        boolean quitter = false;
+        while (!quitter) {
+            try {
+                List<Livre> sousListe;
+                try {
+                    sousListe = listeLivre.subList(pageActuel * 34 - 34, pageActuel * 34);
+                } catch (IndexOutOfBoundsException e) {
+                    sousListe = listeLivre.subList(pageActuel * 34 - 34, listeLivre.size());
+                }
+                Menu.consulterCatalogue(sousListe);
+                String option = System.console().readLine();
+                option = option.strip();
+                if (option.equals("<")) {
+                    if (pageActuel > 1) {
+                        --pageActuel;
+                    }
+                } else if (option.equals(">")) {
+                    if (pageActuel < nbPageMax) {
+                        ++pageActuel;
+                    }
+                } else if (option.equals("q") || option.equals("quitter") || option.equals("quit")) {
+                    quitter = true;
+                } else {
+                    int optionInt = Integer.parseInt(option);
+                    if (optionInt > 0 && optionInt <= 34) {
+                        Menu.qte();;
+                        String qte = System.console().readLine();
+                        qte = qte.strip();
+                        int qteInt = Integer.parseInt(qte);
+                        this.panier.ajouterDetailsCommande(sousListe.get(optionInt - 1), qteInt);
+                    } else {
+                        erreur();
+                    }
+
+                }
+            } catch (NumberFormatException e) {
+                erreur();
+            }
+
+        }
         
     } 
 
@@ -349,36 +439,35 @@ public class AppLibrairie {
         }
     }
 
-    public void verifierStock() throws SQLException{
-       Menu.chercherLivre();
-       String chercher = System.console().readLine();
-       chercher = chercher.strip();
-       if (chercher.equals("q") || chercher.equals("quit") || chercher.equals("quitter")) {
-           return;
-       }
-       boolean trouve = false;
-       List<Livre> listeLivre = new ArrayList<>();
-       st = connexionMySQL.createStatement();
-       ResultSet set = st.executeQuery(
-               "select * from LIVRE natural join MAGASIN where nommag = \"" + magasin.getNomMag() + "\"");
-       while (set.next()) {
-           if (set.getString(2).equals(chercher)) {
-               listeLivre.add(
-                       new Livre(set.getString(1), set.getString(2), set.getInt(3), set.getInt(4), set.getDouble(5)));
-               trouve = true;
-           }
-       }
-       if (!trouve) {
-           System.out.println("le livre n'existe pas");
-           erreur();
-           System.console().readLine();
-           chercherLivre();
-       } else {
-           Menu.livreEnMagasin();
-           System.console().readLine();
-       }
-   }
-
+    public void verifierStock() throws SQLException {
+        Menu.chercherLivre();
+        String chercher = System.console().readLine();
+        chercher = chercher.strip();
+        if (chercher.equals("q") || chercher.equals("quit") || chercher.equals("quitter")) {
+            return;
+        }
+        boolean trouve = false;
+        List<Livre> listeLivre = new ArrayList<>();
+        st = connexionMySQL.createStatement();
+        ResultSet set = st.executeQuery(
+                "select * from LIVRE natural join MAGASIN where nommag = \"" + magasin.getNomMag() + "\"");
+        while (set.next()) {
+            if (set.getString(2).equals(chercher)) {
+                listeLivre.add(
+                        new Livre(set.getString(1), set.getString(2), set.getInt(3), set.getInt(4), set.getDouble(5)));
+                trouve = true;
+            }
+        }
+        if (!trouve) {
+            System.out.println("le livre n'existe pas");
+            erreur();
+            System.console().readLine();
+            chercherLivre();
+        } else {
+            Menu.livreEnMagasin();
+            System.console().readLine();
+        }
+    }
 
     public void chercherLivre() throws SQLException {
         Menu.chercherLivre();
@@ -437,10 +526,6 @@ public class AppLibrairie {
             erreur();
             proposerChercherLivre(listeLivre);
         }
-    }
-
-    public void meilleursVentes() {
-
     }
 
     public void runAdministrateur() {
@@ -723,8 +808,10 @@ public class AppLibrairie {
 
     }
 
+
     public void confSuppLib(Magasin mag){
         Menu.adminConfirmationSup(mag);
+
         String confirmation = System.console().readLine();
         confirmation = confirmation.strip().toLowerCase();
         if (confirmation.equals("oui") || confirmation.equals("o")) {
@@ -790,8 +877,10 @@ public class AppLibrairie {
 
     public static String ljust(String string, int longeur) {
         int aAjouter = longeur - string.length();
-        if (aAjouter <= 0)
-            return string;
+        if (aAjouter <= 0) {
+            String res = string.substring(0, longeur - 1) + " ";
+            return res;
+        }
         String padding = "";
         for (int i = 0; i < aAjouter; i++) {
             padding = padding + " ";
@@ -813,9 +902,10 @@ public class AppLibrairie {
                     majQte();
                 } else if (option.equals("3")) {
                     dispo();
-                }
-                // else if (option.equals("4")) {passerCommande();}
-                else if (option.equals("5")) {
+                } else if (option.equals("4")) {
+                    this.enLigne = 0;
+                    commanderVendeur();
+                } else if (option.equals("5")) {
                     transfert();
                 } else if (option.equals("6")) {
                     run();
@@ -883,7 +973,7 @@ public class AppLibrairie {
         try {
             int numMagasin = Integer.parseInt(magasin);
             if (numMagasin >= 1 && numMagasin <= magasinBD.listeDesMagasins().size()) {
-                return magasinBD.listeDesMagasins().get(numMagasin-1);
+                return magasinBD.listeDesMagasins().get(numMagasin - 1);
             } else {
                 erreur();
                 return choisirMagasinTransfert(idlivre, quantiteInt);
@@ -906,9 +996,117 @@ public class AppLibrairie {
         return (this.vendeurBD.transfer(MagPossede.getIdMag(), idMagInt, idlivre, quantiteInt));
     }
 
+    public void commanderVendeur() {
+        this.modeLivraison = choisirModeLivraison();
+        boolean quitter = false;
+        while (!quitter) {
+            Menu.commanderVendeur();
+            String commander = System.console().readLine();
+            commander = commander.strip();
+            if (commander.equals("1")) {
+                try {
+                    chercherLivreVendeur();
+                } catch (SQLException e) {
+                    System.out.println("erreur en sql");
+                    System.console().readLine();
+                }
+            } else if (commander.equals("2")) {
+                consulterPanierVendeur();
+            } else if (commander.equals("3") || commander.equals("quitter") || commander.equals("q")
+                    || commander.equals("quit")) {
+                quitter = true;
+            } else {
+
+                erreur();
+            }
+        }
+    }
+
+    public void chercherLivreVendeur() throws SQLException {
+        Menu.chercherLivre();
+        String chercher = System.console().readLine();
+        chercher = chercher.strip();
+        if (chercher.equals("q") || chercher.equals("quit") || chercher.equals("quitter")) {
+            return;
+        }
+        st = connexionMySQL.createStatement();
+        ResultSet set = st.executeQuery(
+                "select * from LIVRE where isbn =" + chercher + ";");
+        Livre livre = new Livre(chercher, chercher, enLigne, modeLivraison, enLigne);
+        if (set.next()) {
+            livre = new Livre(set.getString(1), set.getString(2), set.getInt(3), set.getInt(4), set.getDouble(5));
+        }
+
+        char idMag = this.compte.charAt(this.compte.length() - 1);
+        int idMagInt = Character.getNumericValue(idMag);
+        Menu.qte();
+        String qte = System.console().readLine();
+        qte = qte.strip();
+
+        if (qte.equals("q") || qte.equals("quitter") || qte.equals("quit")) {
+            return;
+        }
+        try {
+            if (this.vendeurBD.dispo(idMagInt, chercher, Integer.parseInt(qte), true)) {
+
+                int numQte = Integer.parseInt(qte);
+                panier.ajouterDetailsCommande(livre, numQte);
+            } else {
+                Menu.demandeTransfert();
+                String rep = System.console().readLine();
+                if (rep.equals("oui")) {
+                    transfert();
+                } else {
+                    chercherLivreVendeur();
+                }
+
+            }
+        } catch (NumberFormatException e) {
+
+        }
+    }
+
     public static void main(String[] args) {
         AppLibrairie app = new AppLibrairie();
         app.run();
+    }
+
+    public void finaliserCommandeVendeur() {
+        try {
+            char idMag = this.compte.charAt(this.compte.length() - 1);
+            int idMagInt = Character.getNumericValue(idMag);
+            int maxNumCom = this.commandeBD.maxNumCom() + 1;
+            this.commandeBD.insererCommande(maxNumCom, enLigne, modeLivraison, this.utilisateur.getIdCli(),
+                    idMagInt);
+            for (int i = 0; i < this.panier.size(); i++) {
+                this.commandeBD.insererDetailCommande(maxNumCom, i + 1,
+                        this.panier.getDetailsCommande().get(i).getQte(),
+                        this.panier.getDetailsCommande().get(i).getPrixVente(),
+                        this.panier.getDetailsCommande().get(i).getLivre().getIsbn());
+            }
+            this.panier = new Commande('1', modeLivraison, magasin, utilisateur);
+        } catch (SQLException e) {
+            System.out.println("erreur sql");
+            System.console().readLine();
+        }
+    }
+
+    public void consulterPanierVendeur() {
+        if (Menu.consulterPanier(panier)) {
+            String option = System.console().readLine();
+            option = option.strip();
+            if (option.equals("1")) {
+                finaliserCommandeVendeur();
+            } else if (option.equals("2")) {
+                supprPanier();
+            } else if (option.equals("3") || option.equals("q") || option.equals("quitter") || option.equals("quit")) {
+            } else {
+                erreur();
+                consulterPanier();
+            }
+        } else {
+            System.console().readLine();
+        }
     }
 
 }
