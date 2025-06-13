@@ -1120,7 +1120,7 @@ public class Menu {
         System.out.println(" ||||                                                                |                                                                ||||");
 
         for (int i=1;i<=listeMagasin.size();i++) {
-            String ligne = " ||||   " + i + " - " + listeMagasin.get(i - 1);
+            String ligne = " ||||   " + listeMagasin.get(i-1).getIdMag() + " - " + listeMagasin.get(i - 1);
             ligne = AppLibrairie.ljust(ligne, 69);
             System.out.println(ligne + "|                                                                ||||");
         }
