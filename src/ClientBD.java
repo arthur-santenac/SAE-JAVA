@@ -74,15 +74,17 @@ public class ClientBD {
 	}
 
 	public void supprimerVendeur(Integer id)throws SQLException{
-		PreparedStatement ps = this.laConnexion.prepareStatement("delete from CLIENT where idcli =?");
+		PreparedStatement ps = this.laConnexion.prepareStatement("delete from CONNEXION where idcli =?");
 		ps.setInt(1, id);
-		int nb = ps.executeUpdate();
-		PreparedStatement ps2 = this.laConnexion.prepareStatement("delete from CONNEXION where idcli =?");
+		ps.executeUpdate();
+		PreparedStatement ps2 = this.laConnexion.prepareStatement("delete from CLIENT where idcli =?");
 		ps2.setInt(1, id);
-		int nb2 = ps2.executeUpdate();
-        if(nb ==0 || nb2 ==0){
+		int nb = ps2.executeUpdate();
+        if(nb ==0 ){
 			throw new SQLException("La suppression de la librairie a échoué car aucune librairie n'a cet identifiant");
-		} 
+		}
+		ps.close();
+		ps2.close();
 	}
 
 	public String Connexion(String email, String mdp, AppLibrairie app) {
