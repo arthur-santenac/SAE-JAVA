@@ -546,13 +546,13 @@ public class AppLibrairie {
                 System.out.println("Il n'y a aucune librairie avec cet identifiant");
                 suppLib();
             }      
-            comfSuppLib(lib);
+            confSuppLib(lib);
             
         }
         
     }
 
-    public void comfSuppLib(Magasin mag){
+    public void confSuppLib(Magasin mag){
         Menu.adminComfirmationSup(mag);
         String confirmation = System.console().readLine();
         confirmation = confirmation.strip().toLowerCase();
