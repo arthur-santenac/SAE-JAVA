@@ -418,18 +418,22 @@ public class AppLibrairie {
             if (option.equals("1")) {
                 creerVendeur();
             } else if (option.equals("2")) {
-                creerLib();
+                
             } else if (option.equals("3")) {
-                suppLib();
+                
             } else if (option.equals("4")) {
-                runAdministrateurLib();
+                creerLib();
             } else if (option.equals("5")) {
-
+                suppLib();
             } else if (option.equals("6")) {
-
+                runAdministrateurLib();
             } else if (option.equals("7")) {
 
             } else if (option.equals("8")) {
+
+            } else if (option.equals("9")) {
+
+            } else if (option.equals("10")) {
                 AppLibrairie.quitterAppli = true;
             } else {
                 this.erreur();
@@ -461,6 +465,8 @@ public class AppLibrairie {
         String adresseV = null;
         String codePostalV = null;
         String villeV = null;
+        String emailV = null;
+        String mdp = null;
         try {
             idV = this.clientBD.maxNum() + 1;
         } catch (SQLException e) {
@@ -472,9 +478,11 @@ public class AppLibrairie {
         adresseV = adresseVendeur(nomV, prenomV);
         codePostalV = codePostalVendeur(nomV, prenomV, adresseV);
         villeV = villeVendeur(nomV, prenomV, adresseV, codePostalV);
+        emailV = emailVendeur(nomV, prenomV, adresseV, codePostalV, villeV);
+        mdp = mdpVendeur(nomV, prenomV, adresseV, codePostalV, villeV, emailV);
         Client vendeur = new Client(nomV, prenomV, adresseV, codePostalV, villeV, idV);
         try{
-            this.clientBD.insererVendeur(vendeur);
+            this.clientBD.insererVendeur(vendeur,emailV, mdp);
         }catch(SQLException e){
             System.out.println("Il y a une erreur avec l'insertion du vendeur");
             runAdministrateur();
@@ -538,6 +546,28 @@ public class AppLibrairie {
         }
         String villeVendeur = option;
         return villeVendeur;
+    }
+
+    private String emailVendeur(String nom, String prenom, String adresse, String codePostal, String ville){
+        Menu.adminEmailVendeur(nom, prenom, adresse, codePostal, ville);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String emailVendeur = option;
+        return emailVendeur;
+    }
+
+    private String mdpVendeur(String nom, String prenom, String adresse, String codePostal, String ville, String email){
+        Menu.adminMdpVendeur(nom, prenom, adresse, codePostal, ville, email);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String mdpVendeur = option;
+        return mdpVendeur;
     }
 
     public void creerLib() {

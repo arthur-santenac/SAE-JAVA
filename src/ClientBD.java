@@ -22,17 +22,24 @@ public class ClientBD {
 		return res;
 	}
 
-	public void insererVendeur(Client c)throws SQLException{
-		PreparedStatement ps = this.laConnexion.prepareStatement("insert into CLIENT(nom, prenom, adresse, codePostal, ville, idCli) values(?, ?, ?, ?, ?, ?)");
+	public void insererVendeur(Client c, String email, String mdp)throws SQLException{
+		PreparedStatement ps = this.laConnexion.prepareStatement("insert into CLIENT(idcli, nomcli, prenomcli, adressecli, codepostal, villecli ) values(?, ?, ?, ?, ?, ?)");
 		int nouvNum = this.maxNum()+1;
-		ps.setString(1, c.getNom());
-		ps.setString(2, c.getPrenom());
-		ps.setString(3, c.getAdresse());
-		ps.setString(4, c.getCodePostal());
-		ps.setString(5, c.getVille());
-		ps.setInt(6, c.getIdCli());
+		ps.setInt(1, c.getIdCli());
+		ps.setString(2, c.getNom());
+		ps.setString(3, c.getPrenom());
+		ps.setString(4, c.getAdresse());
+		ps.setString(5, c.getCodePostal());
+		ps.setString(6, c.getVille());
 		ps.executeUpdate();
 		ps.close();
+		PreparedStatement ps2 = this.laConnexion.prepareStatement("insert into CONNEXION(adresseemail, motdepasse, idcli, compte) values(?, ?, ?, ?)");
+		ps2.setString(1, email);
+		ps2.setString(2, mdp);
+		ps2.setInt(3, nouvNum);
+		ps2.setString(4, "vendeur");
+		ps2.executeUpdate();
+		ps2.close();
 	}
 
 	public String Connexion(String email, String mdp, AppLibrairie app) {
