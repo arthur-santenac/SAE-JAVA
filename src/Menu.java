@@ -382,6 +382,27 @@ public class Menu {
         return res;
     }
 
+    public static void consulterCatalogue(List<Livre> listeLivre) {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                   COMMANDER UN LIVRE                           |     > - Page suivante                                          ||||");
+        System.out.println(" ||||________________________________________________________________|     < - Page précédente                                        ||||");
+        System.out.println(" ||||                                                                |     Entrer le numéro du livre pour l'ajouter au panier         ||||");
+
+
+        for (int i=1;i<=listeLivre.size();i++) {
+            
+            System.out.println(" ||||                                                                |                                                                ||||");
+        }
+
+       for (int i=0;i<33-listeLivre.size();i++) {
+            System.out.println(" ||||                                                                |                                                                ||||");
+        }
+
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''"); 
+    }
 
     public static void supprPanier(Commande panier) {
         logo();

@@ -39,4 +39,87 @@ public class ClientBD {
 		}
 	}
 
+	public List<Livre> getLivresCommandesParClient(int idClient) throws SQLException {
+		List<Livre> livreCommander = new ArrayList<>();
+
+		String requete = "SELECT DISTINCT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix, " +
+		"CLASSIFICATION.iddewey, CLASSIFICATION.nomclass " +
+		"FROM CLIENT " +
+		"JOIN COMMANDE ON CLIENT.idcli = COMMANDE.idcli " +
+		"JOIN LIGNECOMMANDE ON COMMANDE.numcom = LIGNECOMMANDE.numcom " +
+		"JOIN LIVRE ON LIGNECOMMANDE.idlivre = LIVRE.isbn " +
+		"LEFT JOIN THEMES ON LIVRE.isbn = THEMES.isbn " +
+		"LEFT JOIN CLASSIFICATION ON THEMES.iddewey = CLASSIFICATION.iddewey " +
+		"WHERE CLIENT.idcli = ?";
+
+		PreparedStatement pst = this.laConnexion.prepareStatement(requete);
+		pst.setInt(1, idClient);
+
+		ResultSet rs = pst.executeQuery();
+		while (rs.next()) {
+		int isbn = rs.getInt("isbn");
+		String titre = rs.getString("titre");
+		int nbpages = rs.getInt("nbpages");
+		String datepubli = rs.getString("datepubli");
+		double prix = rs.getDouble("prix");
+
+		}
+
+		return livreCommander;
+	}
+
+	public List<Livre> onVousRecommande(int idClient) throws SQLException {
+		List<Livre> recommandations = new ArrayList<>();
+
+		String requete = 
+			"WITH ThemesClient AS ( " +
+			"    SELECT iddewey " +
+			"    FROM COMMANDE " +
+			"    NATURAL JOIN LIGNECOMMANDE " +
+			"    NATURAL JOIN THEMES " +
+			"    WHERE idcli = ? " +
+			"), " +
+			"ClientsSimilaires AS ( " +
+			"    SELECT DISTINCT idcli " +
+			"    FROM COMMANDE " +
+			"    NATURAL JOIN LIGNECOMMANDE " +
+			"    NATURAL JOIN THEMES " +
+			"    WHERE iddewey IN (SELECT iddewey FROM ThemesClient) " +
+			"      AND idcli <> ? " +
+			"), " +
+			"LivresPotentiels AS ( " +
+			"    SELECT idlivre, COUNT(*) AS frequence " +
+			"    FROM COMMANDE " +
+			"    NATURAL JOIN LIGNECOMMANDE " +
+			"    WHERE idcli IN (SELECT idcli FROM ClientsSimilaires) " +
+			"    GROUP BY idlivre " +
+			") " +
+			"SELECT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix " +
+			"FROM LivresPotentiels " +
+			"JOIN LIVRE ON LivresPotentiels.idlivre = LIVRE.isbn " +
+			"WHERE isbn NOT IN ( " +
+			"    SELECT idlivre " +
+			"    FROM COMMANDE " +
+			"    NATURAL JOIN LIGNECOMMANDE " +
+			"    WHERE idcli = ? " +
+			") " +
+			"ORDER BY frequence DESC, datepubli DESC";
+
+		PreparedStatement pst = this.laConnexion.prepareStatement(requete);
+		pst.setInt(1, idClient);
+		pst.setInt(2, idClient);
+		pst.setInt(3, idClient);
+		ResultSet rs = pst.executeQuery();
+		while (rs.next()) {
+			int isbn = rs.getInt("isbn");
+			String titre = rs.getString("titre");
+			int nbpages = rs.getInt("nbpages");
+			String datepubli = rs.getString("datepubli");
+			double prix = rs.getDouble("prix");
+
+		}
+
+		return recommandations;
+	}
+
 }
