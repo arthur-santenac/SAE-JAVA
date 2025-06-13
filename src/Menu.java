@@ -1133,7 +1133,7 @@ public class Menu {
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
 
-    public static void transferFail() {
+    public static void transferFailAdmin() {
         logo();
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
@@ -1274,7 +1274,7 @@ public class Menu {
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");     
     }
   
-    public static void tranfertReussi() {
+    public static void tranfertReussiAdmin() {
         logo();
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
@@ -1467,31 +1467,6 @@ public class Menu {
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
-        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
-    }
-
-        public static void choisirMagasinTransfet(List<Magasin> listeMagasin) {
-        logo();
-        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
-        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
-        System.out.println(" ||||                          CLIENT                                |                                                                ||||");
-        System.out.println(" ||||________________________________________________________________|                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||  Veuillez entrer le numéro du magasin possédant le livre à     |                                                                ||||");
-        System.out.println(" ||||  tranférer.                                                    |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
-
-        for (int i=1;i<=listeMagasin.size();i++) {
-            String ligne = " ||||   " + i + " - " + listeMagasin.get(i - 1);
-            ligne = AppLibrairie.ljust(ligne, 69);
-            System.out.println(ligne + "|                                                                ||||");
-        }
-
-        for (int i=0;i<32-listeMagasin.size();i++) {
-            System.out.println(" ||||                                                                |                                                                ||||");
-        }
-
         System.out.println(" ||/================================================================\\|/===============================================================|\\||");
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }

@@ -64,20 +64,14 @@ public class AppLibrairie {
                 try {
                     this.compte = Connexion();
                     if (this.compte.equals("client")) {
-                        this.compte = Connexion();
-                        if (this.compte.equals("client")) {
-                            runClient();
-                        } else if (this.compte.substring(0, 7).equals("vendeur")) {
-                        } else if (this.compte.substring(0, 7).equals("vendeur")) {
-                            // a faire
-                            runVendeur();
-                        } else if (this.compte.equals("administrateur")) {
-                        } else if (this.compte.equals("administrateur")) {
-                            runAdministrateur();
-                        } else if (this.compte.equals("quitter")) {
-                        } else if (this.compte.equals("quitter")) {
-                            AppLibrairie.quitterAppli = true;
-                        }
+                        runClient();
+                    } else if (this.compte.substring(0, 7).equals("vendeur")) {
+                        // a faire
+                        runVendeur();
+                    } else if (this.compte.equals("administrateur")) {
+                        runAdministrateur();
+                    } else if (this.compte.equals("quitter")) {
+                        AppLibrairie.quitterAppli = true;
                     }
                 } catch (MauvaisMotDePasseExeption e) {
                     System.out.println("Mauvais identifiants");
@@ -564,7 +558,7 @@ public class AppLibrairie {
         confirmation = confirmation.strip().toLowerCase();
         if(confirmation.equals("oui")|| confirmation.equals("o")){
             try{
-                Integer id = mag.getIdMag();
+                int id = mag.getIdMag();
                 this.adminBD.supprimerLibrairie(id);         
             }
             catch (SQLException e){
