@@ -1613,7 +1613,7 @@ public class Menu {
         System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| Veuillez entrer le numéro Libraire a supprimée                 |                                                                ||||");
+        System.out.println(" |||| Veuillez entrer le numéro du vendeur à supprimée               |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| q - Annuler la suppression                                     |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -1834,7 +1834,7 @@ public class Menu {
         System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| Veuillez entrer le numéro Libraire a supprimée                 |                                                                ||||");
+        System.out.println(" |||| Veuillez entrer le numéro Libraire à supprimée                 |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| q - Annuler la suppression                                     |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
