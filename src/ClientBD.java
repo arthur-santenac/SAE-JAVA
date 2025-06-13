@@ -22,6 +22,18 @@ public class ClientBD {
 		return res;
 	}
 
+	public Client rechercherVendeurParId(Integer id)throws SQLException{
+		PreparedStatement ps = this.laConnexion.prepareStatement("Select * from CLIENT where idcli =?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()){
+            return new Client(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(1));
+        }
+    	else{
+            throw new SQLException("Magasin non trouvé");
+        }
+    }
+
 	public void insererVendeur(Client c, String email, String mdp)throws SQLException{
 		PreparedStatement ps = this.laConnexion.prepareStatement("insert into CLIENT(idcli, nomcli, prenomcli, adressecli, codepostal, villecli ) values(?, ?, ?, ?, ?, ?)");
 		ps.setInt(1, c.getIdCli());
@@ -42,24 +54,36 @@ public class ClientBD {
 	}
 
 	List<Client> listeDesVendeurs() throws SQLException {
-    this.st = this.laConnexion.createStatement();
-    // Utilisez la requête recommandée avec INNER JOIN
-    ResultSet rs = this.st.executeQuery(
-        "SELECT c.* FROM CLIENT c INNER JOIN CONNEXION co ON c.idcli = co.idcli WHERE co.compte = 'vendeur'");
-    List<Client> clients = new ArrayList<>();
-    while (rs.next()) {
-        int id = rs.getInt(1);
-        String nomV = rs.getString(2);
-        String prenomV = rs.getString(3);
-        String adresseV = rs.getString(4);
-        String codePostalV = rs.getString(5);
-        String villeV = rs.getString(6);
-        Client c = new Client(nomV, prenomV, adresseV, codePostalV, villeV, id);
-        clients.add(c);
-    }
-    rs.close();
-    return clients;
-}
+		this.st = this.laConnexion.createStatement();
+		// Utilisez la requête recommandée avec INNER JOIN
+		ResultSet rs = this.st.executeQuery(
+			"SELECT c.* FROM CLIENT c INNER JOIN CONNEXION co ON c.idcli = co.idcli WHERE co.compte = 'vendeur'");
+		List<Client> clients = new ArrayList<>();
+		while (rs.next()) {
+			int id = rs.getInt(1);
+			String nomV = rs.getString(2);
+			String prenomV = rs.getString(3);
+			String adresseV = rs.getString(4);
+			String codePostalV = rs.getString(5);
+			String villeV = rs.getString(6);
+			Client c = new Client(nomV, prenomV, adresseV, codePostalV, villeV, id);
+			clients.add(c);
+		}
+		rs.close();
+		return clients;
+	}
+
+	public void supprimerLibrairie(Integer id)throws SQLException{
+		PreparedStatement ps = this.laConnexion.prepareStatement("delete from CLIENT where idcli =?");
+		ps.setInt(1, id);
+		int nb = ps.executeUpdate();
+		PreparedStatement ps2 = this.laConnexion.prepareStatement("delete from CONNEXION where idcli =?");
+		ps2.setInt(1, id);
+		int nb2 = ps2.executeUpdate();
+        if(nb ==0 || nb2 ==0){
+			throw new SQLException("La suppression de la librairie a échoué car aucune librairie n'a cet identifiant");
+		} 
+	}
 
 	public String Connexion(String email, String mdp, AppLibrairie app) {
 		try {

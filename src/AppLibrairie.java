@@ -451,7 +451,7 @@ public class AppLibrairie {
             if (option.equals("1")) {
                 creerVendeur();
             } else if (option.equals("2")) {
-                
+                suppVendeur();
             } else if (option.equals("3")) {
                 listeVendeurs();
             } else if (option.equals("4")) {
@@ -589,6 +589,56 @@ public class AppLibrairie {
         return mdpVendeur;
     }
 
+    public void suppVendeur() {
+        Client vendeur = null;
+        Integer idCli = null;
+        try {
+            List<Client> listeVendeurs = this.clientBD.listeDesVendeurs();
+            Menu.adminSupVendeur(listeVendeurs);
+        } catch (SQLException ex) {
+            System.out.println("Erreur SQL !");
+        }
+        String id = System.console().readLine();
+        id = id.strip();
+        if (id.equals("q") || id.equals("quitter") || id.equals("quit")) {
+            Menu.admin();
+        } else {
+            try {
+                idCli = Integer.parseInt(id);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrez un identifiant valide.");
+            }
+            try {
+                vendeur = this.clientBD.rechercherVendeurParId(idCli);
+            } catch (SQLException e) {
+                System.out.println("Il n'y a aucune librairie avec cet identifiant");
+                suppLib();
+            }
+            confSuppVendeur(vendeur);
+
+        }
+
+    }
+
+    public void confSuppVendeur(Client client){
+        Menu.adminConfirmationSupVendeur(client);
+        String confirmation = System.console().readLine();
+        confirmation = confirmation.strip().toLowerCase();
+        if (confirmation.equals("oui") || confirmation.equals("o")) {
+            try {
+                int id = client.getIdCli();
+                this.adminBD.supprimerLibrairie(id);
+            } catch (SQLException e) {
+                System.out.println("Problèmes rencontrés lors de la suppression de la librairie");
+            }
+            runAdministrateur();
+        } else if (confirmation.equals("non") || confirmation.equals("n")) {
+            runAdministrateur();
+        } else {
+            erreur();
+        }
+    }
+
 
     public void listeVendeurs() {
         try {
@@ -674,7 +724,7 @@ public class AppLibrairie {
     }
 
     public void confSuppLib(Magasin mag){
-        Menu.adminComfirmationSup(mag);
+        Menu.adminConfirmationSup(mag);
         String confirmation = System.console().readLine();
         confirmation = confirmation.strip().toLowerCase();
         if (confirmation.equals("oui") || confirmation.equals("o")) {

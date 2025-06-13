@@ -11,7 +11,7 @@ public class MagasinBD {
 		this.laConnexion=laConnexion;
 	}
 
-    Magasin rechercherMagasinParId(Integer id)throws SQLException{
+    public Magasin rechercherMagasinParId(Integer id)throws SQLException{
 		PreparedStatement ps = this.laConnexion.prepareStatement("Select * from MAGASIN where idmag =?");
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
@@ -25,7 +25,7 @@ public class MagasinBD {
 
 
 
-    List<Magasin> listeDesMagasins() throws SQLException{
+    public List<Magasin> listeDesMagasins() throws SQLException{
 		this.st = this.laConnexion.createStatement();
 		ResultSet rs = this.st.executeQuery("Select * from MAGASIN");
 		List<Magasin> magasins = new ArrayList<>();
@@ -40,7 +40,7 @@ public class MagasinBD {
 		return magasins;
 	}
 
-    List<String> listeDesNomDeMags() throws SQLException{
+    public List<String> listeDesNomDeMags() throws SQLException{
 		this.st = this.laConnexion.createStatement();
 		ResultSet rs = this.st.executeQuery("Select  from MAGASIN");
 		List<String> magasins = new ArrayList<>();
