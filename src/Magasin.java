@@ -78,19 +78,6 @@ public class Magasin {
     }
 
     
-/*     public List<Livre> catalogueFiltre(Filtre filtre)throws PasUnTelFiltreException{
-        List<Livre> livresFiltrés = new ArrayList<>();
-        switch (filtre) {
-            case AUTEUR:
-                for(Livre livre: this.livres){
-                    if(livre.getAuteurs().contains())
-                }
-                break;
-        
-            default: throw new PasUnTelFiltreException();
-                break;
-        }
-    } */
     
     @Override
     public boolean equals(Object o){

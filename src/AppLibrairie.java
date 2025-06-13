@@ -845,6 +845,29 @@ public class AppLibrairie {
         }
     }
 
+    public void adminStats(){
+        Menu.adminStats();
+        String option = System.console().readLine();
+        option = option.strip().toLowerCase();
+        if (option.equals("1")) {
+            nbVentesParAn();
+        } else if (option.equals("2")) {
+            adminStats();
+        } else if (option.equals("3")) {
+            this.runAdministrateur();
+        }
+        else{
+            erreur();
+        }
+
+    }
+
+    private void nbVentesParAn(){
+        String option = System.console().readLine();
+        option = option.strip().toLowerCase();
+
+    }
+
     public void erreur() {
         System.out.println("\n" + "Erreur veillez réessayer");
         System.console().readLine();
