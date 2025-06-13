@@ -1344,7 +1344,9 @@ public class Menu {
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| Êtes vous sûr de vouloir supprimer la Librairie :              |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| "+mag.getIdMag()+" "+mag.getNomMag()+" "+mag.getVilleMag()+AppLibrairie.ljust(" ", 15)+"                                |                                                                ||||");
+        String ligne = " ||||    " + " - " +mag.getIdMag()+" "+mag.getNomMag()+" "+mag.getVilleMag();
+                ligne = AppLibrairie.ljust(ligne, 69);
+                System.out.println(ligne + "|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
