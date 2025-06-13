@@ -93,7 +93,7 @@ CREATE TABLE LIVRE (
 
 CREATE TABLE MAGASIN (
   PRIMARY KEY (idmag),
-  idmag    VARCHAR(42) NOT NULL,
+  idmag    int NOT NULL,
   nommag   VARCHAR(42),
   villemag VARCHAR(42)
 );

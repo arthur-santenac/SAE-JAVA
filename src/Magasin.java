@@ -4,13 +4,13 @@ import java.util.List;
 
 public class Magasin {
     
-    private String idMag;
+    private int idMag;
     private String nomMag;
     private String villeMag;
     private List<Commande> commandes;
     private List<Livre> livres;
 
-    public Magasin(String idMag, String nomMag, String villeMag) {
+    public Magasin(int idMag, String nomMag, String villeMag) {
         this.idMag = idMag;
         this.nomMag = nomMag;
         this.villeMag = villeMag;
@@ -18,11 +18,11 @@ public class Magasin {
         this.livres = new ArrayList<>();
     }
 
-    public String getIdMag() {
+    public int getIdMag() {
         return idMag;
     }
 
-    public void setIdMag(String idMag) {
+    public void setIdMag(int idMag) {
         this.idMag = idMag;
     }
 

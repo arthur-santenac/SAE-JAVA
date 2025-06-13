@@ -17,13 +17,13 @@ public class CommandeBD {
             return res;
         }
 
-        public void insererCommande(int numcom, char enLigne, char livraison, int idcli, String idmag) throws SQLException{
+        public void insererCommande(int numcom, char enLigne, char livraison, int idcli, int idmag) throws SQLException{
             PreparedStatement ps = laConnexion.prepareStatement("insert into COMMANDE values (?,CURDATE(),?,?,?,?)");
             ps.setInt(1, numcom);
             ps.setString(2, String.valueOf(enLigne));
             ps.setString(3, String.valueOf(livraison));
             ps.setInt(4, idcli);
-            ps.setString(5, idmag);
+            ps.setInt(5, idmag);
             ps.executeUpdate();
         }
 
