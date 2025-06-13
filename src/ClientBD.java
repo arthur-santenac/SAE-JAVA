@@ -120,12 +120,12 @@ public class ClientBD {
 
 		ResultSet rs = pst.executeQuery();
 		while (rs.next()) {
-		int isbn = rs.getInt("isbn");
-		String titre = rs.getString("titre");
-		int nbpages = rs.getInt("nbpages");
-		String datepubli = rs.getString("datepubli");
-		double prix = rs.getDouble("prix");
-
+			String isbn = rs.getString("isbn");
+			String titre = rs.getString("titre");
+			int nbpages = rs.getInt("nbpages");
+			int datepubli = rs.getInt("datepubli");
+			double prix = rs.getDouble("prix");
+			livreCommander.add(new Livre(isbn, titre, nbpages, datepubli, prix));
 		}
 
 		return livreCommander;
@@ -174,12 +174,12 @@ public class ClientBD {
 		pst.setInt(3, idClient);
 		ResultSet rs = pst.executeQuery();
 		while (rs.next()) {
-			int isbn = rs.getInt("isbn");
+			String isbn = rs.getString("isbn");
 			String titre = rs.getString("titre");
 			int nbpages = rs.getInt("nbpages");
-			String datepubli = rs.getString("datepubli");
+			int datepubli = rs.getInt("datepubli");
 			double prix = rs.getDouble("prix");
-
+			recommandations.add(new Livre(isbn, titre, nbpages, datepubli, prix));
 		}
 
 		return recommandations;
