@@ -8,6 +8,14 @@ insert into MAGASIN(idmag, nommag, villemag) values
        (6,'Rhône à lire','Lyon'),
        (7,'Loire et livres','Orléans');
 
+insert into CLIENT(idcli, nomcli, prenomcli, adressecli, codepostal, villecli) values
+	(1, "deoliveira", "hugo", "rue", 45000, "orleans");
+
+insert into CONNEXION(adresseemail, motdepasse, idcli, compte )values
+	("hugo", "mdp", 1, "administrateur" );
+
+
+
 -- La classification
 insert into CLASSIFICATION(iddewey, nomclass) values
 	('000', 'Informatique, généralités'),

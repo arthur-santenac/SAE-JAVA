@@ -19,7 +19,7 @@ public class Magasin {
     }
 
     public int getIdMag() {
-        return idMag;
+        return this.idMag;
     }
 
     public void setIdMag(int idMag) {
@@ -27,7 +27,7 @@ public class Magasin {
     }
 
     public String getNomMag() {
-        return nomMag;
+        return this.nomMag;
     }
 
     public void setNomMag(String nomMag) {
@@ -35,7 +35,7 @@ public class Magasin {
     }
 
     public String getVilleMag() {
-        return villeMag;
+        return this.villeMag;
     }
 
 

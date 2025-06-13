@@ -11,9 +11,19 @@ public class MagasinBD {
 		this.laConnexion=laConnexion;
 	}
 
-    Magasin rechercherJoueurParNom(String nom)throws SQLException{
-    	throw new SQLException("méthode rechercherJoueurParNum à implémenter");
+    Magasin rechercherMagasinParId(Integer id)throws SQLException{
+		PreparedStatement ps = this.laConnexion.prepareStatement("Select * from MAGASIN where idmag =?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()){
+            return new Magasin(rs.getInt(1), rs.getString(2), rs.getString(3));
+        }
+    	else{
+            throw new SQLException("Magasin non trouvé");
+        }
     }
+
+
 
     List<Magasin> listeDesMagasins() throws SQLException{
 		this.st = this.laConnexion.createStatement();
@@ -30,7 +40,15 @@ public class MagasinBD {
 		return magasins;
 	}
 
-    ArrayList<String> listeDesNomDeMags() throws SQLException{
-		throw new SQLException("méthode listeDesJoueurs à implémenter");
+    List<String> listeDesNomDeMags() throws SQLException{
+		this.st = this.laConnexion.createStatement();
+		ResultSet rs = this.st.executeQuery("Select  from MAGASIN");
+		List<String> magasins = new ArrayList<>();
+		while(rs.next()){
+			String nomM = rs.getString(1);
+			magasins.add(nomM);
+		}
+		rs.close();
+		return magasins;
 	}
 }
