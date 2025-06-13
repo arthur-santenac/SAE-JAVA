@@ -845,6 +845,20 @@ public class AppLibrairie {
         }
     }
 
+    public void adminStats(){
+        Menu.adminStats();
+        String option = System.console().readLine();
+            option = option.strip().toLowerCase();
+            if (option.equals("1")) {
+                
+            } else if (option.equals("2")) {
+                
+            } else if (option.equals("3")) {
+                
+            }
+
+    }
+
     public void erreur() {
         System.out.println("\n" + "Erreur veillez réessayer");
         System.console().readLine();

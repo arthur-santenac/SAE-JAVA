@@ -51,4 +51,18 @@ public class MagasinBD {
 		rs.close();
 		return magasins;
 	}
+
+	public List<String> nombreLivresVenduParMagParAn() throws SQLException{
+		this.st = this.laConnexion.createStatement();
+		ResultSet rs = this.st.executeQuery("Select distinct nommag Magasin, YEAR(datecom) Année, sum(qte) qte" +
+						"From MAGASIN natural join COMMANDE natural join DETAILCOMMANDE" + 
+						"Group by nommag , YEAR(datecom);");
+		List<String> res = new ArrayList<>();
+		while (rs.next()) {
+			String chaine = rs.getString(1)+rs.getString(2)+rs.getInt(3);
+			res.add(chaine);
+		}
+		rs.close();
+		return res;
+	}
 }
