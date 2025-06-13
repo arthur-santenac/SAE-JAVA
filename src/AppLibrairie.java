@@ -267,8 +267,10 @@ public class AppLibrairie {
             } else if (commander.equals("3")) {
                 meilleursVentes();
             } else if (commander.equals("4")) {
+                consulterCatalogue();  
+            } else if (commander.equals("5")) {
                 consulterPanier();
-            } else if (commander.equals("5") || commander.equals("quitter") || commander.equals("q")
+            } else if (commander.equals("6") || commander.equals("quitter") || commander.equals("q")
                     || commander.equals("quit")) {
                 quitter = true;
             } else {
@@ -276,6 +278,10 @@ public class AppLibrairie {
             }
         }
     }
+
+    public void consulterCatalogue() {
+        
+    } 
 
     public void consulterPanier() {
         if (Menu.consulterPanier(panier)) {
@@ -707,17 +713,14 @@ public class AppLibrairie {
         String magasin = System.console().readLine();
         magasin = magasin.strip();
         try {
-            System.out.println("caca");
             int numMagasin = Integer.parseInt(magasin);
             if (numMagasin >= 1 && numMagasin <= magasinBD.listeDesMagasins().size()) {
                 return magasinBD.listeDesMagasins().get(numMagasin-1);
             } else {
-                System.out.println("cacaa");
                 erreur();
                 return choisirMagasinTransfert(idlivre, quantiteInt);
             }
         } catch (NumberFormatException e) {
-            System.out.println("caca1");
             erreur();
             return choisirMagasinTransfert(idlivre, quantiteInt);
         }
