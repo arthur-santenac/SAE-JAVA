@@ -439,36 +439,35 @@ public class AppLibrairie {
         }
     }
 
-    public void verifierStock() throws SQLException{
-       Menu.chercherLivre();
-       String chercher = System.console().readLine();
-       chercher = chercher.strip();
-       if (chercher.equals("q") || chercher.equals("quit") || chercher.equals("quitter")) {
-           return;
-       }
-       boolean trouve = false;
-       List<Livre> listeLivre = new ArrayList<>();
-       st = connexionMySQL.createStatement();
-       ResultSet set = st.executeQuery(
-               "select * from LIVRE natural join MAGASIN where nommag = \"" + magasin.getNomMag() + "\"");
-       while (set.next()) {
-           if (set.getString(2).equals(chercher)) {
-               listeLivre.add(
-                       new Livre(set.getString(1), set.getString(2), set.getInt(3), set.getInt(4), set.getDouble(5)));
-               trouve = true;
-           }
-       }
-       if (!trouve) {
-           System.out.println("le livre n'existe pas");
-           erreur();
-           System.console().readLine();
-           chercherLivre();
-       } else {
-           Menu.livreEnMagasin();
-           System.console().readLine();
-       }
-   }
-
+    public void verifierStock() throws SQLException {
+        Menu.chercherLivre();
+        String chercher = System.console().readLine();
+        chercher = chercher.strip();
+        if (chercher.equals("q") || chercher.equals("quit") || chercher.equals("quitter")) {
+            return;
+        }
+        boolean trouve = false;
+        List<Livre> listeLivre = new ArrayList<>();
+        st = connexionMySQL.createStatement();
+        ResultSet set = st.executeQuery(
+                "select * from LIVRE natural join MAGASIN where nommag = \"" + magasin.getNomMag() + "\"");
+        while (set.next()) {
+            if (set.getString(2).equals(chercher)) {
+                listeLivre.add(
+                        new Livre(set.getString(1), set.getString(2), set.getInt(3), set.getInt(4), set.getDouble(5)));
+                trouve = true;
+            }
+        }
+        if (!trouve) {
+            System.out.println("le livre n'existe pas");
+            erreur();
+            System.console().readLine();
+            chercherLivre();
+        } else {
+            Menu.livreEnMagasin();
+            System.console().readLine();
+        }
+    }
 
     public void chercherLivre() throws SQLException {
         Menu.chercherLivre();
@@ -535,35 +534,203 @@ public class AppLibrairie {
             String option = System.console().readLine();
             option = option.strip().toLowerCase();
             if (option.equals("1")) {
-
+                creerVendeur();
             } else if (option.equals("2")) {
-                creerLib();
+                suppVendeur();
             } else if (option.equals("3")) {
-                suppLib();
+                listeVendeurs();
             } else if (option.equals("4")) {
-                runAdministrateurLib();
+                creerLib();
             } else if (option.equals("5")) {
-
+                suppLib();
             } else if (option.equals("6")) {
-
+                listeLibs();
             } else if (option.equals("7")) {
 
             } else if (option.equals("8")) {
 
-            } else if (option.equals("q") || option.equals("quitter") || option.equals("quit")) {
-                return;
+            } else if (option.equals("9")) {
+
+            } else if (option.equals("10")) {
+                AppLibrairie.quitterAppli = true;
             } else {
                 this.erreur();
             }
         }
     }
 
-    public void runAdministrateurLib() {
+    
+
+    public void creerVendeur() {
+        Integer idV = null;
+        String nomV = null;
+        String prenomV = null;
+        String adresseV = null;
+        String codePostalV = null;
+        String villeV = null;
+        String emailV = null;
+        String mdp = null;
         try {
-            List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
-            Menu.adminListeLib(listeMagasin);
+            idV = this.clientBD.maxNum() + 1;
+        } catch (SQLException e) {
+            System.out.println("Il y a une erreur avec l'id du vendeur");
+            runAdministrateur();
+        }
+        nomV = nomVendeur();
+        prenomV = prenomVendeur(nomV);
+        adresseV = adresseVendeur(nomV, prenomV);
+        codePostalV = codePostalVendeur(nomV, prenomV, adresseV);
+        villeV = villeVendeur(nomV, prenomV, adresseV, codePostalV);
+        emailV = emailVendeur(nomV, prenomV, adresseV, codePostalV, villeV);
+        mdp = mdpVendeur(nomV, prenomV, adresseV, codePostalV, villeV, emailV);
+        Client vendeur = new Client(nomV, prenomV, adresseV, codePostalV, villeV, idV);
+        try{
+            this.clientBD.insererVendeur(vendeur,emailV, mdp);
+        }catch(SQLException e){
+            System.out.println("Il y a une erreur avec l'insertion du vendeur");
+            runAdministrateur();
+        }
+        runAdministrateur();
+        
+    }
+
+    private String nomVendeur(){
+        Menu.adminNomVendeur();
+        String option = System.console().readLine();
+        option = option.strip();
+        String nomVendeur = null;
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        else{
+            nomVendeur = option;
+        }
+        return nomVendeur;
+    }
+
+    private String prenomVendeur(String nom){
+        Menu.adminPrenomVendeur(nom);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String prenomVendeur = option;
+        return prenomVendeur;
+    }
+
+    private String adresseVendeur(String nom, String prenom){
+        Menu.adminAdresseVendeur(nom,prenom);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String adresseVendeur = option;
+        return adresseVendeur;
+    }
+
+    private String codePostalVendeur(String nom, String prenom, String adresse){
+        Menu.adminCodePostalVendeur(nom, prenom, adresse);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String codePostalV = option;
+        return codePostalV;
+    }
+
+    private String villeVendeur(String nom, String prenom, String adresse, String codePostal){
+        Menu.adminVilleVendeur(nom, prenom, adresse, codePostal);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String villeVendeur = option;
+        return villeVendeur;
+    }
+
+    private String emailVendeur(String nom, String prenom, String adresse, String codePostal, String ville){
+        Menu.adminEmailVendeur(nom, prenom, adresse, codePostal, ville);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String emailVendeur = option;
+        return emailVendeur;
+    }
+
+    private String mdpVendeur(String nom, String prenom, String adresse, String codePostal, String ville, String email){
+        Menu.adminMdpVendeur(nom, prenom, adresse, codePostal, ville, email);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String mdpVendeur = option;
+        return mdpVendeur;
+    }
+
+    public void suppVendeur() {
+        Client vendeur = null;
+        Integer idCli = null;
+        try {
+            List<Client> listeVendeurs = this.clientBD.listeDesVendeurs();
+            Menu.adminSupVendeur(listeVendeurs);
         } catch (SQLException ex) {
             System.out.println("Erreur SQL !");
+        }
+        String id = System.console().readLine();
+        id = id.strip();
+        if (id.equals("q") || id.equals("quitter") || id.equals("quit")) {
+            Menu.admin();
+        } else {
+            try {
+                idCli = Integer.parseInt(id);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrez un identifiant valide.");
+            }
+            try {
+                vendeur = this.clientBD.rechercherVendeurParId(idCli);
+            } catch (SQLException e) {
+                System.out.println("Il n'y a aucune librairie avec cet identifiant");
+                suppLib();
+            }
+            confSuppVendeur(vendeur);
+
+        }
+
+    }
+
+    public void confSuppVendeur(Client client){
+        Menu.adminConfirmationSupVendeur(client);
+        String confirmation = System.console().readLine();
+        confirmation = confirmation.strip().toLowerCase();
+        if (confirmation.equals("oui") || confirmation.equals("o")) {
+            try {
+                int id = client.getIdCli();
+                this.clientBD.supprimerVendeur(id);
+            } catch (SQLException e) {
+                System.out.println("Problèmes rencontrés lors de la suppression de la librairie");
+            }
+            runAdministrateur();
+        } else if (confirmation.equals("non") || confirmation.equals("n")) {
+            runAdministrateur();
+        } else {
+            erreur();
+        }
+    }
+
+
+    public void listeVendeurs() {
+        try {
+            List<Client> listeMagasin = this.clientBD.listeDesVendeurs();
+            Menu.adminListeVendeur(listeMagasin);
+        } catch (SQLException ex) {
+            System.out.println("Erreur d'affichage de la liste des vendeurs !");
         }
         String option = System.console().readLine();
         option = option.strip().toLowerCase();
@@ -572,22 +739,6 @@ public class AppLibrairie {
         } else {
             erreur();
         }
-
-    }
-
-    public void creerVendeur() {
-        Integer idVendeur = null;
-        String nomVendeur = null;
-        String prenomVendeur = null;
-        String addresseVendeur = null;
-        String codePostalVendeur = null;
-        try {
-            idVendeur = this.clientBD.maxNum() + 1;
-        } catch (SQLException e) {
-            System.out.println("Il y a une erreur avec l'id du vendeur");
-            runAdministrateur();
-        }
-
     }
 
     public void creerLib() {
@@ -606,7 +757,7 @@ public class AppLibrairie {
 
     }
 
-    public String nomLib() {
+    private String nomLib() {
         Menu.adminNomLib();
         String nom = System.console().readLine();
         nom = nom.strip();
@@ -618,7 +769,7 @@ public class AppLibrairie {
         return nomLib;
     }
 
-    public String villeLib(String nom) {
+    private String villeLib(String nom) {
         Menu.adminVilleLib(nom);
         String ville = System.console().readLine();
         ville = ville.strip();
@@ -657,8 +808,10 @@ public class AppLibrairie {
 
     }
 
+
     public void confSuppLib(Magasin mag){
-        Menu.adminComfirmationSup(mag);
+        Menu.adminConfirmationSup(mag);
+
         String confirmation = System.console().readLine();
         confirmation = confirmation.strip().toLowerCase();
         if (confirmation.equals("oui") || confirmation.equals("o")) {
@@ -670,6 +823,22 @@ public class AppLibrairie {
             }
             runAdministrateur();
         } else if (confirmation.equals("non") || confirmation.equals("n")) {
+            runAdministrateur();
+        } else {
+            erreur();
+        }
+    }
+
+    public void listeLibs() {
+        try {
+            List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
+            Menu.adminListeLib(listeMagasin);
+        } catch (SQLException ex) {
+            System.out.println("Erreur SQL !");
+        }
+        String option = System.console().readLine();
+        option = option.strip().toLowerCase();
+        if (option.equals("q") || option.equals("quitter")) {
             runAdministrateur();
         } else {
             erreur();
@@ -733,9 +902,10 @@ public class AppLibrairie {
                     majQte();
                 } else if (option.equals("3")) {
                     dispo();
-                }
-                // else if (option.equals("4")) {passerCommande();}
-                else if (option.equals("5")) {
+                } else if (option.equals("4")) {
+                    this.enLigne = 0;
+                    commanderVendeur();
+                } else if (option.equals("5")) {
                     transfert();
                 } else if (option.equals("6")) {
                     run();
@@ -803,7 +973,7 @@ public class AppLibrairie {
         try {
             int numMagasin = Integer.parseInt(magasin);
             if (numMagasin >= 1 && numMagasin <= magasinBD.listeDesMagasins().size()) {
-                return magasinBD.listeDesMagasins().get(numMagasin-1);
+                return magasinBD.listeDesMagasins().get(numMagasin - 1);
             } else {
                 erreur();
                 return choisirMagasinTransfert(idlivre, quantiteInt);
@@ -826,9 +996,117 @@ public class AppLibrairie {
         return (this.vendeurBD.transfer(MagPossede.getIdMag(), idMagInt, idlivre, quantiteInt));
     }
 
+    public void commanderVendeur() {
+        this.modeLivraison = choisirModeLivraison();
+        boolean quitter = false;
+        while (!quitter) {
+            Menu.commanderVendeur();
+            String commander = System.console().readLine();
+            commander = commander.strip();
+            if (commander.equals("1")) {
+                try {
+                    chercherLivreVendeur();
+                } catch (SQLException e) {
+                    System.out.println("erreur en sql");
+                    System.console().readLine();
+                }
+            } else if (commander.equals("2")) {
+                consulterPanierVendeur();
+            } else if (commander.equals("3") || commander.equals("quitter") || commander.equals("q")
+                    || commander.equals("quit")) {
+                quitter = true;
+            } else {
+
+                erreur();
+            }
+        }
+    }
+
+    public void chercherLivreVendeur() throws SQLException {
+        Menu.chercherLivre();
+        String chercher = System.console().readLine();
+        chercher = chercher.strip();
+        if (chercher.equals("q") || chercher.equals("quit") || chercher.equals("quitter")) {
+            return;
+        }
+        st = connexionMySQL.createStatement();
+        ResultSet set = st.executeQuery(
+                "select * from LIVRE where isbn =" + chercher + ";");
+        Livre livre = new Livre(chercher, chercher, enLigne, modeLivraison, enLigne);
+        if (set.next()) {
+            livre = new Livre(set.getString(1), set.getString(2), set.getInt(3), set.getInt(4), set.getDouble(5));
+        }
+
+        char idMag = this.compte.charAt(this.compte.length() - 1);
+        int idMagInt = Character.getNumericValue(idMag);
+        Menu.qte();
+        String qte = System.console().readLine();
+        qte = qte.strip();
+
+        if (qte.equals("q") || qte.equals("quitter") || qte.equals("quit")) {
+            return;
+        }
+        try {
+            if (this.vendeurBD.dispo(idMagInt, chercher, Integer.parseInt(qte), true)) {
+
+                int numQte = Integer.parseInt(qte);
+                panier.ajouterDetailsCommande(livre, numQte);
+            } else {
+                Menu.demandeTransfert();
+                String rep = System.console().readLine();
+                if (rep.equals("oui")) {
+                    transfert();
+                } else {
+                    chercherLivreVendeur();
+                }
+
+            }
+        } catch (NumberFormatException e) {
+
+        }
+    }
+
     public static void main(String[] args) {
         AppLibrairie app = new AppLibrairie();
         app.run();
+    }
+
+    public void finaliserCommandeVendeur() {
+        try {
+            char idMag = this.compte.charAt(this.compte.length() - 1);
+            int idMagInt = Character.getNumericValue(idMag);
+            int maxNumCom = this.commandeBD.maxNumCom() + 1;
+            this.commandeBD.insererCommande(maxNumCom, enLigne, modeLivraison, this.utilisateur.getIdCli(),
+                    idMagInt);
+            for (int i = 0; i < this.panier.size(); i++) {
+                this.commandeBD.insererDetailCommande(maxNumCom, i + 1,
+                        this.panier.getDetailsCommande().get(i).getQte(),
+                        this.panier.getDetailsCommande().get(i).getPrixVente(),
+                        this.panier.getDetailsCommande().get(i).getLivre().getIsbn());
+            }
+            this.panier = new Commande('1', modeLivraison, magasin, utilisateur);
+        } catch (SQLException e) {
+            System.out.println("erreur sql");
+            System.console().readLine();
+        }
+    }
+
+    public void consulterPanierVendeur() {
+        if (Menu.consulterPanier(panier)) {
+            String option = System.console().readLine();
+            option = option.strip();
+            if (option.equals("1")) {
+                finaliserCommandeVendeur();
+            } else if (option.equals("2")) {
+                supprPanier();
+            } else if (option.equals("3") || option.equals("q") || option.equals("quitter") || option.equals("quit")) {
+            } else {
+                erreur();
+                consulterPanier();
+            }
+        } else {
+            System.console().readLine();
+        }
     }
 
 }
