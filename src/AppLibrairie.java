@@ -117,7 +117,7 @@ public class AppLibrairie {
             throw new MauvaisMotDePasseExeption();
         }
         return rep;
-        
+
     }
 
     public void creerUnCompte() throws SQLException {
@@ -297,12 +297,16 @@ public class AppLibrairie {
 
     public void finaliserCommande() {
         try {
-            int maxNumCom  = this.commandeBD.maxNumCom() + 1;
-            this.commandeBD.insererCommande(maxNumCom, enLigne, modeLivraison, this.utilisateur.getIdCli(), this.magasin.getIdMag());
-            for (int i=0;i<this.panier.size();i++) {
-                this.commandeBD.insererDetailCommande(maxNumCom, i + 1, this.panier.getDetailsCommande().get(i).getQte(), this.panier.getDetailsCommande().get(i).getPrixVente(), this.panier.getDetailsCommande().get(i).getLivre().getIsbn());
+            int maxNumCom = this.commandeBD.maxNumCom() + 1;
+            this.commandeBD.insererCommande(maxNumCom, enLigne, modeLivraison, this.utilisateur.getIdCli(),
+                    this.magasin.getIdMag());
+            for (int i = 0; i < this.panier.size(); i++) {
+                this.commandeBD.insererDetailCommande(maxNumCom, i + 1,
+                        this.panier.getDetailsCommande().get(i).getQte(),
+                        this.panier.getDetailsCommande().get(i).getPrixVente(),
+                        this.panier.getDetailsCommande().get(i).getLivre().getIsbn());
             }
-            this.panier = new Commande('1', modeLivraison, magasin, utilisateur); 
+            this.panier = new Commande('1', modeLivraison, magasin, utilisateur);
         } catch (SQLException e) {
             System.out.println("erreur sql");
             System.console().readLine();
@@ -316,7 +320,7 @@ public class AppLibrairie {
         if (option.equals("1")) {
             this.panier = new Commande(enLigne, modeLivraison, magasin, utilisateur);
         } else if (option.equals("2")) {
-            try {   
+            try {
                 Menu.supprPanierUneCom(this.panier);
                 option = System.console().readLine();
                 option = option.strip();
@@ -340,7 +344,7 @@ public class AppLibrairie {
     }
 
     public void verifierStock() {
-                
+
     }
 
     public void chercherLivre() throws SQLException {
@@ -411,133 +415,115 @@ public class AppLibrairie {
         while (!AppLibrairie.quitterAppli) {
             String option = System.console().readLine();
             option = option.strip().toLowerCase();
-            if(option.equals("1")){
-                
-            }
-            else if(option.equals("2")){
-                creerLib();                 
-            }
-            else if(option.equals("3")){
-                suppLib();                 
-            }
-            else if(option.equals("4")){
+            if (option.equals("1")) {
+
+            } else if (option.equals("2")) {
+                creerLib();
+            } else if (option.equals("3")) {
+                suppLib();
+            } else if (option.equals("4")) {
                 runAdministrateurLib();
-            }
-            else if(option.equals("5")){
-                
-            }
-            else if(option.equals("6")){
-                
-            }
-            else if(option.equals("7")){
-                
-            }
-            else if(option.equals("8")){
-                
-            }
-            else if (option.equals("q") || option.equals("quitter") || option.equals("quit")) {
+            } else if (option.equals("5")) {
+
+            } else if (option.equals("6")) {
+
+            } else if (option.equals("7")) {
+
+            } else if (option.equals("8")) {
+
+            } else if (option.equals("q") || option.equals("quitter") || option.equals("quit")) {
                 return;
-            }
-            else{
+            } else {
                 this.erreur();
             }
         }
     }
 
-    public void runAdministrateurLib(){
-        try{
+    public void runAdministrateurLib() {
+        try {
             List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
             Menu.adminListeLib(listeMagasin);
-        }
-        catch(SQLException ex){
+        } catch (SQLException ex) {
             System.out.println("Erreur SQL !");
         }
         String option = System.console().readLine();
         option = option.strip().toLowerCase();
-        if(option.equals("q")|| option.equals("quitter") ){
+        if (option.equals("q") || option.equals("quitter")) {
             runAdministrateur();
-        }
-        else{
+        } else {
             erreur();
         }
 
-        
     }
 
-    public void creerVendeur(){
+    public void creerVendeur() {
         Integer idVendeur = null;
         String nomVendeur = null;
         String prenomVendeur = null;
         String addresseVendeur = null;
         String codePostalVendeur = null;
-        try{
-            idVendeur = this.clientBD.maxNum()+1;
-        }
-        catch(SQLException e){
+        try {
+            idVendeur = this.clientBD.maxNum() + 1;
+        } catch (SQLException e) {
             System.out.println("Il y a une erreur avec l'id du vendeur");
             runAdministrateur();
         }
 
     }
 
-    public void creerLib(){
+    public void creerLib() {
         Magasin newLibrairie = null;
         String nomLib = nomLib();
         String ville = villeLib(nomLib);
-        try{
+        try {
             int idmag = this.adminBD.maxNumMagasin();
             newLibrairie = new Magasin(idmag, nomLib, ville);
-            this.adminBD.insererLibrairie(newLibrairie); 
-            this.runAdministrateur(); 
-        }
-        catch (SQLException e){
+            this.adminBD.insererLibrairie(newLibrairie);
+            this.runAdministrateur();
+        } catch (SQLException e) {
             System.out.println("Problèmes rencontrés dans l'ajout d'une nouvelle librairie");
             Menu.adminNomLib();
         }
-        
+
     }
 
-    public String nomLib(){
+    public String nomLib() {
         Menu.adminNomLib();
         String nom = System.console().readLine();
         nom = nom.strip();
         String nomLib = null;
-        if(nom.equals("q")|| nom.equals("quitter")|| nom.equals("Quitter")){
+        if (nom.equals("q") || nom.equals("quitter") || nom.equals("Quitter")) {
             runAdministrateur();
         }
         nomLib = nom;
         return nomLib;
     }
 
-    public String villeLib(String nom){
+    public String villeLib(String nom) {
         Menu.adminVilleLib(nom);
         String ville = System.console().readLine();
         ville = ville.strip();
         String villeLib = ville;
-        return villeLib; 
+        return villeLib;
     }
-
 
     public void suppLib() {
         Magasin lib = null;
         Integer idMag = null;
-        try{
+        try {
             List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
             Menu.adminSupLib(listeMagasin);
-        }
-        catch(SQLException ex){
+        } catch (SQLException ex) {
             System.out.println("Erreur SQL !");
         }
         String id = System.console().readLine();
         id = id.strip();
         if (id.equals("q") || id.equals("quitter") || id.equals("quit")) {
-            Menu.admin();    
-        }
-        else{
-            try{
+            Menu.admin();
+        } else {
+            try {
                 idMag = Integer.parseInt(id);
-            }
-            catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 System.out.println("Entrez un identifiant valide.");
             }
             try {
@@ -545,35 +531,31 @@ public class AppLibrairie {
             } catch (SQLException e) {
                 System.out.println("Il n'y a aucune librairie avec cet identifiant");
                 suppLib();
-            }      
+            }
             comfSuppLib(lib);
-            
+
         }
-        
+
     }
 
-    public void comfSuppLib(Magasin mag){
+    public void comfSuppLib(Magasin mag) {
         Menu.adminComfirmationSup(mag);
         String confirmation = System.console().readLine();
         confirmation = confirmation.strip().toLowerCase();
-        if(confirmation.equals("oui")|| confirmation.equals("o")){
-            try{
+        if (confirmation.equals("oui") || confirmation.equals("o")) {
+            try {
                 int id = mag.getIdMag();
-                this.adminBD.supprimerLibrairie(id);         
-            }
-            catch (SQLException e){
+                this.adminBD.supprimerLibrairie(id);
+            } catch (SQLException e) {
                 System.out.println("Problèmes rencontrés lors de la suppression de la librairie");
             }
-            runAdministrateur(); 
-        }
-        else if(confirmation.equals("non")|| confirmation.equals("n")){
             runAdministrateur();
-        }
-        else{
+        } else if (confirmation.equals("non") || confirmation.equals("n")) {
+            runAdministrateur();
+        } else {
             erreur();
         }
     }
-
 
     public void erreur() {
         System.out.println("\n" + "Erreur veillez réessayer");
@@ -632,9 +614,11 @@ public class AppLibrairie {
                     dispo();
                 }
                 // else if (option.equals("4")) {passerCommande();}
-                else if (option.equals("5")) {transfert();}
-                // else if (option.equals("6")) {changerCompte();}
-                else if (option.equals("7") || option.equals("quitter") || option.equals("q")
+                else if (option.equals("5")) {
+                    transfert();
+                } else if (option.equals("6")) {
+                    run();
+                } else if (option.equals("7") || option.equals("quitter") || option.equals("q")
                         || option.equals("quit")) {
                     AppLibrairie.quitterAppli = true;
                 } else {
@@ -684,10 +668,11 @@ public class AppLibrairie {
         return (this.vendeurBD.dispo(idMagInt, idlivre, quantiteInt));
     }
 
-    public Magasin choisirMagasinTransfert(String idlivre, int quantiteInt) throws SQLException{
-            List<Magasin> listeMagasin = new ArrayList<>();
+    public Magasin choisirMagasinTransfert(String idlivre, int quantiteInt) throws SQLException {
+        List<Magasin> listeMagasin = new ArrayList<>();
         st = connexionMySQL.createStatement();
-        ResultSet set = st.executeQuery("select * from POSSEDER natural join MAGASIN where isbn = " + idlivre +" AND qte >= " + quantiteInt + ";");
+        ResultSet set = st.executeQuery("select * from POSSEDER natural join MAGASIN where isbn = " + idlivre
+                + " AND qte >= " + quantiteInt + ";");
         while (set.next()) {
             listeMagasin.add(new Magasin(set.getInt(1), set.getString(2), set.getString(3)));
         }
@@ -716,7 +701,7 @@ public class AppLibrairie {
         Menu.vendeurRecupQte();
         String quantite = System.console().readLine();
         int quantiteInt = Integer.parseInt(quantite);
-        Magasin MagPossede = choisirMagasinTransfert( idlivre,  quantiteInt);
+        Magasin MagPossede = choisirMagasinTransfert(idlivre, quantiteInt);
         return (this.vendeurBD.transfer(MagPossede.getIdMag(), idMagInt, idlivre, quantiteInt));
     }
 
