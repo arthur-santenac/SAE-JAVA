@@ -416,7 +416,7 @@ public class AppLibrairie {
             String option = System.console().readLine();
             option = option.strip().toLowerCase();
             if (option.equals("1")) {
-
+                creerVendeur();
             } else if (option.equals("2")) {
                 creerLib();
             } else if (option.equals("3")) {
@@ -430,9 +430,7 @@ public class AppLibrairie {
             } else if (option.equals("7")) {
 
             } else if (option.equals("8")) {
-
-            } else if (option.equals("q") || option.equals("quitter") || option.equals("quit")) {
-                return;
+                AppLibrairie.quitterAppli = true;
             } else {
                 this.erreur();
             }
@@ -457,18 +455,89 @@ public class AppLibrairie {
     }
 
     public void creerVendeur() {
-        Integer idVendeur = null;
-        String nomVendeur = null;
-        String prenomVendeur = null;
-        String addresseVendeur = null;
-        String codePostalVendeur = null;
+        Integer idV = null;
+        String nomV = null;
+        String prenomV = null;
+        String adresseV = null;
+        String codePostalV = null;
+        String villeV = null;
         try {
-            idVendeur = this.clientBD.maxNum() + 1;
+            idV = this.clientBD.maxNum() + 1;
         } catch (SQLException e) {
             System.out.println("Il y a une erreur avec l'id du vendeur");
             runAdministrateur();
         }
+        nomV = nomVendeur();
+        prenomV = prenomVendeur(nomV);
+        adresseV = adresseVendeur(nomV, prenomV);
+        codePostalV = codePostalVendeur(nomV, prenomV, adresseV);
+        villeV = villeVendeur(nomV, prenomV, adresseV, codePostalV);
+        Client vendeur = new Client(nomV, prenomV, adresseV, codePostalV, villeV, idV);
+        try{
+            this.clientBD.insererVendeur(vendeur);
+        }catch(SQLException e){
+            System.out.println("Il y a une erreur avec l'insertion du vendeur");
+            runAdministrateur();
+        }
+        
+    }
 
+    private String nomVendeur(){
+        Menu.adminNomVendeur();
+        String option = System.console().readLine();
+        option = option.strip();
+        String nomVendeur = null;
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        else{
+            nomVendeur = option;
+        }
+        return nomVendeur;
+    }
+
+    private String prenomVendeur(String nom){
+        Menu.adminPrenomVendeur(nom);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String prenomVendeur = option;
+        return prenomVendeur;
+    }
+
+    private String adresseVendeur(String nom, String prenom){
+        Menu.adminAdresseVendeur(nom,prenom);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String adresseVendeur = option;
+        return adresseVendeur;
+    }
+
+    private String codePostalVendeur(String nom, String prenom, String adresse){
+        Menu.adminCodePostalVendeur(nom, prenom, adresse);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String codePostalV = option;
+        return codePostalV;
+    }
+
+    private String villeVendeur(String nom, String prenom, String adresse, String codePostal){
+        Menu.adminVilleVendeur(nom, prenom, adresse, codePostal);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        String villeVendeur = option;
+        return villeVendeur;
     }
 
     public void creerLib() {
@@ -487,7 +556,7 @@ public class AppLibrairie {
 
     }
 
-    public String nomLib() {
+    private String nomLib() {
         Menu.adminNomLib();
         String nom = System.console().readLine();
         nom = nom.strip();
@@ -499,7 +568,7 @@ public class AppLibrairie {
         return nomLib;
     }
 
-    public String villeLib(String nom) {
+    private String villeLib(String nom) {
         Menu.adminVilleLib(nom);
         String ville = System.console().readLine();
         ville = ville.strip();

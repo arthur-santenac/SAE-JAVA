@@ -24,7 +24,8 @@ public class AdminBD {
 		
 	}
 
-    void insererLibrairie( Magasin m) throws  SQLException{
+
+    public void insererLibrairie(Magasin m) throws  SQLException{
 		PreparedStatement ps = this.laConnexion.prepareStatement("insert into MAGASIN(idmag, nommag, villemag) values(?, ?, ?)");
 		int nouvNum = this.maxNumMagasin()+1;
 		ps.setInt(1, nouvNum);
@@ -34,7 +35,7 @@ public class AdminBD {
 		ps.close();
 	}
 
-	void supprimerLibrairie(Integer id)throws SQLException{
+	public void supprimerLibrairie(Integer id)throws SQLException{
 		PreparedStatement ps = this.laConnexion.prepareStatement("delete from MAGASIN where idmag =?");
 		ps.setInt(1, id);
 		int nb = ps.executeUpdate();
