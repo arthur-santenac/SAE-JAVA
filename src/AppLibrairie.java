@@ -343,9 +343,36 @@ public class AppLibrairie {
         }
     }
 
-    public void verifierStock() {
+    public void verifierStock() throws SQLException{
+       Menu.chercherLivre();
+       String chercher = System.console().readLine();
+       chercher = chercher.strip();
+       if (chercher.equals("q") || chercher.equals("quit") || chercher.equals("quitter")) {
+           return;
+       }
+       boolean trouve = false;
+       List<Livre> listeLivre = new ArrayList<>();
+       st = connexionMySQL.createStatement();
+       ResultSet set = st.executeQuery(
+               "select * from LIVRE natural join MAGASIN where nommag = \"" + magasin.getNomMag() + "\"");
+       while (set.next()) {
+           if (set.getString(2).equals(chercher)) {
+               listeLivre.add(
+                       new Livre(set.getString(1), set.getString(2), set.getInt(3), set.getInt(4), set.getDouble(5)));
+               trouve = true;
+           }
+       }
+       if (!trouve) {
+           System.out.println("le livre n'existe pas");
+           erreur();
+           System.console().readLine();
+           chercherLivre();
+       } else {
+           Menu.livreEnMagasin();
+           System.console().readLine();
+       }
+   }
 
-    }
 
     public void chercherLivre() throws SQLException {
         Menu.chercherLivre();
