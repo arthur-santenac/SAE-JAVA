@@ -627,7 +627,7 @@ public class AppLibrairie {
         if (confirmation.equals("oui") || confirmation.equals("o")) {
             try {
                 int id = client.getIdCli();
-                this.adminBD.supprimerLibrairie(id);
+                this.clientBD.supprimerVendeur(id);
             } catch (SQLException e) {
                 System.out.println("Problèmes rencontrés lors de la suppression de la librairie");
             }
@@ -642,7 +642,7 @@ public class AppLibrairie {
 
     public void listeVendeurs() {
         try {
-            List<Client> listeMagasin = clientBD.listeDesVendeurs();
+            List<Client> listeMagasin = this.clientBD.listeDesVendeurs();
             Menu.adminListeVendeur(listeMagasin);
         } catch (SQLException ex) {
             System.out.println("Erreur d'affichage de la liste des vendeurs !");

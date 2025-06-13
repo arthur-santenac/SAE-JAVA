@@ -73,7 +73,7 @@ public class ClientBD {
 		return clients;
 	}
 
-	public void supprimerLibrairie(Integer id)throws SQLException{
+	public void supprimerVendeur(Integer id)throws SQLException{
 		PreparedStatement ps = this.laConnexion.prepareStatement("delete from CLIENT where idcli =?");
 		ps.setInt(1, id);
 		int nb = ps.executeUpdate();
