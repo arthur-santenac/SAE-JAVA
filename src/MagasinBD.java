@@ -52,17 +52,20 @@ public class MagasinBD {
 		return magasins;
 	}
 
-	public List<String> nombreLivresVenduParMagParAn() throws SQLException{
-		this.st = this.laConnexion.createStatement();
-		ResultSet rs = this.st.executeQuery("Select distinct nommag Magasin, YEAR(datecom) Année, sum(qte) qte" +
-						"From MAGASIN natural join COMMANDE natural join DETAILCOMMANDE" + 
-						"Group by nommag , YEAR(datecom);");
+	public List<String> nombreLivresVenduParMagParAn(int annee) throws SQLException {
+		PreparedStatement ps = this.laConnexion.prepareStatement(
+		"Select nommag as Magasin, YEAR(datecom) as Annee, SUM(qte) as total " +
+		"From MAGASIN Natural join COMMANDE Natural join DETAILCOMMANDE " +
+		"Where YEAR(datecom) = ? GROUP BY nommag, YEAR(datecom)");
+		ps.setInt(1, annee);
+		ResultSet rs = ps.executeQuery();
 		List<String> res = new ArrayList<>();
 		while (rs.next()) {
-			String chaine = rs.getString(1)+rs.getString(2)+rs.getInt(3);
+			String chaine = rs.getString(1) + " " + rs.getInt(2) + " : " + rs.getInt(3);
 			res.add(chaine);
 		}
 		rs.close();
+		ps.close();
 		return res;
 	}
 }

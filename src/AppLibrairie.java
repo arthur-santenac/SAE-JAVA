@@ -911,7 +911,8 @@ public class AppLibrairie {
         String option = System.console().readLine();
         option = option.strip().toLowerCase();
         if (option.equals("1")) {
-            nbVentesParAn();
+            int anne = choixAnnee();
+            nbVentesParAn(anne);
         } else if (option.equals("2")) {
             adminStats();
         } else if (option.equals("3")) {
@@ -923,14 +924,34 @@ public class AppLibrairie {
 
     }
 
-    private void nbVentesParAn(){
+    private int choixAnnee(){
+        Menu.adminChoixAnne();
         String option = System.console().readLine();
         option = option.strip().toLowerCase();
         if (option.equals("q") || option.equals("quitter") || option.equals("Quitter")) {
-            runAdministrateur();
+            adminStats();
+        }
+        if (option.length() != 4 || !option.matches("\\d{4}")) { // commande trouvé sur internet : option.matches("\\d{4}") permet de vérifier que l'utilisateur a entrer exactement 4 chiffres.
+            System.out.println("Entrez une année valide composée de 4 chiffres (ex : 2023).");
+            return choixAnnee(); 
+        }
+        Integer anne =Integer.parseInt(option);
+        return anne;
+    }
+
+    private void nbVentesParAn(int anne){
+        try{
+            List<String>resRequete = this.magasinBD.nombreLivresVenduParMagParAn(anne);
+            Menu.adminStatAnne(resRequete);
+        }catch(SQLException e){
+            System.out.println("Erreur de requete");
+        }
+        String option = System.console().readLine();
+        option = option.strip().toLowerCase();
+        if(option.equals("q") || option.equals("quitter")){
+            adminStats();
         }
         
-
     }
 
     public void erreur() {
