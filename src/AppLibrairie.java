@@ -120,6 +120,32 @@ public class AppLibrairie {
 
     }
 
+    public boolean connexionBD() throws SQLException, ClassNotFoundException {
+        ConnexionMySQL connexionMySQL = new ConnexionMySQL();
+        Menu.connexionIdentBD();
+        String identifiant = System.console().readLine();
+        if (identifiant.equals("quitter") || identifiant.equals("q") || identifiant.equals("quit")) {
+            return false;
+        }
+
+        Menu.connexionMdpBD();
+        String mdp = System.console().readLine();
+        if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {
+            return false;
+        }
+
+        // String serveur = "servinfo-maria"; Pour les machines de l'IUT
+        String serveur = "localhost";
+        String nomBase = "DB" + identifiant;
+        connexionMySQL.connecter(identifiant, mdp, serveur, nomBase);
+        if (!connexionMySQL.isConnecte()) {
+            throw new SQLException();
+        }
+        this.connexionMySQL = connexionMySQL;
+        return true;
+
+    }
+
     public void creerUnCompte() throws SQLException {
         Menu.creerCompteEmail();
         String email = System.console().readLine();
@@ -873,30 +899,7 @@ public class AppLibrairie {
         System.console().readLine();
     }
 
-    public boolean connexionBD() throws SQLException, ClassNotFoundException {
-        ConnexionMySQL connexionMySQL = new ConnexionMySQL();
-        Menu.connexionIdentBD();
-        String identifiant = System.console().readLine();
-        if (identifiant.equals("quitter") || identifiant.equals("q") || identifiant.equals("quit")) {
-            return false;
-        }
-
-        Menu.connexionMdpBD();
-        String mdp = System.console().readLine();
-        if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {
-            return false;
-        }
-
-        String serveur = "servinfo-maria";
-        String nomBase = "DB" + identifiant;
-        connexionMySQL.connecter(identifiant, mdp, serveur, nomBase);
-        if (!connexionMySQL.isConnecte()) {
-            throw new SQLException();
-        }
-        this.connexionMySQL = connexionMySQL;
-        return true;
-
-    }
+    
 
     public static String ljust(String string, int longeur) {
         int aAjouter = longeur - string.length();
