@@ -916,8 +916,7 @@ public class AppLibrairie {
         String option = System.console().readLine();
         option = option.strip().toLowerCase();
         if (option.equals("1")) {
-            int anne = choixAnnee();
-            nbVentesParAn(anne);
+            valeurDesStocks();
         } else if (option.equals("2")) {
             adminStock();
         } else if (option.equals("3")) {
@@ -925,6 +924,21 @@ public class AppLibrairie {
         }
         else{
             erreur();
+        }
+    }
+
+
+    private void valeurDesStocks(){
+        try{
+            List<String>resRequete = this.magasinBD.valeurStocksParMag();
+            Menu.adminValeurStocks(resRequete);
+        }catch(SQLException e){
+            System.out.println("Erreur de requete");
+        }
+        String option = System.console().readLine();
+        option = option.strip().toLowerCase();
+        if(option.equals("q") || option.equals("quitter")){
+            adminStock();
         }
     }
 
@@ -976,6 +990,8 @@ public class AppLibrairie {
         }
         
     }
+
+    
 
     public void erreur() {
         System.out.println("\n" + "Erreur veillez réessayer");

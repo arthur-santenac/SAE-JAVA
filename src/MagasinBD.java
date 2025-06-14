@@ -68,4 +68,17 @@ public class MagasinBD {
 		ps.close();
 		return res;
 	}
+
+	public List<String> valeurStocksParMag()throws SQLException{
+		PreparedStatement ps = this.laConnexion.prepareStatement("Select nommag Magasin, sum(qte*prix) total From MAGASIN natural left join POSSEDER p natural left join LIVRE Group by nommag;");
+		ResultSet rs = ps.executeQuery();
+		List<String> res = new ArrayList<>();
+		while (rs.next()) {
+			String chaine = rs.getString(1) + ": " + rs.getInt(2);
+			res.add(chaine);
+		}
+		rs.close();
+		ps.close();
+		return res;
+	}
 }

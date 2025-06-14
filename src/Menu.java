@@ -1975,7 +1975,7 @@ public class Menu {
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| Que souhaitez vous faire ?                                     |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| 1 - Nombre de livres vendu par ans                             |                                                                ||||");
+        System.out.println(" |||| 1 - Valeur des stocks par librairies                           |                                                                ||||");
         System.out.println(" |||| 2 - Pas fais                                                   |                                                                ||||");
         System.out.println(" |||| 3 - Retour                                                     |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -2007,6 +2007,31 @@ public class Menu {
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+    public static void adminValeurStocks(List<String> listeStocks) {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| Voici la liste des magasins avec la valeur de leurs stocks     |                                                                ||||");
+        System.out.println(" |||| en euro.                                                       |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||  q - Quitter                                                   |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        for (int i=1;i<=listeStocks.size();i++) {
+            String ligne = " ||||   " + " - " + listeStocks.get(i - 1);
+            ligne = AppLibrairie.ljust(ligne, 69);
+            System.out.println(ligne + "|                                                                ||||");
+        }
+
+        for (int i=0;i<31-listeStocks.size();i++) {
+            System.out.println(" ||||                                                                |                                                                ||||");
+        }
         System.out.println(" ||/================================================================\\|/===============================================================|\\||");
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
@@ -2063,7 +2088,7 @@ public class Menu {
         System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| Veuillez entrer l'année que vous souhaitez analyser            |                                                                ||||");
+        System.out.println(" |||| Veuillez entrer l'année que vous souhaitez analyser.           |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| q - Retour                                                     |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -2110,7 +2135,7 @@ public class Menu {
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| Voici la liste des magasins avec le nombre de livres           |                                                                ||||");
-        System.out.println(" |||| qu'ils ont venddu sur une année donnée                         |                                                                ||||");
+        System.out.println(" |||| qu'ils ont venddu sur une année donnée.                        |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||  q - Quitter                                                   |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
