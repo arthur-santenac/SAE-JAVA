@@ -1379,7 +1379,7 @@ public class Menu {
 
 
 
-    public static void adminCodePostalVendeur(String nomV,String prenomV, String adresseV){
+    public static void adminCodePostalVendeur(String nomV,String prenomV, String adresseV, String villeV){
         logo();
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
@@ -1401,7 +1401,10 @@ public class Menu {
         ligne = " ||||    " + " - " + adresseV;
                 ligne = AppLibrairie.ljust(ligne, 69);
                 System.out.println(ligne + "|                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
+        ligne = " ||||    " + " - " + villeV;
+                ligne = AppLibrairie.ljust(ligne, 69);
+                System.out.println(ligne + "|                                                                ||||");
+    
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -1433,7 +1436,7 @@ public class Menu {
     }
 
 
-    public static void adminVilleVendeur(String nomV,String prenomV, String adresseV, String codePostalV){
+    public static void adminVilleVendeur(String nomV,String prenomV, String adresseV){
         logo();
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
@@ -1455,9 +1458,7 @@ public class Menu {
         ligne = " ||||    " + " - " + adresseV;
                 ligne = AppLibrairie.ljust(ligne, 69);
                 System.out.println(ligne + "|                                                                ||||");
-        ligne = " ||||    " + " - " + codePostalV;
-                ligne = AppLibrairie.ljust(ligne, 69);
-                System.out.println(ligne + "|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -1580,6 +1581,68 @@ public class Menu {
                 System.out.println(ligne + "|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+
+    public static void adminLibVendeur(String nomV,String prenomV, String adresseV, String codePostalV, String villeV, String emailV){
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| Veuillez entrer le numéro de la librairie attribuée            |                                                                ||||");
+        System.out.println(" |||| à  ce nouveau Vendeur                                          |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||    q - Quitter                                                 |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||    l - Liste des librairies                                    |                                                                ||||");
+        String ligne = " ||||    " + " - " + nomV;
+                ligne = AppLibrairie.ljust(ligne, 69);
+                System.out.println(ligne + "|                                                                ||||");
+        ligne = " ||||    " + " - " + prenomV;
+                ligne = AppLibrairie.ljust(ligne, 69);
+                System.out.println(ligne + "|                                                                ||||");
+        ligne = " ||||    " + " - " + adresseV;
+                ligne = AppLibrairie.ljust(ligne, 69);
+                System.out.println(ligne + "|                                                                ||||");
+        ligne = " ||||    " + " - " + codePostalV;
+                ligne = AppLibrairie.ljust(ligne, 69);
+                System.out.println(ligne + "|                                                                ||||");
+        ligne = " ||||    " + " - " + villeV;
+                ligne = AppLibrairie.ljust(ligne, 69);
+                System.out.println(ligne + "|                                                                ||||");
+        ligne = " ||||    " + " - " + emailV;
+                ligne = AppLibrairie.ljust(ligne, 69);
+                System.out.println(ligne + "|                                                                ||||");
+        
+        
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");

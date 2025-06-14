@@ -574,7 +574,7 @@ public class AppLibrairie {
             } else if (option.equals("7")) {
 
             } else if (option.equals("8")) {
-
+                adminStats();
             } else if (option.equals("9")) {
 
             } else if (option.equals("10")) {
@@ -589,29 +589,23 @@ public class AppLibrairie {
 
     public void creerVendeur() {
         Integer idV = null;
-        String nomV = null;
-        String prenomV = null;
-        String adresseV = null;
-        String codePostalV = null;
-        String villeV = null;
-        String emailV = null;
-        String mdp = null;
         try {
             idV = this.clientBD.maxNum() + 1;
         } catch (SQLException e) {
             System.out.println("Il y a une erreur avec l'id du vendeur");
             runAdministrateur();
         }
-        nomV = nomVendeur();
-        prenomV = prenomVendeur(nomV);
-        adresseV = adresseVendeur(nomV, prenomV);
-        codePostalV = codePostalVendeur(nomV, prenomV, adresseV);
-        villeV = villeVendeur(nomV, prenomV, adresseV, codePostalV);
-        emailV = emailVendeur(nomV, prenomV, adresseV, codePostalV, villeV);
-        mdp = mdpVendeur(nomV, prenomV, adresseV, codePostalV, villeV, emailV);
+        String nomV = nomVendeur();
+        String prenomV = prenomVendeur(nomV);
+        String adresseV = adresseVendeur(nomV, prenomV);
+        String villeV = villeVendeur(nomV, prenomV, adresseV);
+        String codePostalV = codePostalVendeur(nomV, prenomV, adresseV, villeV);
+        String emailV = emailVendeur(nomV, prenomV, adresseV, codePostalV, villeV);
+        String mdp = mdpVendeur(nomV, prenomV, adresseV, codePostalV, villeV, emailV);
+        int idlib = libVendeur(nomV, prenomV, adresseV, codePostalV, villeV, emailV);
         Client vendeur = new Client(nomV, prenomV, adresseV, codePostalV, villeV, idV);
         try{
-            this.clientBD.insererVendeur(vendeur,emailV, mdp);
+            this.clientBD.insererVendeur(vendeur,emailV, mdp, idlib );
         }catch(SQLException e){
             System.out.println("Il y a une erreur avec l'insertion du vendeur");
             runAdministrateur();
@@ -656,8 +650,8 @@ public class AppLibrairie {
         return adresseVendeur;
     }
 
-    private String codePostalVendeur(String nom, String prenom, String adresse){
-        Menu.adminCodePostalVendeur(nom, prenom, adresse);
+    private String codePostalVendeur(String nom, String prenom, String adresse, String ville){
+        Menu.adminCodePostalVendeur(nom, prenom, adresse, ville);
         String option = System.console().readLine();
         option = option.strip();
         if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
@@ -667,8 +661,8 @@ public class AppLibrairie {
         return codePostalV;
     }
 
-    private String villeVendeur(String nom, String prenom, String adresse, String codePostal){
-        Menu.adminVilleVendeur(nom, prenom, adresse, codePostal);
+    private String villeVendeur(String nom, String prenom, String adresse){
+        Menu.adminVilleVendeur(nom, prenom, adresse);
         String option = System.console().readLine();
         option = option.strip();
         if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
@@ -681,8 +675,8 @@ public class AppLibrairie {
     private String emailVendeur(String nom, String prenom, String adresse, String codePostal, String ville){
         Menu.adminEmailVendeur(nom, prenom, adresse, codePostal, ville);
         String option = System.console().readLine();
-        option = option.strip();
-        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+        option = option.strip().toLowerCase();
+        if(option.equals("q") || option.equals("quitter") ){
             runAdministrateur();
         }
         String emailVendeur = option;
@@ -698,6 +692,36 @@ public class AppLibrairie {
         }
         String mdpVendeur = option;
         return mdpVendeur;
+    }
+
+    private int libVendeur(String nom, String prenom, String adresse, String codePostal, String ville, String email){
+        Menu.adminLibVendeur(nom, prenom, adresse, codePostal, ville, email);
+        String option = System.console().readLine();
+        option = option.strip();
+        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+            runAdministrateur();
+        }
+        if (option.equals("l")){
+            listeLibsVendeur(nom, prenom, adresse, codePostal, ville, email);
+        }
+        int idLib = Integer.parseInt(option);
+        return idLib;
+    }
+
+    public void listeLibsVendeur(String nom, String prenom, String adresse, String codePostal, String ville, String email) {
+        try {
+            List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
+            Menu.adminListeLib(listeMagasin);
+        } catch (SQLException ex) {
+            System.out.println("Erreur SQL !");
+        }
+        String option = System.console().readLine();
+        option = option.strip().toLowerCase();
+        if (option.equals("q") || option.equals("quitter")) {
+            libVendeur(nom, prenom, adresse, codePostal, ville, email);
+        } else {
+            erreur();
+        }
     }
 
     public void suppVendeur() {
@@ -891,6 +915,10 @@ public class AppLibrairie {
     private void nbVentesParAn(){
         String option = System.console().readLine();
         option = option.strip().toLowerCase();
+        if (option.equals("q") || option.equals("quitter") || option.equals("Quitter")) {
+            runAdministrateur();
+        }
+        
 
     }
 
