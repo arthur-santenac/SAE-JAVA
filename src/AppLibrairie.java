@@ -696,16 +696,27 @@ public class AppLibrairie {
 
     private int libVendeur(String nom, String prenom, String adresse, String codePostal, String ville, String email){
         Menu.adminLibVendeur(nom, prenom, adresse, codePostal, ville, email);
-        String option = System.console().readLine();
-        option = option.strip();
-        if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
-            runAdministrateur();
+        boolean continuer = false;
+        Integer idLib = null;
+        while(!continuer){
+            String option = System.console().readLine();
+            option = option.strip();
+            if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
+                runAdministrateur();
+            }
+            if (option.equals("l")){
+                listeLibsVendeur(nom, prenom, adresse, codePostal, ville, email);
+                continue;
+            }
+            try {
+                idLib = Integer.parseInt(option);
+                continuer = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Veuillez entrer un numéro valide ou 'l' pour la liste.");
+            }
         }
-        if (option.equals("l")){
-            listeLibsVendeur(nom, prenom, adresse, codePostal, ville, email);
-        }
-        int idLib = Integer.parseInt(option);
         return idLib;
+        
     }
 
     public void listeLibsVendeur(String nom, String prenom, String adresse, String codePostal, String ville, String email) {
