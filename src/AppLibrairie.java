@@ -572,7 +572,7 @@ public class AppLibrairie {
             } else if (option.equals("6")) {
                 listeLibs();
             } else if (option.equals("7")) {
-
+                adminStock();
             } else if (option.equals("8")) {
                 adminStats();
             } else if (option.equals("9")) {
@@ -667,6 +667,7 @@ public class AppLibrairie {
         option = option.strip();
         if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
             runAdministrateur();
+            return "";
         }
         String villeVendeur = option;
         return villeVendeur;
@@ -678,6 +679,7 @@ public class AppLibrairie {
         option = option.strip().toLowerCase();
         if(option.equals("q") || option.equals("quitter") ){
             runAdministrateur();
+            return "";
         }
         String emailVendeur = option;
         return emailVendeur;
@@ -689,6 +691,7 @@ public class AppLibrairie {
         option = option.strip();
         if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
             runAdministrateur();
+            return "";
         }
         String mdpVendeur = option;
         return mdpVendeur;
@@ -703,6 +706,7 @@ public class AppLibrairie {
             option = option.strip();
             if(option.equals("q") || option.equals("quitter") || option.equals("Quitter")){
                 runAdministrateur();
+                return -1;
             }
             if (option.equals("l")){
                 listeLibsVendeur(nom, prenom, adresse, codePostal, ville, email);
@@ -825,6 +829,7 @@ public class AppLibrairie {
         String nomLib = null;
         if (nom.equals("q") || nom.equals("quitter") || nom.equals("Quitter")) {
             runAdministrateur();
+            return "";
         }
         nomLib = nom;
         return nomLib;
@@ -906,6 +911,23 @@ public class AppLibrairie {
         }
     }
 
+    public void adminStock(){
+        Menu.adminStocks();
+        String option = System.console().readLine();
+        option = option.strip().toLowerCase();
+        if (option.equals("1")) {
+            int anne = choixAnnee();
+            nbVentesParAn(anne);
+        } else if (option.equals("2")) {
+            adminStock();
+        } else if (option.equals("3")) {
+            runAdministrateur();
+        }
+        else{
+            erreur();
+        }
+    }
+
     public void adminStats(){
         Menu.adminStats();
         String option = System.console().readLine();
@@ -916,7 +938,7 @@ public class AppLibrairie {
         } else if (option.equals("2")) {
             adminStats();
         } else if (option.equals("3")) {
-            this.runAdministrateur();
+            runAdministrateur();
         }
         else{
             erreur();
@@ -930,6 +952,7 @@ public class AppLibrairie {
         option = option.strip().toLowerCase();
         if (option.equals("q") || option.equals("quitter") || option.equals("Quitter")) {
             adminStats();
+            return -1;
         }
         if (option.length() != 4 || !option.matches("\\d{4}")) { // commande trouvé sur internet : option.matches("\\d{4}") permet de vérifier que l'utilisateur a entrer exactement 4 chiffres.
             System.out.println("Entrez une année valide composée de 4 chiffres (ex : 2023).");
