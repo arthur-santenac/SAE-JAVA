@@ -2044,7 +2044,7 @@ public class Menu {
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| 1 - Nombre de livres vendu par ans                             |                                                                ||||");
-        System.out.println(" |||| 2 - Pas fais                                                   |                                                                ||||");
+        System.out.println(" |||| 2 - Auteur n°1 des ventes par an                               |                                                                ||||");
         System.out.println(" |||| 3 - Retour                                                     |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -2136,6 +2136,32 @@ public class Menu {
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| Voici la liste des magasins avec le nombre de livres           |                                                                ||||");
         System.out.println(" |||| qu'ils ont venddu sur une année donnée.                        |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||  q - Quitter                                                   |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        for (int i=1;i<=res.size();i++) {
+            String ligne = " ||||   " + " - " + res.get(i - 1);
+            ligne = AppLibrairie.ljust(ligne, 69);
+            System.out.println(ligne + "|                                                                ||||");
+        }
+
+        for (int i=0;i<31-res.size();i++) {
+            System.out.println(" ||||                                                                |                                                                ||||");
+        }
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+
+    public static void adminPalmares(List<String> res) {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| Voici la liste des auteurs qui ont le plus vendu de livres     |                                                                ||||");
+        System.out.println(" |||| chaque année et le nombre de livres vendus.                    |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||  q - Quitter                                                   |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");

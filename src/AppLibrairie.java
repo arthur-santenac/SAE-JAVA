@@ -950,7 +950,7 @@ public class AppLibrairie {
             int anne = choixAnnee();
             nbVentesParAn(anne);
         } else if (option.equals("2")) {
-            adminStats();
+            palmares();
         } else if (option.equals("3")) {
             runAdministrateur();
         }
@@ -989,6 +989,20 @@ public class AppLibrairie {
             adminStats();
         }
         
+    }
+
+    private void palmares(){
+        try{
+            List<String>resRequete = this.adminBD.palmares();
+            Menu.adminPalmares(resRequete);
+        }catch(SQLException e){
+            System.out.println("Erreur de requete");
+        }
+        String option = System.console().readLine();
+        option = option.strip().toLowerCase();
+        if(option.equals("q") || option.equals("quitter")){
+            adminStats();
+        }
     }
 
     

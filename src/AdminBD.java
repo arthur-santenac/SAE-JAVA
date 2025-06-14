@@ -44,4 +44,24 @@ public class AdminBD {
 		} 
 	}
 
+	public List<String> palmares()throws SQLException{
+		PreparedStatement ps = this.laConnexion.prepareStatement("with vue as(" +
+						" Select YEAR(datecom) annee,idauteur, nomauteur, sum(qte) total " + 
+						" From AUTEUR natural join ECRIRE natural join LIVRE natural join DETAILCOMMANDE natural join COMMANDE " + //
+						" Group by YEAR(datecom),idauteur, nomauteur )"+"\n" +
+						"\n" +
+						"Select annee , nomauteur , total\n" + 
+						"From vue v1 Where total = ( Select max(total) From vue v2  Where annee <> 2025 and v1.annee = v2.annee)\n" +
+						"Group by annee, nomauteur;");
+		ResultSet rs = ps.executeQuery();
+		List<String> res = new ArrayList<>();
+		while (rs.next()) {
+			String chaine = rs.getString(2)+" " + rs.getInt(1)+" "+rs.getInt(3);
+			res.add(chaine);
+		}
+		rs.close();
+		ps.close();
+		return res;
+	}
+
 }

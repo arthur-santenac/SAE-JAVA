@@ -81,4 +81,5 @@ public class MagasinBD {
 		ps.close();
 		return res;
 	}
+
 }
