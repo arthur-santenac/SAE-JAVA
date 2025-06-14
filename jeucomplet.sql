@@ -8,11 +8,14 @@ insert into MAGASIN(idmag, nommag, villemag) values
        (6,'Rhône à lire','Lyon'),
        (7,'Loire et livres','Orléans');
 
-insert into CLIENT(idcli, nomcli, prenomcli, adressecli, codepostal, villecli) values
-	(1, "deoliveira", "hugo", "rue", 45000, "orleans");
 
-insert into CONNEXION(adresseemail, motdepasse, idcli, compte )values
-	("hugo", "mdp", 1, "administrateur" );
+INSERT INTO CLIENT(idcli, nomcli, prenomcli, adressecli, codepostal, villecli) VALUES
+    (1, 'deoliveira', 'hugo', 'rue', 45000, 'orleans'),
+    (2, 'louis', 'louis', 'louis', 75000, 'louis');
+
+INSERT INTO CONNEXION(adresseemail, motdepasse, idcli, compte) VALUES
+    ('hugo', 'mdp', 1, 'administrateur'),
+    ('louis', 'azerty', 2, 'vendeur1');
 
 
 
@@ -12553,6 +12556,3 @@ insert into POSSEDER(idmag, isbn, qte) values
 	(1, '9782081271654', 9),
 	(7, '9782070570669', 6);
 
-INSERT INTO CLIENT VALUES (1, 'louis', 'louis', 'louis', 75000, 'louis');
-
-INSERT INTO CONNEXION VALUES ('louis', 'azerty', 1, 'vendeur1');
