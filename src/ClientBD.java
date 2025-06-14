@@ -15,7 +15,7 @@ public class ClientBD {
 
 	public int maxNum() throws SQLException{
 		this.st=this.laConnexion.createStatement();
-		ResultSet rs = this.st.executeQuery("Select IFNULL(max(idcli),1) from CLIENT");
+		ResultSet rs = this.st.executeQuery("Select IFNULL(max(idcli),0) from CLIENT");
 		rs.next();
 		int res = rs.getInt(1);
 		rs.close();
@@ -34,7 +34,7 @@ public class ClientBD {
         }
     }
 
-	public void insererVendeur(Client c, String email, String mdp)throws SQLException{
+	public void insererVendeur(Client c, String email, String mdp, int idMag)throws SQLException{
 		PreparedStatement ps = this.laConnexion.prepareStatement("insert into CLIENT(idcli, nomcli, prenomcli, adressecli, codepostal, villecli ) values(?, ?, ?, ?, ?, ?)");
 		ps.setInt(1, c.getIdCli());
 		ps.setString(2, c.getNom());
@@ -48,7 +48,7 @@ public class ClientBD {
 		ps2.setString(1, email);
 		ps2.setString(2, mdp);
 		ps2.setInt(3, c.getIdCli());
-		ps2.setString(4, "vendeur");
+		ps2.setString(4, "vendeur"+idMag);
 		ps2.executeUpdate();
 		ps2.close();
 	}
@@ -57,7 +57,7 @@ public class ClientBD {
 		this.st = this.laConnexion.createStatement();
 		// Utilisez la requête recommandée avec INNER JOIN
 		ResultSet rs = this.st.executeQuery(
-			"SELECT c.* FROM CLIENT c INNER JOIN CONNEXION co ON c.idcli = co.idcli WHERE co.compte = 'vendeur'");
+			"Select c.* from CLIENT c INNER JOIN CONNEXION co ON c.idcli = co.idcli Where co.compte Like 'vendeur%'");
 		List<Client> clients = new ArrayList<>();
 		while (rs.next()) {
 			int id = rs.getInt(1);

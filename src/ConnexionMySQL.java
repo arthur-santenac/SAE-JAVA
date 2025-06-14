@@ -11,7 +11,9 @@ public class ConnexionMySQL {
 	}
 
 	public void connecter( String nomLogin, String motDePasse, String nomServeur, String nomBase) throws SQLException {
-		this.mysql=DriverManager.getConnection("jdbc:mysql://" + nomServeur + ":3306/" + nomBase, nomLogin, motDePasse);
+		// this.mysql=DriverManager.getConnection("jdbc:mysql://" + nomServeur + ":3306/" + nomBase, nomLogin, motDePasse);
+		String url = "jdbc:mariadb://" + nomServeur + ":3306/" + nomBase; // Pour notre machine perso
+		this.mysql = DriverManager.getConnection(url, nomLogin, motDePasse);
 		this.connecte = true;
 		// si tout s'est bien passé la connexion n'est plus nulle
 		this.connecte=this.mysql!=null;

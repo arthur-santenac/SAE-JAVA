@@ -7,6 +7,9 @@
     "java.project.referencedLibraries": [
         "/usr/share/java/mariadb-java-client.jar",
         "/home/iut45/Etudiants/o22406613/Documents/SAE/SAE-JAVA/lib/hamcrest-core-1.3.jar",
-        "/home/iut45/Etudiants/o22406613/Documents/SAE/SAE-JAVA/lib/junit-4.13.2.jar"
+        "/home/iut45/Etudiants/o22406613/Documents/SAE/SAE-JAVA/lib/junit-4.13.2.jar",
+        "lib/hamcrest-core-1.3.jar",
+        "lib/junit-4.13.2.jar",
+        "lib/mariadb-java-client-3.3.3.jar"
     ]
 }
