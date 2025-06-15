@@ -1302,7 +1302,7 @@ public class AppLibrairie {
         option = option.strip().toLowerCase();
         if (option.equals("1")) {
             int anne = choixAnnee();
-            if (anne != -1) {
+            if (anne == -1) {
                 adminStats(); 
             }
             else{
@@ -1374,6 +1374,8 @@ public class AppLibrairie {
             adminStats();
         }
     }
+
+    // ==================================================== FIN ADMINISTRATEUR ====================================================
 
     public void setUtilisateur(Client utilisateur) {
         this.utilisateur = utilisateur;
