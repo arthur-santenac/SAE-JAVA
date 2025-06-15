@@ -10,12 +10,14 @@ insert into MAGASIN(idmag, nommag, villemag) values
 
 
 INSERT INTO CLIENT(idcli, nomcli, prenomcli, adressecli, codepostal, villecli) VALUES
-    (1, 'deoliveira', 'hugo', 'rue', 45000, 'orleans'),
-    (2, 'louis', 'louis', 'louis', 75000, 'louis');
+    (1, 'hugo', 'hugo', 'rue', 45000, 'orleans'),
+    (2, 'louis', 'louis', 'rue', 75000, 'orelans'),
+	(3, 'arthur', 'arthur', 'rue', 75000, 'orelans');
 
 INSERT INTO CONNEXION(adresseemail, motdepasse, idcli, compte) VALUES
-    ('hugo', 'mdp', 1, 'administrateur'),
-    ('louis', 'azerty', 2, 'vendeur1');
+    ('client', 'client', 3, 'client'),
+	('admin', 'admin', 1, 'administrateur'),
+    ('vendeur', 'vendeur', 2, 'vendeur1');
 
 
 
