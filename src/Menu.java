@@ -1751,7 +1751,7 @@ public class Menu {
         System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| q - Retour                                                     |                                                                ||||");
+        System.out.println(" |||| q - Retour au menu précédent                                   |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         for (int i=1;i<=listeVendeurs.size();i++) {
@@ -1871,7 +1871,7 @@ public class Menu {
         System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| q - Retour                                                     |                                                                ||||");
+        System.out.println(" |||| q - Retour au menu précédent                                   |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         for (int i=1;i<=listeMagasin.size();i++) {
@@ -1976,8 +1976,8 @@ public class Menu {
         System.out.println(" |||| Que souhaitez vous faire ?                                     |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| 1 - Valeur des stocks par librairies                           |                                                                ||||");
-        System.out.println(" |||| 2 - Pas fais                                                   |                                                                ||||");
-        System.out.println(" |||| 3 - Retour                                                     |                                                                ||||");
+        System.out.println(" |||| 2 - Stock de livres global                                     |                                                                ||||");
+        System.out.println(" |||| 3 - Retour au menu précédent                                   |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -2036,6 +2036,32 @@ public class Menu {
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
 
+    public static void adminAfficherStocksGlobaux(List<String> liste, int pageActuel, int nbPageMax) {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                    ADMINISTRATEUR                              |     > - Page suivante                                          ||||");
+        System.out.println(" ||||________________________________________________________________|     < - Page précédente                                        ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| q - Retour au menu précédent                                   |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        for (int i = 1; i <= liste.size(); i++) {
+            String ligne2 = " ||||   " + " - " + liste.get(i - 1);
+            ligne2 = AppLibrairie.ljust(ligne2, 69);
+            System.out.println(ligne2 + "|                                                                ||||");
+        }
+        for (int i = 0; i < 31 - liste.size(); i++) {
+            System.out.println(" ||||                                                                |                                                                ||||");
+        }
+        String ligne = "     Page " +pageActuel+"/"+nbPageMax;
+                ligne = AppLibrairie.ljust(ligne, 64);
+                System.out.println(" ||||                                                                |"+ligne+"||||");
+    
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+
     public static void adminStats() {
         logo();
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
@@ -2045,8 +2071,8 @@ public class Menu {
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| 1 - Nombre de livres vendu par ans                             |                                                                ||||");
         System.out.println(" |||| 2 - Auteur n°1 des ventes par an                               |                                                                ||||");
-        System.out.println(" |||| 3 - Retour                                                     |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| 3 - Les 10 éditeurs avec le plus grands nombre d'auteurs       |                                                                ||||");
+        System.out.println(" |||| 4 - Retour au menu précédent                                   |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -2090,7 +2116,7 @@ public class Menu {
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| Veuillez entrer l'année que vous souhaitez analyser.           |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" |||| q - Retour                                                     |                                                                ||||");
+        System.out.println(" |||| q - Retour au menu précédent                                   |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -2178,6 +2204,30 @@ public class Menu {
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
 
+    public static void adminMeilleursEdit(List<String> res) {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| Voici la liste des 10 meilleurs éditeurs en termes de nombres  |                                                                ||||");
+        System.out.println(" |||| d'auteurs.                                                     |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||  q - Quitter                                                   |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        for (int i=1;i<=res.size();i++) {
+            String ligne = " ||||   " + " - " + res.get(i - 1);
+            ligne = AppLibrairie.ljust(ligne, 69);
+            System.out.println(ligne + "|                                                                ||||");
+        }
+
+        for (int i=0;i<31-res.size();i++) {
+            System.out.println(" ||||                                                                |                                                                ||||");
+        }
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
     
 
     public static void commanderVendeur() {
