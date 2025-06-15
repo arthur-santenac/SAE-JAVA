@@ -44,6 +44,39 @@ public class AdminBD {
 		} 
 	}
 
+	public List<String> afficherStocks() throws SQLException{
+		Statement st = this.laConnexion.createStatement();
+        ResultSet rs = st.executeQuery("Select isbn, titre, nbpages, prix, SUM(qte) as stockTotal From LIVRE Natural join POSSEDER Natural join MAGASIN "+
+            						"Group by isbn, titre, nbpages, prix");
+        List<String> listeStock = new ArrayList<>();
+        while (rs.next()) {
+			String titre = rs.getString(2);
+			if (titre.length() > 20) {
+				titre = titre.substring(0, 17) + "...";
+			}
+            String chaine = rs.getString(1)+" "+titre+" | "+rs.getInt(3)+" pages | "+rs.getInt(4)+"€ |"+rs.getInt(5);
+            listeStock.add(chaine);
+        }
+		return listeStock;
+	}
+
+	public List<String> afficherStocksLib(int id) throws SQLException{
+		PreparedStatement ps = this.laConnexion.prepareStatement("Select isbn, titre, nbpages, prix, SUM(qte) as stockTotal From LIVRE Natural join POSSEDER Natural join MAGASIN "+
+            						"Where idmag = ? Group by isbn, titre, nbpages, prix");
+		ps.setInt(1, id);
+		ResultSet rs = ps.executeQuery();
+        List<String> listeStock = new ArrayList<>();
+        while (rs.next()) {
+			String titre = rs.getString(2);
+			if (titre.length() > 20) {
+				titre = titre.substring(0, 17) + "...";
+			}
+            String chaine = rs.getString(1)+" "+titre+" | "+rs.getInt(3)+" pages | "+rs.getInt(4)+"€ |"+rs.getInt(5);
+            listeStock.add(chaine);
+        }
+		return listeStock;
+	}
+
 	public List<String> palmares()throws SQLException{
 		PreparedStatement ps = this.laConnexion.prepareStatement("with vue as(" +
 						" Select YEAR(datecom) annee,idauteur, nomauteur, sum(qte) total " + 
@@ -52,7 +85,7 @@ public class AdminBD {
 						"\n" +
 						"Select annee , nomauteur , total\n" + 
 						"From vue v1 Where total = ( Select max(total) From vue v2  Where annee <> 2025 and v1.annee = v2.annee)\n" +
-						"Group by annee, nomauteur;");
+						"Group by annee, nomauteur");
 		ResultSet rs = ps.executeQuery();
 		List<String> res = new ArrayList<>();
 		while (rs.next()) {
@@ -63,5 +96,24 @@ public class AdminBD {
 		ps.close();
 		return res;
 	}
+
+
+	public List<String> meilleursEdit()throws SQLException{
+		PreparedStatement ps = this.laConnexion.prepareStatement("Select nomedit Editeur , count(distinct idauteur) nbauteurs "+ 
+																 "From EDITEUR natural join EDITER natural join LIVRE natural join ECRIRE natural join AUTEUR "+
+																 "Group by nomedit Order by nbauteurs desc limit 10");
+		ResultSet rs = ps.executeQuery();
+		List<String> res = new ArrayList<>();
+		while (rs.next()) {
+			String chaine = rs.getString(1)+" : "+rs.getInt(2);
+			res.add(chaine);
+		}
+		rs.close();
+		ps.close();
+		return res;
+	}
+
+
+
 
 }
