@@ -363,7 +363,7 @@ public class Menu {
             
             System.out.println(" |||| Vous n'avez rien dans votre panier                             |                                                                ||||");
         } else {
-            System.out.println(" |||| Voici votre panier :                                           |                                                                ||||");
+            System.out.println(AppLibrairie.ljust(" |||| Voici votre panier (valeur totale : " + panier.prixTot() + "€) :", 69) + "|                                                                ||||");
             res = true;
         }
 
