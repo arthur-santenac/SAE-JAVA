@@ -138,7 +138,7 @@ public class AppLibrairie {
 
         // String serveur = "servinfo-maria"; Pour les machines de l'IUT
         String serveur = "localhost";
-        String nomBase = "test";
+        String nomBase = "DB" + identifiant;
         connexionMySQL.connecter(identifiant, mdp, serveur, nomBase);
         if (!connexionMySQL.isConnecte()) {
             throw new SQLException();
@@ -753,7 +753,7 @@ public class AppLibrairie {
                         this.panier.getDetailsCommande().get(i).getQte(),
                         this.panier.getDetailsCommande().get(i).getPrixVente(),
                         this.panier.getDetailsCommande().get(i).getLivre().getIsbn());
-                this.vendeurBD.majQte(idMagInt, this.panier.getDetailsCommande().get(i).getLivre().getIsbn(), this.panier.getDetailsCommande().get(i).getQte(), true);
+                this.vendeurBD.majQte(idMagInt, this.panier.getDetailsCommande().get(i).getLivre().getIsbn(), -this.panier.getDetailsCommande().get(i).getQte(), false);
             }
             this.panier = new Commande('1', modeLivraison, magasin, utilisateur);
         } catch (SQLException e) {
