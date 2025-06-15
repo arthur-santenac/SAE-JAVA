@@ -55,6 +55,14 @@ public class Commande {
         return livre.getPrix()*quantiteEnDouble;
     }
 
+    public double prixTot() {
+        double res = 0;
+        for (DetailCommande detail : detailsCommande) {
+            res += detail.getPrixVente();
+        }
+        return res;
+    }
+
     @Override
     public boolean equals(Object o){
         if(o == null){
