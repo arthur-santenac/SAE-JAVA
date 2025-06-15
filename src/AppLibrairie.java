@@ -381,7 +381,7 @@ public class AppLibrairie {
                 } else {
                     int optionInt = Integer.parseInt(option);
                     if (optionInt > 0 && optionInt <= 34) {
-                        Menu.qte();;
+                        Menu.qte();
                         String qte = System.console().readLine();
                         qte = qte.strip();
                         int qteInt = Integer.parseInt(qte);
@@ -918,15 +918,17 @@ public class AppLibrairie {
         if (option.equals("1")) {
             valeurDesStocks();
         } else if (option.equals("2")) {
-            adminStock();
+            consulterStocksGlobaux();
         } else if (option.equals("3")) {
+            choixLib();
+        }
+        else if (option.equals("4")) {
             runAdministrateur();
         }
         else{
             erreur();
         }
     }
-
 
     private void valeurDesStocks(){
         try{
@@ -942,22 +944,129 @@ public class AppLibrairie {
         }
     }
 
+    public void consulterStocksGlobaux(){
+        try{
+            List<String> listeStock = this.adminBD.afficherStocks();
+            int pageActuel = 1;
+            int nbPageMax = (int) (listeStock.size() / 34 + 1);
+            boolean quitter = false;
+            while (!quitter) {
+                List<String> sousListe;
+                try {
+                    sousListe = listeStock.subList(pageActuel * 34 - 34, pageActuel * 34);
+                } catch (IndexOutOfBoundsException e) {
+                    sousListe = listeStock.subList(pageActuel * 34 - 34, listeStock.size());
+                }
+
+                Menu.adminAfficherStocksGlobaux(sousListe, pageActuel, nbPageMax);
+                String option = System.console().readLine().strip();
+                if (option.equals("<") && pageActuel > 1){
+                    pageActuel--;
+                }
+                else if (option.equals(">") && pageActuel < nbPageMax){
+                    pageActuel++;
+                } 
+                else if (option.equals("q")){
+                    quitter = true;
+                    adminStock();
+                } 
+                else{
+                    erreur();
+                }
+        }
+        }catch(SQLException e){
+            System.out.println("Erreur de requête");
+        }
+    }
+
+    private void choixLib(){
+        Magasin lib = null;
+        Integer idMag = null;
+        try {
+            List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
+            Menu.adminChoixLib(listeMagasin);
+        } catch (SQLException ex) {
+            System.out.println("Erreur SQL !");
+        }
+        String option = System.console().readLine();
+        option = option.strip().toLowerCase();
+        if (option.equals("q") || option.equals("quitter")) {
+            adminStock();
+        }else {
+            try {
+                idMag = Integer.parseInt(option);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrez un identifiant valide.");
+            }
+            try {
+                lib = this.magasinBD.rechercherMagasinParId(idMag);
+            } catch (SQLException e) {
+                System.out.println("Il n'y a aucune librairie avec cet identifiant");
+                choixLib();
+            }
+            consulterStockLib(idMag);
+
+        }
+        
+    }
+
+    private void consulterStockLib(int idmag){
+        try{
+            List<String> listeStock = this.adminBD.afficherStocksLib(idmag);
+            int pageActuel = 1;
+            int nbPageMax = (int) (listeStock.size() / 34 + 1);
+            boolean quitter = false;
+            while (!quitter) {
+                List<String> sousListe;
+                try {
+                    sousListe = listeStock.subList(pageActuel * 34 - 34, pageActuel * 34);
+                } catch (IndexOutOfBoundsException e) {
+                    sousListe = listeStock.subList(pageActuel * 34 - 34, listeStock.size());
+                }
+
+                Menu.adminAfficherStocksGlobaux(sousListe, pageActuel, nbPageMax);
+                String option = System.console().readLine().strip();
+                if (option.equals("<") && pageActuel > 1){
+                    pageActuel--;
+                }
+                else if (option.equals(">") && pageActuel < nbPageMax){
+                    pageActuel++;
+                } 
+                else if (option.equals("q")){
+                    quitter = true;
+                    choixLib();
+                } 
+                else{
+                    erreur();
+                }
+        }
+        }catch(SQLException e){
+            System.out.println("Erreur de requête");
+        }
+    }
+
     public void adminStats(){
         Menu.adminStats();
         String option = System.console().readLine();
         option = option.strip().toLowerCase();
         if (option.equals("1")) {
             int anne = choixAnnee();
-            nbVentesParAn(anne);
+            if (anne != -1) {
+                adminStats(); 
+            }
+            else{
+                nbVentesParAn(anne);
+            }
         } else if (option.equals("2")) {
             palmares();
+            adminStats();
         } else if (option.equals("3")) {
+            meilleurEditeurs();
+        } else if (option.equals("4")) {
             runAdministrateur();
-        }
-        else{
+        } else {
             erreur();
         }
-
     }
 
     private int choixAnnee(){
@@ -965,7 +1074,6 @@ public class AppLibrairie {
         String option = System.console().readLine();
         option = option.strip().toLowerCase();
         if (option.equals("q") || option.equals("quitter") || option.equals("Quitter")) {
-            adminStats();
             return -1;
         }
         if (option.length() != 4 || !option.matches("\\d{4}")) { // commande trouvé sur internet : option.matches("\\d{4}") permet de vérifier que l'utilisateur a entrer exactement 4 chiffres.
@@ -995,6 +1103,17 @@ public class AppLibrairie {
         try{
             List<String>resRequete = this.adminBD.palmares();
             Menu.adminPalmares(resRequete);
+        }catch(SQLException e){
+            System.out.println("Erreur de requete");
+        }
+        String option = System.console().readLine();
+        option = option.strip().toLowerCase();
+    }
+
+    private void meilleurEditeurs(){
+        try{
+            List<String>resRequete = this.adminBD.meilleursEdit();
+            Menu.adminMeilleursEdit(resRequete);
         }catch(SQLException e){
             System.out.println("Erreur de requete");
         }
