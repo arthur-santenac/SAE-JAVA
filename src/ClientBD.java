@@ -107,15 +107,16 @@ public class ClientBD {
 	public List<Livre> getLivresCommandesParClient(int idClient) throws SQLException {
 		List<Livre> livreCommander = new ArrayList<>();
 
-		String requete = "SELECT DISTINCT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix, " +
-		"CLASSIFICATION.iddewey, CLASSIFICATION.nomclass " +
-		"FROM CLIENT " +
-		"JOIN COMMANDE ON CLIENT.idcli = COMMANDE.idcli " +
-		"JOIN LIGNECOMMANDE ON COMMANDE.numcom = LIGNECOMMANDE.numcom " +
-		"JOIN LIVRE ON LIGNECOMMANDE.idlivre = LIVRE.isbn " +
-		"LEFT JOIN THEMES ON LIVRE.isbn = THEMES.isbn " +
-		"LEFT JOIN CLASSIFICATION ON THEMES.iddewey = CLASSIFICATION.iddewey " +
-		"WHERE CLIENT.idcli = ?";
+		String requete =
+			"SELECT DISTINCT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix, " +
+			"CLASSIFICATION.iddewey, CLASSIFICATION.nomclass " +
+			"FROM CLIENT " +
+			"JOIN COMMANDE ON CLIENT.idcli = COMMANDE.idcli " +
+			"JOIN DETAILCOMMANDE ON COMMANDE.numcom = DETAILCOMMANDE.numcom " +
+			"JOIN LIVRE ON DETAILCOMMANDE.isbn = LIVRE.isbn " +
+			"LEFT JOIN THEMES ON LIVRE.isbn = THEMES.isbn " +
+			"LEFT JOIN CLASSIFICATION ON THEMES.iddewey = CLASSIFICATION.iddewey " +
+			"WHERE CLIENT.idcli = ?";
 
 		PreparedStatement pst = this.laConnexion.prepareStatement(requete);
 		pst.setInt(1, idClient);
@@ -132,56 +133,52 @@ public class ClientBD {
 
 		return livreCommander;
 	}
-
 	public List<Livre> onVousRecommande(int idClient) throws SQLException {
 		List<Livre> recommandations = new ArrayList<>();
 
-		String requete = 
+		String requete =
 			"WITH ThemesClient AS ( " +
-			"    SELECT iddewey " +
+			"    SELECT THEMES.iddewey " +
 			"    FROM COMMANDE " +
-			"    NATURAL JOIN LIGNECOMMANDE " +
-			"    NATURAL JOIN THEMES " +
-			"    WHERE idcli = ? " +
-			"), " +
-			"ClientsSimilaires AS ( " +
-			"    SELECT DISTINCT idcli " +
-			"    FROM COMMANDE " +
-			"    NATURAL JOIN LIGNECOMMANDE " +
-			"    NATURAL JOIN THEMES " +
-			"    WHERE iddewey IN (SELECT iddewey FROM ThemesClient) " +
-			"      AND idcli <> ? " +
+			"    JOIN DETAILCOMMANDE ON DETAILCOMMANDE.numcom = COMMANDE.numcom " +
+			"    JOIN THEMES ON THEMES.isbn = DETAILCOMMANDE.isbn " +
+			"    WHERE COMMANDE.idcli = ? " +
 			"), " +
 			"LivresPotentiels AS ( " +
-			"    SELECT idlivre, COUNT(*) AS frequence " +
+			"    SELECT DETAILCOMMANDE.isbn, COUNT(*) AS frequence " +
 			"    FROM COMMANDE " +
-			"    NATURAL JOIN LIGNECOMMANDE " +
-			"    WHERE idcli IN (SELECT idcli FROM ClientsSimilaires) " +
-			"    GROUP BY idlivre " +
+			"    JOIN DETAILCOMMANDE ON DETAILCOMMANDE.numcom = COMMANDE.numcom " +
+			"    JOIN THEMES ON THEMES.isbn = DETAILCOMMANDE.isbn " +
+			"    WHERE COMMANDE.idcli <> ? " +
+			"      AND THEMES.iddewey IN (SELECT iddewey FROM ThemesClient) " +
+			"    GROUP BY DETAILCOMMANDE.isbn " +
 			") " +
 			"SELECT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix " +
 			"FROM LivresPotentiels " +
-			"JOIN LIVRE ON LivresPotentiels.idlivre = LIVRE.isbn " +
-			"WHERE isbn NOT IN ( " +
-			"    SELECT idlivre " +
+			"JOIN LIVRE ON LIVRE.isbn = LivresPotentiels.isbn " +
+			"WHERE LIVRE.isbn NOT IN ( " +
+			"    SELECT DETAILCOMMANDE.isbn " +
 			"    FROM COMMANDE " +
-			"    NATURAL JOIN LIGNECOMMANDE " +
-			"    WHERE idcli = ? " +
+			"    JOIN DETAILCOMMANDE ON DETAILCOMMANDE.numcom = COMMANDE.numcom " +
+			"    WHERE COMMANDE.idcli = ? " +
 			") " +
-			"ORDER BY frequence DESC, datepubli DESC";
+			"ORDER BY LivresPotentiels.frequence DESC, LIVRE.datepubli DESC";
 
-		PreparedStatement pst = this.laConnexion.prepareStatement(requete);
-		pst.setInt(1, idClient);
-		pst.setInt(2, idClient);
-		pst.setInt(3, idClient);
-		ResultSet rs = pst.executeQuery();
-		while (rs.next()) {
-			String isbn = rs.getString("isbn");
-			String titre = rs.getString("titre");
-			int nbpages = rs.getInt("nbpages");
-			int datepubli = rs.getInt("datepubli");
-			double prix = rs.getDouble("prix");
-			recommandations.add(new Livre(isbn, titre, nbpages, datepubli, prix));
+		try (PreparedStatement pst = this.laConnexion.prepareStatement(requete)) {
+			pst.setInt(1, idClient);
+			pst.setInt(2, idClient);
+			pst.setInt(3, idClient);
+
+			try (ResultSet rs = pst.executeQuery()) {
+				while (rs.next()) {
+					recommandations.add(new Livre(
+						rs.getString("isbn"),
+						rs.getString("titre"),
+						rs.getInt("nbpages"),
+						rs.getInt("datepubli"),
+						rs.getDouble("prix")));
+				}
+			}
 		}
 
 		return recommandations;
