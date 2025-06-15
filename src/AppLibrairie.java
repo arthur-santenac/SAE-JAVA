@@ -66,7 +66,6 @@ public class AppLibrairie {
                     if (this.compte.equals("client")) {
                         runClient();
                     } else if (this.compte.substring(0, 7).equals("vendeur")) {
-                        // a faire
                         runVendeur();
                     } else if (this.compte.equals("administrateur")) {
                         runAdministrateur();
@@ -597,10 +596,6 @@ public class AppLibrairie {
 
     }
 
-    public void setUtilisateur(Client utilisateur) {
-        this.utilisateur = utilisateur;
-    }
-
     public boolean ajouteLivre() throws SQLException, NumberFormatException {
         char idMag = this.compte.charAt(this.compte.length() - 1);
         int idMagInt = Character.getNumericValue(idMag);
@@ -716,7 +711,7 @@ public class AppLibrairie {
 
         char idMag = this.compte.charAt(this.compte.length() - 1);
         int idMagInt = Character.getNumericValue(idMag);
-        Menu.qte();
+        Menu.qte(livre.getPrix());
         String qte = System.console().readLine();
         qte = qte.strip();
 
@@ -785,7 +780,7 @@ public class AppLibrairie {
         }
     }
 
-  // ==================================================== ADMINISTRATEUR ====================================================
+    // ==================================================== ADMINISTRATEUR ====================================================
   
     public void runAdministrateur() {
         Menu.admin();
@@ -1205,11 +1200,6 @@ public class AppLibrairie {
             padding = padding + " ";
         }
         return string + padding;
-    }
-
-    public static void main(String[] args) {
-        AppLibrairie app = new AppLibrairie();
-        app.run();
     }
 
 }
