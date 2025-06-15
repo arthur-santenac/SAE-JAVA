@@ -193,7 +193,7 @@ public class AppLibrairie {
             return;
         }
         int codePostalInt = Integer.parseInt(codePostal);
-        int idcli = this.clientBD.maxNum();
+        int idcli = this.clientBD.maxNum() + 1;
 
         PreparedStatement ps = connexionMySQL.prepareStatement("insert into CLIENT values (?,?,?,?,?,?)");
         ps.setInt(1, idcli);
