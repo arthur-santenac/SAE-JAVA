@@ -555,15 +555,15 @@ public class Menu {
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
 
-    public static void qte() {
+    public static void qte(double prix) {
         logo();
         System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
         System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
         System.out.println(" ||||                   COMMANDER UN LIVRE                           |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(AppLibrairie.ljust(" ||||  Ce livre coûte " + prix + " €", 69) + "|                                                                ||||");
         System.out.println(" ||||  Veuillez entrer le nombre d'exemplaires                       |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
