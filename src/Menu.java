@@ -967,7 +967,6 @@ public class Menu {
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||/================================================================\\|/===============================================================|\\||");
         System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
     }
@@ -979,7 +978,7 @@ public class Menu {
         System.out.println(" ||||                    VENDEUR                                     |                                                                ||||");
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
-        System.out.println(" ||||  - Nous avons ca en stock ! (stock : " + quantite +" )                   |                                                                ||||");
+        System.out.println(" ||||  - Nous avons ca en stock ! (stock : " + quantite +" )                       |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
