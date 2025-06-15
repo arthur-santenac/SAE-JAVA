@@ -10,7 +10,7 @@ public class Commande {
     private List<DetailCommande> detailsCommande;
     private Client client;
 
-    public Commande(char enLigne, char livraison, Magasin magasin,Client client) {
+    public Commande(char enLigne, char livraison, Magasin magasin, Client client) {
         this.enLigne = enLigne;
         this.livraison = livraison;
         this.client = client;

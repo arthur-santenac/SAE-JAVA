@@ -105,7 +105,8 @@ public class AppLibrairie {
         }
 
         Menu.connexionMdp();
-        String mdp = System.console().readLine();
+        char[] mdpString = System.console().readPassword();
+        String mdp = String.valueOf(mdpString);
         mdp = mdp.strip();
 
         if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {
@@ -129,14 +130,16 @@ public class AppLibrairie {
         }
 
         Menu.connexionMdpBD();
-        String mdp = System.console().readLine();
+        char[] mdpString = System.console().readPassword();
+        String mdp = String.valueOf(mdpString);
+        mdp = mdp.strip();
         if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {
             return false;
         }
 
         // String serveur = "servinfo-maria"; Pour les machines de l'IUT
         String serveur = "localhost";
-        String nomBase = "DB" + identifiant;
+        String nomBase = "test";
         connexionMySQL.connecter(identifiant, mdp, serveur, nomBase);
         if (!connexionMySQL.isConnecte()) {
             throw new SQLException();
@@ -209,6 +212,8 @@ public class AppLibrairie {
         ps.setString(4, "client");
         ps.executeUpdate();
     }
+  
+  // ==================================================== Client ====================================================
 
     public void runClient() {
         try {
@@ -288,17 +293,17 @@ public class AppLibrairie {
                     System.out.println("erreur en sql");
                     System.console().readLine();
                 }
+            // } else if (commander.equals("2")) {
+            //     livresRecommande();
             } else if (commander.equals("2")) {
-                livresRecommande();
-            } else if (commander.equals("3")) {
                 try {
                     consulterCatalogue();
                 } catch (SQLException e) {
                     erreur();
                 }
-            } else if (commander.equals("4")) {
+            } else if (commander.equals("3")) {
                 consulterPanier();
-            } else if (commander.equals("5") || commander.equals("quitter") || commander.equals("q")
+            } else if (commander.equals("4") || commander.equals("quitter") || commander.equals("q")
                     || commander.equals("quit")) {
                 quitter = true;
             } else {
@@ -306,46 +311,46 @@ public class AppLibrairie {
             }
         }
     }
+  
+    // public void livresRecommande() {
+    //     try {
+    //         boolean quitter = false;
+    //         List<Livre> livresRec = this.clientBD.onVousRecommande(this.utilisateur.getIdCli());
+    //         List<Livre> sousLivres;
+    //         if (livresRec.size() >= 34) {
+    //             sousLivres = livresRec.subList(0, 34);
+    //         } else {
+    //             sousLivres = livresRec;
+    //         }
+    //         while (!quitter) {
+    //             try {
+    //                 Menu.livresRecommande(livresRec);
+    //                 String option = System.console().readLine();
+    //                 option = option.strip();
+    //                 if (option.equals("quitter") || option.equals("q") || option.equals("quit")) {
+    //                     quitter = true;
+    //                 } else {
+    //                     int optionInt = Integer.parseInt(option);
+    //                     if (optionInt > 0 && optionInt < sousLivres.size()) {
+    //                         Menu.qte(sousLivres.get(optionInt - 1).getPrix());
+    //                         ;
+    //                         String qte = System.console().readLine();
+    //                         qte = qte.strip();
+    //                         int qteInt = Integer.parseInt(qte);
+    //                         this.panier.ajouterDetailsCommande(sousLivres.get(optionInt - 1), qteInt);
+    //                     } else {
+    //                         erreur();
+    //                     }
+    //                 }
+    //             } catch (NumberFormatException e) {
+    //                 erreur();
+    //             }
+    //         }
 
-    public void livresRecommande() {
-        try {
-            boolean quitter = false;
-            List<Livre> livresRec = this.clientBD.onVousRecommande(this.utilisateur.getIdCli());
-            List<Livre> sousLivres;
-            if (livresRec.size() >= 34) {
-                sousLivres = livresRec.subList(0, 34);
-            } else {
-                sousLivres = livresRec;
-            }
-            while (!quitter) {
-                try {
-                    Menu.livresRecommande(livresRec);
-                    String option = System.console().readLine();
-                    option = option.strip();
-                    if (option.equals("quitter") || option.equals("q") || option.equals("quit")) {
-                        quitter = true;
-                    } else {
-                        int optionInt = Integer.parseInt(option);
-                        if (optionInt > 0 && optionInt < sousLivres.size()) {
-                            Menu.qte();
-                            ;
-                            String qte = System.console().readLine();
-                            qte = qte.strip();
-                            int qteInt = Integer.parseInt(qte);
-                            this.panier.ajouterDetailsCommande(sousLivres.get(optionInt - 1), qteInt);
-                        } else {
-                            erreur();
-                        }
-                    }
-                } catch (NumberFormatException e) {
-                    erreur();
-                }
-            }
-
-        } catch (SQLException e) {
-            erreur();
-        }
-    }
+    //     } catch (SQLException e) {
+    //         erreur();
+    //     }
+    // }
 
     public void consulterCatalogue() throws SQLException {
         st = connexionMySQL.createStatement();
@@ -383,7 +388,7 @@ public class AppLibrairie {
                 } else {
                     int optionInt = Integer.parseInt(option);
                     if (optionInt > 0 && optionInt <= 34) {
-                        Menu.qte();
+                        Menu.qte(sousListe.get(optionInt - 1).getPrix());
                         ;
                         String qte = System.console().readLine();
                         qte = qte.strip();
@@ -539,7 +544,7 @@ public class AppLibrairie {
             int numLivre = Integer.parseInt(quelleLivre);
             if (numLivre >= 1 && numLivre <= listeLivre.size()) {
 
-                Menu.qte();
+                Menu.qte(listeLivre.get(numLivre - 1).getPrix());
                 String qte = System.console().readLine();
                 qte = qte.strip();
                 if (qte.equals("q") || qte.equals("quitter") || qte.equals("quit")) {
@@ -738,7 +743,7 @@ public class AppLibrairie {
         }
     }
 
-        public void finaliserCommandeVendeur() {
+    public void finaliserCommandeVendeur() {
         try {
             Menu.vendeurRecupIdCli();
             String idCLi = System.console().readLine();
@@ -780,8 +785,8 @@ public class AppLibrairie {
         }
     }
 
-    // ==================================================== ADMIN ====================================================
-
+  // ==================================================== ADMINISTRATEUR ====================================================
+  
     public void runAdministrateur() {
         Menu.admin();
         while (!AppLibrairie.quitterAppli) {
@@ -1180,6 +1185,10 @@ public class AppLibrairie {
 
     }
 
+    public void setUtilisateur(Client utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
     public void erreur() {
         System.out.println("\n" + "Erreur veillez réessayer");
         System.console().readLine();
@@ -1198,13 +1207,9 @@ public class AppLibrairie {
         return string + padding;
     }
 
-
-
     public static void main(String[] args) {
         AppLibrairie app = new AppLibrairie();
         app.run();
     }
-
-
 
 }
