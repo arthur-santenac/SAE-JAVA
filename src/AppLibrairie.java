@@ -216,7 +216,7 @@ public class AppLibrairie {
 
     public void runClient() {
         try {
-            this.enLigne = '1';
+            this.enLigne = 'O';
             this.magasin = choisirMagasin();
             this.modeLivraison = choisirModeLivraison();
             this.panier = new Commande('1', modeLivraison, magasin, utilisateur);
@@ -270,9 +270,9 @@ public class AppLibrairie {
         String modeLivraison = System.console().readLine();
         modeLivraison = modeLivraison.strip();
         if (modeLivraison.equals("1")) {
-            return '0';
+            return 'M';
         } else if (modeLivraison.equals("2")) {
-            return '1';
+            return 'C';
         } else {
             erreur();
             return choisirModeLivraison();
@@ -564,37 +564,37 @@ public class AppLibrairie {
     // ==================================================== VENDEUR ====================================================
 
         public void runVendeur() {
-        this.vendeurBD = new VendeurBD(connexionMySQL);
-        try {
-            this.panier = new Commande('1', modeLivraison, magasin, utilisateur);
-            while (!AppLibrairie.quitterAppli) {
-                Menu.vendeur();
-                String option = System.console().readLine();
-                option = option.strip();
-                if (option.equals("1")) {
-                    ajouteLivre();
-                } else if (option.equals("2")) {
-                    majQte();
-                } else if (option.equals("3")) {
-                    dispo();
-                } else if (option.equals("4")) {                    
-                    commanderVendeur();
-                } else if (option.equals("5")) {
-                    transfert();
-                } else if (option.equals("6")) {
-                    run();
-                } else if (option.equals("7") || option.equals("quitter") || option.equals("q")
-                        || option.equals("quit")) {
-                    AppLibrairie.quitterAppli = true;
-                } else {
-                    erreur();
+            this.vendeurBD = new VendeurBD(connexionMySQL);
+            this.enLigne = 'N';
+            try {
+                this.panier = new Commande('1', modeLivraison, magasin, utilisateur);
+                while (!AppLibrairie.quitterAppli) {
+                    Menu.vendeur();
+                    String option = System.console().readLine();
+                    option = option.strip();
+                    if (option.equals("1")) {
+                        ajouteLivre();
+                    } else if (option.equals("2")) {
+                        majQte();
+                    } else if (option.equals("3")) {
+                        dispo();
+                    } else if (option.equals("4")) {                    
+                        commanderVendeur();
+                    } else if (option.equals("5")) {
+                        transfert();
+                    } else if (option.equals("6")) {
+                        run();
+                    } else if (option.equals("7") || option.equals("quitter") || option.equals("q")
+                            || option.equals("quit")) {
+                        AppLibrairie.quitterAppli = true;
+                    } else {
+                        erreur();
+                    }
                 }
+            } catch (SQLException e) {
+                System.out.println("erreur");
             }
-        } catch (SQLException e) {
-            System.out.println("erreur");
         }
-
-    }
 
     public boolean ajouteLivre() throws SQLException, NumberFormatException {
         char idMag = this.compte.charAt(this.compte.length() - 1);
