@@ -46,8 +46,25 @@ public class AdminBD {
 
 	public List<String> afficherStocks() throws SQLException{
 		Statement st = this.laConnexion.createStatement();
-        ResultSet rs = st.executeQuery("SELECT isbn, titre, nbpages, prix, SUM(qte) AS stockTotal FROM LIVRE Natural join POSSEDER Natural join MAGASIN "+
-            						"GROUP BY isbn, titre, nbpages, prix");
+        ResultSet rs = st.executeQuery("Select isbn, titre, nbpages, prix, SUM(qte) as stockTotal From LIVRE Natural join POSSEDER Natural join MAGASIN "+
+            						"Group by isbn, titre, nbpages, prix");
+        List<String> listeStock = new ArrayList<>();
+        while (rs.next()) {
+			String titre = rs.getString(2);
+			if (titre.length() > 20) {
+				titre = titre.substring(0, 17) + "...";
+			}
+            String chaine = rs.getString(1)+" "+titre+" | "+rs.getInt(3)+" pages | "+rs.getInt(4)+"€ |"+rs.getInt(5);
+            listeStock.add(chaine);
+        }
+		return listeStock;
+	}
+
+	public List<String> afficherStocksLib(int id) throws SQLException{
+		PreparedStatement ps = this.laConnexion.prepareStatement("Select isbn, titre, nbpages, prix, SUM(qte) as stockTotal From LIVRE Natural join POSSEDER Natural join MAGASIN "+
+            						"Where idmag = ? Group by isbn, titre, nbpages, prix");
+		ps.setInt(1, id);
+		ResultSet rs = ps.executeQuery();
         List<String> listeStock = new ArrayList<>();
         while (rs.next()) {
 			String titre = rs.getString(2);

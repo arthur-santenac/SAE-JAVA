@@ -1977,8 +1977,8 @@ public class Menu {
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| 1 - Valeur des stocks par librairies                           |                                                                ||||");
         System.out.println(" |||| 2 - Stock de livres global                                     |                                                                ||||");
-        System.out.println(" |||| 3 - Retour au menu précédent                                   |                                                                ||||");
-        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| 3 - Stock de livres de la librairie choisi                     |                                                                ||||");
+        System.out.println(" |||| 4 - Retour au menu précédent                                   |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
@@ -2046,7 +2046,57 @@ public class Menu {
         System.out.println(" |||| q - Retour au menu précédent                                   |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         for (int i = 1; i <= liste.size(); i++) {
-            String ligne2 = " ||||   " + " - " + liste.get(i - 1);
+            String ligne2 = " |||| " + " - " + liste.get(i - 1);
+            ligne2 = AppLibrairie.ljust(ligne2, 69);
+            System.out.println(ligne2 + "|                                                                ||||");
+        }
+        for (int i = 0; i < 31 - liste.size(); i++) {
+            System.out.println(" ||||                                                                |                                                                ||||");
+        }
+        String ligne = "     Page " +pageActuel+"/"+nbPageMax;
+                ligne = AppLibrairie.ljust(ligne, 64);
+                System.out.println(" ||||                                                                |"+ligne+"||||");
+    
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+    public static void adminChoixLib(List<Magasin> listeMagasin) {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                    ADMINISTRATEUR                              |                                                                ||||");
+        System.out.println(" ||||________________________________________________________________|                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| Veuillez entrer le numéro Libraire à gerer                     |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| q - Retour au menu précédent                                   |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        for (int i=1;i<=listeMagasin.size();i++) {
+            String ligne = " ||||  " + i + " - " + listeMagasin.get(i - 1);
+            ligne = AppLibrairie.ljust(ligne, 69);
+            System.out.println(ligne + "|                                                                ||||");
+        }
+
+        for (int i=0;i<32-listeMagasin.size();i++) {
+            System.out.println(" ||||                                                                |                                                                ||||");
+        }
+        System.out.println(" ||/================================================================\\|/===============================================================|\\||");
+        System.out.println(" '-----------------------------------------------------------------~___~----------------------------------------------------------------''");
+    }
+
+    public static void adminAfficherStocksLib(List<String> liste, int pageActuel, int nbPageMax) {
+        logo();
+        System.out.println("     _______________________________________________________________   _______________________________________________________________  ");
+        System.out.println(" .-/|                                                               \\ /                                                               |\\-.");
+        System.out.println(" ||||                    ADMINISTRATEUR                              |     > - Page suivante                                          ||||");
+        System.out.println(" ||||________________________________________________________________|     < - Page précédente                                        ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        System.out.println(" |||| q - Retour au menu précédent                                   |                                                                ||||");
+        System.out.println(" ||||                                                                |                                                                ||||");
+        for (int i = 1; i <= liste.size(); i++) {
+            String ligne2 = " |||| " + " - " + liste.get(i - 1);
             ligne2 = AppLibrairie.ljust(ligne2, 69);
             System.out.println(ligne2 + "|                                                                ||||");
         }
@@ -2161,7 +2211,7 @@ public class Menu {
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| Voici la liste des magasins avec le nombre de livres           |                                                                ||||");
-        System.out.println(" |||| qu'ils ont venddu sur une année donnée.                        |                                                                ||||");
+        System.out.println(" |||| qu'ils ont vendu sur une année donnée.                         |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" ||||  q - Quitter                                                   |                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");

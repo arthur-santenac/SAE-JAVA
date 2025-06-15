@@ -920,6 +920,9 @@ public class AppLibrairie {
         } else if (option.equals("2")) {
             consulterStocksGlobaux();
         } else if (option.equals("3")) {
+            choixLib();
+        }
+        else if (option.equals("4")) {
             runAdministrateur();
         }
         else{
@@ -976,25 +979,94 @@ public class AppLibrairie {
         }
     }
 
+    private void choixLib(){
+        Magasin lib = null;
+        Integer idMag = null;
+        try {
+            List<Magasin> listeMagasin = magasinBD.listeDesMagasins();
+            Menu.adminChoixLib(listeMagasin);
+        } catch (SQLException ex) {
+            System.out.println("Erreur SQL !");
+        }
+        String option = System.console().readLine();
+        option = option.strip().toLowerCase();
+        if (option.equals("q") || option.equals("quitter")) {
+            adminStock();
+        }else {
+            try {
+                idMag = Integer.parseInt(option);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrez un identifiant valide.");
+            }
+            try {
+                lib = this.magasinBD.rechercherMagasinParId(idMag);
+            } catch (SQLException e) {
+                System.out.println("Il n'y a aucune librairie avec cet identifiant");
+                choixLib();
+            }
+            consulterStockLib(idMag);
+
+        }
+        
+    }
+
+    private void consulterStockLib(int idmag){
+        try{
+            List<String> listeStock = this.adminBD.afficherStocksLib(idmag);
+            int pageActuel = 1;
+            int nbPageMax = (int) (listeStock.size() / 34 + 1);
+            boolean quitter = false;
+            while (!quitter) {
+                List<String> sousListe;
+                try {
+                    sousListe = listeStock.subList(pageActuel * 34 - 34, pageActuel * 34);
+                } catch (IndexOutOfBoundsException e) {
+                    sousListe = listeStock.subList(pageActuel * 34 - 34, listeStock.size());
+                }
+
+                Menu.adminAfficherStocksGlobaux(sousListe, pageActuel, nbPageMax);
+                String option = System.console().readLine().strip();
+                if (option.equals("<") && pageActuel > 1){
+                    pageActuel--;
+                }
+                else if (option.equals(">") && pageActuel < nbPageMax){
+                    pageActuel++;
+                } 
+                else if (option.equals("q")){
+                    quitter = true;
+                    choixLib();
+                } 
+                else{
+                    erreur();
+                }
+        }
+        }catch(SQLException e){
+            System.out.println("Erreur de requête");
+        }
+    }
+
     public void adminStats(){
         Menu.adminStats();
         String option = System.console().readLine();
         option = option.strip().toLowerCase();
         if (option.equals("1")) {
             int anne = choixAnnee();
-            nbVentesParAn(anne);
+            if (anne != -1) {
+                adminStats(); 
+            }
+            else{
+                nbVentesParAn(anne);
+            }
         } else if (option.equals("2")) {
             palmares();
+            adminStats();
         } else if (option.equals("3")) {
             meilleurEditeurs();
-        }
-         else if (option.equals("4")) {
+        } else if (option.equals("4")) {
             runAdministrateur();
-        }
-        else{
+        } else {
             erreur();
         }
-
     }
 
     private int choixAnnee(){
@@ -1002,7 +1074,6 @@ public class AppLibrairie {
         String option = System.console().readLine();
         option = option.strip().toLowerCase();
         if (option.equals("q") || option.equals("quitter") || option.equals("Quitter")) {
-            adminStats();
             return -1;
         }
         if (option.length() != 4 || !option.matches("\\d{4}")) { // commande trouvé sur internet : option.matches("\\d{4}") permet de vérifier que l'utilisateur a entrer exactement 4 chiffres.
@@ -1037,9 +1108,6 @@ public class AppLibrairie {
         }
         String option = System.console().readLine();
         option = option.strip().toLowerCase();
-        if(option.equals("q") || option.equals("quitter")){
-            adminStats();
-        }
     }
 
     private void meilleurEditeurs(){
