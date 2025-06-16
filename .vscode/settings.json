@@ -4,6 +4,7 @@
     ],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
-        "lib/mariadb-java-client-3.5.3.jar"
+        "lib/mariadb-java-client-3.5.3.jar",
+        "/usr/share/openjfx/lib/*"
     ]
 }
