@@ -565,7 +565,8 @@ public class AppLibrairie {
             this.enLigne = 'N';
             try {
                 this.panier = new Commande('1', modeLivraison, magasin, utilisateur);
-                while (!AppLibrairie.quitterAppli) {
+                boolean quitter = false;
+                while (quitter) {
                     Menu.vendeur();
                     String option = System.console().readLine();
                     option = option.strip();
@@ -580,10 +581,11 @@ public class AppLibrairie {
                     } else if (option.equals("5")) {
                         transfert();
                     } else if (option.equals("6")) {
-                        run();
+                        quitter = true;
                     } else if (option.equals("7") || option.equals("quitter") || option.equals("q")
                             || option.equals("quit")) {
                         AppLibrairie.quitterAppli = true;
+                        quitter = true;
                     } else {
                         erreur();
                     }
@@ -743,7 +745,7 @@ public class AppLibrairie {
             char idMag = this.compte.charAt(this.compte.length() - 1);
             int idMagInt = Character.getNumericValue(idMag);
             int maxNumCom = this.commandeBD.maxNumCom() + 1;
-            this.commandeBD.insererCommande(maxNumCom, enLigne, modeLivraison, this.utilisateur.getIdCli(),
+            this.commandeBD.insererCommande(maxNumCom, enLigne, modeLivraison, idCliInt,
                     idMagInt);
             for (int i = 0; i < this.panier.size(); i++) {
                 this.commandeBD.insererDetailCommande(maxNumCom, i + 1,
@@ -781,7 +783,8 @@ public class AppLibrairie {
   
     public void runAdministrateur() {
         Menu.admin();
-        while (!AppLibrairie.quitterAppli) {
+        boolean quitter = false;
+        while (!quitter) {
             String option = System.console().readLine();
             option = option.strip().toLowerCase();
             if (option.equals("1")) {
@@ -801,9 +804,10 @@ public class AppLibrairie {
             } else if (option.equals("8")) {
                 adminStats();
             } else if (option.equals("9")) {
-
+                quitter = true;
             } else if (option.equals("10")) {
                 AppLibrairie.quitterAppli = true;
+                quitter = true;
             } else {
                 this.erreur();
             }
