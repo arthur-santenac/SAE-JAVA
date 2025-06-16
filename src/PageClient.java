@@ -4,20 +4,30 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-public class LivreExpress extends Application {
+public class PageClient extends BorderPane {
 
-    @Override
-    public void start(Stage primaryStage) {
-        // --- TOP ---
+    public PageClient() {
+
+        super();
+
+        this.setTop(this.top());
+        this.setLeft(this.left());
+        this.setCenter(this.center());
+        this.setRight(this.right());
+
+    }
+
+    public HBox top() {
         Label titre = new Label("Livre Express");
         Button btnDeconnexion = new Button("deconnexion");
-
-        HBox topBar = new HBox(20, titre, btnDeconnexion);
-        topBar.setStyle("-fx-padding: 10; -fx-alignment: center_left; -fx-background-color: #666; -fx-spacing: 20;");
+        HBox top = new HBox(20, titre, btnDeconnexion);
+        top.setStyle("-fx-padding: 10; -fx-alignment: center_left; -fx-background-color: #666; -fx-spacing: 20;");
         titre.setStyle("-fx-text-fill: white; -fx-font-size: 20px;");
         btnDeconnexion.setStyle("-fx-background-color: #ddd;");
+        return top;
+    }
 
-        // --- LEFT ---
+    public VBox left() {
         TextField txtRecherche = new TextField();
         txtRecherche.setPromptText("Entrez le nom d'un livre");
         txtRecherche.setMaxWidth(Double.MAX_VALUE);
@@ -26,19 +36,21 @@ public class LivreExpress extends Application {
         resultatRecherche.setPrefHeight(200);
 
         Label info = new Label("Information pour plus trad a renter si on a besotting");
+        VBox left = new VBox(10, txtRecherche, resultatRecherche, info);
+        left.setStyle("-fx-padding: 10;");
+        return left;
+    }
 
-        VBox leftPane = new VBox(10, txtRecherche, resultatRecherche, info);
-        leftPane.setStyle("-fx-padding: 10;");
-
-        // --- CENTER ---
+    public VBox center() {
         Label lblCatalogue = new Label("Catalogue");
         TextArea catalogue = new TextArea();
         catalogue.setPrefHeight(400);
-
-        VBox centerPane = new VBox(10, lblCatalogue, catalogue);
-        centerPane.setStyle("-fx-padding: 10;");
-
-        // --- RIGHT ---
+        VBox center = new VBox(10, lblCatalogue, catalogue);
+        center.setStyle("-fx-padding: 10;");
+        return center;
+    }
+    
+    public VBox right() {
         Label lblSelection = new Label("Notre sélection pour vous");
         TextArea selection = new TextArea();
         selection.setPrefHeight(200);
@@ -48,27 +60,10 @@ public class LivreExpress extends Application {
         Button panier3 = new Button("panier");
         Button panier4 = new Button("panier");
 
-        // Empile les boutons
         VBox boutonsPanier = new VBox(10, panier1, panier2, panier3, panier4);
-
-        VBox rightPane = new VBox(10, lblSelection, selection, boutonsPanier);
-        rightPane.setStyle("-fx-padding: 10;");
-
-        // --- ROOT ---
-        BorderPane root = new BorderPane();
-        root.setTop(topBar);
-        root.setLeft(leftPane);
-        root.setCenter(centerPane);
-        root.setRight(rightPane);
-
-        Scene scene = new Scene(root, 1000, 600);
-
-        primaryStage.setTitle("Livre Express");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
+        VBox right = new VBox(10, lblSelection, selection, boutonsPanier);
+        right.setStyle("-fx-padding: 10;");
+        return right;
     }
 }
+
