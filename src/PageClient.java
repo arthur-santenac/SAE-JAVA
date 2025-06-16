@@ -7,10 +7,12 @@ import javafx.stage.Stage;
 
 public class PageClient extends BorderPane {
 
-    public PageClient() {
+    private Button boutonDeconnexion;
+
+    public PageClient(Button boutonDeconnexion) {
 
         super();
-
+        this.boutonDeconnexion = boutonDeconnexion;
         this.setTop(this.top());
         this.setLeft(this.left());
         this.setCenter(this.center());
@@ -20,14 +22,13 @@ public class PageClient extends BorderPane {
 
     public BorderPane top() {
         Label titre = new Label("Livre Express");
-        Button btnDeconnexion = new Button("deconnexion");
         BorderPane top = new BorderPane();
         top.setLeft(titre);
-        top.setRight(btnDeconnexion);
+        top.setRight(boutonDeconnexion);
         top.setPadding(new Insets(15));
         top.setStyle("-fx-background-color: #666;");
         titre.setStyle("-fx-text-fill: white; -fx-font-size: 20px;");
-        btnDeconnexion.setStyle("-fx-background-color: #ddd;");
+
         return top;
     }
 
