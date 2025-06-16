@@ -42,7 +42,6 @@ public class LivreExpress extends Application {
         this.mdp = new TextField();
         this.boutonConnexion = new Button("Connexion");
         this.boutonDeconnexion = new Button("Déconnexion");
-
         boutonDeconnexion.setStyle("-fx-background-color: #ddd;");
 
         this.boutonConnexion.setBackground( new Background( new BackgroundFill(Color.ALICEBLUE,null,null)));
@@ -50,6 +49,7 @@ public class LivreExpress extends Application {
         this.boutonConnexion.setPadding(new Insets(0, 0, 0, 30));
 
         ControleurConnexion controleurConnexion = new ControleurConnexion(laConnexion, this, email.getText(), mdp.getText());
+
         this.boutonConnexion.setOnAction(controleurConnexion);
         this.boutonDeconnexion.setOnAction(controleurConnexion);
     }
@@ -67,7 +67,7 @@ public class LivreExpress extends Application {
     public void afficheConnexion() {
         Pane root = new PageConnexion(boutonConnexion, email, mdp);
         this.scene.setRoot(root);
-        this.stage.setWidth(400);
+        this.stage.setWidth(600);
         this.stage.setHeight(200);
     }
     
