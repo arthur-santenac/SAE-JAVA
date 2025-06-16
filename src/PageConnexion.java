@@ -14,10 +14,7 @@ import javafx.stage.Stage;
 
 public class PageConnexion extends BorderPane {
   
-    
-
     private TextField tfEmail;
-
     private TextField tfMdp;
     
     public PageConnexion(){
@@ -27,8 +24,6 @@ public class PageConnexion extends BorderPane {
         this.setCenter(this.centre());
     }
 
-
-    
     private BorderPane entete() {
         BorderPane entete = new BorderPane();
         Text titre = new Text();
@@ -51,9 +46,4 @@ public class PageConnexion extends BorderPane {
         centre.setAlignment(Pos.BASELINE_CENTER);
         return centre;
     }
-
-
-
 }
-
-
