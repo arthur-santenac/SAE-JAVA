@@ -104,84 +104,76 @@ public class ClientBD {
 		}
 	}
 
-	// public List<Livre> getLivresCommandesParClient(int idClient) throws SQLException {
-	// 	List<Livre> livreCommander = new ArrayList<>();
+public List<Livre> getLivresCommandesParClient(int idClient) throws SQLException {
+    List<Livre> livreCommander = new ArrayList<>();
 
-	// 	String requete =
-	// 		"SELECT DISTINCT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix, " +
-	// 		"CLASSIFICATION.iddewey, CLASSIFICATION.nomclass " +
-	// 		"FROM CLIENT " +
-	// 		"JOIN COMMANDE ON CLIENT.idcli = COMMANDE.idcli " +
-	// 		"JOIN DETAILCOMMANDE ON COMMANDE.numcom = DETAILCOMMANDE.numcom " +
-	// 		"JOIN LIVRE ON DETAILCOMMANDE.isbn = LIVRE.isbn " +
-	// 		"LEFT JOIN THEMES ON LIVRE.isbn = THEMES.isbn " +
-	// 		"LEFT JOIN CLASSIFICATION ON THEMES.iddewey = CLASSIFICATION.iddewey " +
-	// 		"WHERE CLIENT.idcli = ?";
+    String requete =
+        "SELECT DISTINCT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix, " +
+        "CLASSIFICATION.iddewey, CLASSIFICATION.nomclass " +
+        "FROM CLIENT " +
+        "JOIN COMMANDE ON CLIENT.idcli = COMMANDE.idcli " +
+        "JOIN DETAILCOMMANDE ON COMMANDE.numcom = DETAILCOMMANDE.numcom " +
+        "JOIN LIVRE ON DETAILCOMMANDE.isbn = LIVRE.isbn " +
+        "LEFT JOIN THEMES ON LIVRE.isbn = THEMES.isbn " +
+        "LEFT JOIN CLASSIFICATION ON THEMES.iddewey = CLASSIFICATION.iddewey " +
+        "WHERE CLIENT.idcli = ?";
 
-	// 	PreparedStatement pst = this.laConnexion.prepareStatement(requete);
-	// 	pst.setInt(1, idClient);
+    PreparedStatement pst = this.laConnexion.prepareStatement(requete);
+    pst.setInt(1, idClient);
 
-	// 	ResultSet rs = pst.executeQuery();
-	// 	while (rs.next()) {
-	// 		String isbn = rs.getString("isbn");
-	// 		String titre = rs.getString("titre");
-	// 		int nbpages = rs.getInt("nbpages");
-	// 		int datepubli = rs.getInt("datepubli");
-	// 		double prix = rs.getDouble("prix");
-	// 		livreCommander.add(new Livre(isbn, titre, nbpages, datepubli, prix));
-	// 	}
+    ResultSet rs = pst.executeQuery();
+    while (rs.next()) {
+        String isbn      = rs.getString("isbn");
+        String titre     = rs.getString("titre");
+        int    nbpages   = rs.getInt("nbpages");
+        int    datepubli = rs.getInt("datepubli");
+        double prix      = rs.getDouble("prix");
+        livreCommander.add(new Livre(isbn, titre, nbpages, datepubli, prix));
+    }
 
-	// 	return livreCommander;
-	// }
-	// public List<Livre> onVousRecommande(int idClient) throws SQLException {
-	// 	List<Livre> recommandations = new ArrayList<>();
+    return livreCommander;
+}
 
-	// 	String requete =
-	// 		"WITH ThemesClient AS ( " +
-	// 		"    SELECT THEMES.iddewey " +
-	// 		"    FROM COMMANDE " +
-	// 		"    JOIN DETAILCOMMANDE ON DETAILCOMMANDE.numcom = COMMANDE.numcom " +
-	// 		"    JOIN THEMES ON THEMES.isbn = DETAILCOMMANDE.isbn " +
-	// 		"    WHERE COMMANDE.idcli = ? " +
-	// 		"), " +
-	// 		"LivresPotentiels AS ( " +
-	// 		"    SELECT DETAILCOMMANDE.isbn, COUNT(*) AS frequence " +
-	// 		"    FROM COMMANDE " +
-	// 		"    JOIN DETAILCOMMANDE ON DETAILCOMMANDE.numcom = COMMANDE.numcom " +
-	// 		"    JOIN THEMES ON THEMES.isbn = DETAILCOMMANDE.isbn " +
-	// 		"    WHERE COMMANDE.idcli <> ? " +
-	// 		"      AND THEMES.iddewey IN (SELECT iddewey FROM ThemesClient) " +
-	// 		"    GROUP BY DETAILCOMMANDE.isbn " +
-	// 		") " +
-	// 		"SELECT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix " +
-	// 		"FROM LivresPotentiels " +
-	// 		"JOIN LIVRE ON LIVRE.isbn = LivresPotentiels.isbn " +
-	// 		"WHERE LIVRE.isbn NOT IN ( " +
-	// 		"    SELECT DETAILCOMMANDE.isbn " +
-	// 		"    FROM COMMANDE " +
-	// 		"    JOIN DETAILCOMMANDE ON DETAILCOMMANDE.numcom = COMMANDE.numcom " +
-	// 		"    WHERE COMMANDE.idcli = ? " +
-	// 		") " +
-	// 		"ORDER BY LivresPotentiels.frequence DESC, LIVRE.datepubli DESC";
 
-	// 	try (PreparedStatement pst = this.laConnexion.prepareStatement(requete)) {
-	// 		pst.setInt(1, idClient);
-	// 		pst.setInt(2, idClient);
-	// 		pst.setInt(3, idClient);
+public List<Livre> onVousRecommande(int idClient) throws SQLException {
+    List<Livre> recommandations = new ArrayList<>();
 
-	// 		try (ResultSet rs = pst.executeQuery()) {
-	// 			while (rs.next()) {
-	// 				recommandations.add(new Livre(
-	// 					rs.getString("isbn"),
-	// 					rs.getString("titre"),
-	// 					rs.getInt("nbpages"),
-	// 					rs.getInt("datepubli"),
-	// 					rs.getDouble("prix")));
-	// 			}
-	// 		}
-	// 	}
+    String requete =
+        "SELECT DISTINCT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix " +
+        "FROM THEMES " +
+        "JOIN LIVRE ON LIVRE.isbn = THEMES.isbn " +
+        "WHERE THEMES.iddewey IN ( " +
+        "        SELECT DISTINCT THEMES.iddewey " +
+        "        FROM COMMANDE " +
+        "        JOIN DETAILCOMMANDE ON DETAILCOMMANDE.numcom = COMMANDE.numcom " +
+        "        JOIN THEMES ON THEMES.isbn = DETAILCOMMANDE.isbn " +
+        "        WHERE COMMANDE.idcli = ? ) " +
+        "AND LIVRE.isbn NOT IN ( " +
+        "        SELECT DETAILCOMMANDE.isbn " +
+        "        FROM COMMANDE " +
+        "        JOIN DETAILCOMMANDE ON DETAILCOMMANDE.numcom = COMMANDE.numcom " +
+        "        WHERE COMMANDE.idcli = ? ) " +
+        "ORDER BY LIVRE.datepubli DESC";
 
-	// 	return recommandations;
-	// }
+    try (PreparedStatement pst = this.laConnexion.prepareStatement(requete)) {
+        pst.setInt(1, idClient);
+        pst.setInt(2, idClient);
+
+        try (ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                recommandations.add(new Livre(
+                    rs.getString("isbn"),
+                    rs.getString("titre"),
+                    rs.getInt("nbpages"),
+                    rs.getInt("datepubli"),
+                    rs.getDouble("prix")));
+            }
+        }
+    }
+
+    return recommandations;
+}
+
+
 
 }

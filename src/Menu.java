@@ -265,7 +265,7 @@ public class Menu {
         System.out.println(" ||||________________________________________________________________|                                                                ||||");
         System.out.println(" ||||                                                                |                                                                ||||");
         System.out.println(" |||| 1 - Chercher un livre                                          |                                                                ||||");
-        // System.out.println(" |||| 2 - Livres recommandés                                         |                                                                ||||");
+        System.out.println(" |||| 2 - Livres recommandés                                         |                                                                ||||");
         System.out.println(" |||| 2 - Consulter le catalogue                                     |                                                                ||||");
         System.out.println(" |||| 3 - Consulter son panier                                       |                                                                ||||");
         System.out.println(" |||| 4 - Revenir en arrière                                         |                                                                ||||");
@@ -400,7 +400,7 @@ public class Menu {
         }
 
         for (int i=0;i<33-listeLivre.size();i++) {
-            System.out.println(" ||||                                                                |                                                                ||||");
+            System.out.println(" ||||                                                                |                                       liti                         ||||");
         }
 
         System.out.println(" ||||                                                                |                                                                ||||");
