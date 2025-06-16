@@ -14,12 +14,14 @@ import javafx.stage.Stage;
 
 public class PageConnexion extends BorderPane {
   
+    private Button connexion;
     private TextField tfEmail;
     private TextField tfMdp;
     
-    public PageConnexion(){
-        this.tfEmail = new TextField();
-        this.tfMdp = new TextField();
+    public PageConnexion(Button connexion, TextField email, TextField mdp){
+        this.connexion = connexion;
+        this.tfEmail = email;
+        this.tfMdp = mdp;
         this.setTop(this.entete());
         this.setCenter(this.centre());
     }
@@ -37,12 +39,10 @@ public class PageConnexion extends BorderPane {
         VBox centre = new VBox(30);
         this.tfEmail.setPromptText("Entrez votre adresse email");
         this.tfMdp.setPromptText("Entrez votre mot de passe");
-        Button btnConnexion = new Button("Connexion");
-        btnConnexion.setBackground( new Background( new BackgroundFill(Color.ALICEBLUE,null,null)));
-        btnConnexion.setStyle("-fx-border-color:black");
+
         Button btnCreerCompte = new Button("Créer un compte");
-        centre.getChildren().addAll(this.tfEmail, this.tfMdp, btnConnexion, btnCreerCompte);
-        btnConnexion.setPadding(new Insets(0, 0, 0, 30));
+        centre.getChildren().addAll(this.tfEmail, this.tfMdp, connexion, btnCreerCompte);
+
         centre.setAlignment(Pos.BASELINE_CENTER);
         return centre;
     }
