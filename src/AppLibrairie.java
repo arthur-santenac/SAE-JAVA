@@ -104,7 +104,8 @@ public class AppLibrairie {
         }
 
         Menu.connexionMdp();
-        String mdp = System.console().readLine();
+        char[] mdpString = System.console().readPassword();
+        String mdp = String.valueOf(mdpString);
         mdp = mdp.strip();
 
         if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {
@@ -128,14 +129,14 @@ public class AppLibrairie {
         }
 
         Menu.connexionMdpBD();
-        String mdp = System.console().readLine();
+        char[] mdpString = System.console().readPassword();
+        String mdp = String.valueOf(mdpString);
+        mdp = mdp.strip();
         if (mdp.equals("quitter") || mdp.equals("q") || mdp.equals("quit")) {
             return false;
         }
 
-        // String serveur = "servinfo-maria"; Pour les machines de l'IUT
-        String serveur = "localhost";
-        String nomBase = "DBdeoliveira";
+        String serveur = "servinfo-maria";
         String nomBase = "DB" + identifiant;
         connexionMySQL.connecter(identifiant, mdp, serveur, nomBase);
         if (!connexionMySQL.isConnecte()) {
@@ -384,7 +385,7 @@ public class AppLibrairie {
                 } else {
                     int optionInt = Integer.parseInt(option);
                     if (optionInt > 0 && optionInt <= 34) {
-                        Menu.qte();
+                        Menu.qte(sousListe.get(optionInt - 1).getPrix());
                         String qte = System.console().readLine();
                         qte = qte.strip();
                         int qteInt = Integer.parseInt(qte);
@@ -539,7 +540,7 @@ public class AppLibrairie {
             int numLivre = Integer.parseInt(quelleLivre);
             if (numLivre >= 1 && numLivre <= listeLivre.size()) {
 
-                Menu.qte();
+                Menu.qte(listeLivre.get(numLivre - 1).getPrix());
                 String qte = System.console().readLine();
                 qte = qte.strip();
                 if (qte.equals("q") || qte.equals("quitter") || qte.equals("quit")) {
@@ -707,7 +708,7 @@ public class AppLibrairie {
 
         char idMag = this.compte.charAt(this.compte.length() - 1);
         int idMagInt = Character.getNumericValue(idMag);
-        Menu.qte();
+        Menu.qte(livre.getPrix());
         String qte = System.console().readLine();
         qte = qte.strip();
 
