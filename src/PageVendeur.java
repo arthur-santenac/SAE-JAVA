@@ -8,15 +8,26 @@ import javafx.stage.Stage;
 import javax.swing.plaf.synth.Region;
 
 public class PageVendeur extends BorderPane {
-
+    private Button deconnexion;
     private Label bonjour;
     private Button btnAjout;
     private Button btnStock;
     private Button btnTransfert;
-
-    public PageVendeur() {
+    private TextField idAjout;
+    private Button ajouter;
+    private Button finaliser;
+    public PageVendeur(Button deconnexion, Label bonjour, Button btnAjout, Button btnStock, Button btnTransfert, TextField idAjout, Button ajouter, Button finaliser) {
 
         super();
+        this.deconnexion = deconnexion;
+        this.bonjour = bonjour;
+        this.btnAjout = btnAjout;
+        this.btnStock = btnStock;
+        this.btnTransfert = btnTransfert;
+        this.idAjout = idAjout;
+        this.ajouter = ajouter;
+        this.finaliser = finaliser;
+
 
         this.setTop(this.top());
         this.setLeft(this.left());
