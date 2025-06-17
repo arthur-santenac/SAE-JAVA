@@ -1,3 +1,5 @@
+import java.sql.SQLException;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -22,6 +24,9 @@ public class LivreExpress extends Application {
 
     private Scene scene;
     private Stage stage;
+    private Client utilisateur;
+    private ConnexionMySQL laConnexion;
+
  
     /**
      * @param args the command line arguments
@@ -37,7 +42,14 @@ public class LivreExpress extends Application {
         this.mdp = new TextField();
         this.boutonConnexion = new Button("Connexion");
         this.boutonDeconnexion = new Button("Déconnexion");
-        ControleurConnexion controleurConnexion = new ControleurConnexion(this, email.getText(), mdp.getText());
+        boutonDeconnexion.setStyle("-fx-background-color: #ddd;");
+
+        this.boutonConnexion.setBackground( new Background( new BackgroundFill(Color.ALICEBLUE,null,null)));
+        this.boutonConnexion.setStyle("-fx-border-color:black");
+        this.boutonConnexion.setPadding(new Insets(0, 0, 0, 30));
+
+        ControleurConnexion controleurConnexion = new ControleurConnexion(laConnexion, this, email.getText(), mdp.getText());
+
         this.boutonConnexion.setOnAction(controleurConnexion);
         this.boutonDeconnexion.setOnAction(controleurConnexion);
     }
@@ -72,5 +84,16 @@ public class LivreExpress extends Application {
         this.scene.setRoot(root);
         this.stage.setWidth(1000);
         this.stage.setHeight(600);
+    }
+    
+    public void setUtilisateur(Client utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
+    public void setConnexion(String ident, String mdp, String serveur, String nomBase) throws SQLException {
+        this.laConnexion.connecter(ident, mdp, serveur, nomBase);
+        if (!this.laConnexion.isConnecte()) {
+            throw new SQLException();
+        }
     }
 }
