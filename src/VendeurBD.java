@@ -33,7 +33,8 @@ public class VendeurBD {
 		}
 	}
 
-	public boolean majQte(int idmag, String isbn, int qte, boolean afficheMenu) throws SQLException {
+	public boolean majQte(int idmag, String isbn, int qte, boolean afficheMenu) throws SQLException, NumberFormatException {
+		Integer.parseInt(isbn);
 		this.st = this.laConnexion.createStatement();
 		ResultSet verif = this.st.executeQuery(
 				"SELECT * FROM POSSEDER WHERE idmag = '" + idmag + "' AND isbn = '" + isbn + "';");
@@ -111,7 +112,7 @@ public class VendeurBD {
 		this.st = this.laConnexion.createStatement();
 
 		ResultSet verif = this.st.executeQuery(
-				"SELECT qte FROM LIVRE WHERE isbn = '" + isbn + "');");
+				"SELECT * FROM LIVRE WHERE isbn = '" + isbn + "';");
 
 		if (verif.next()) {
 			return true;
