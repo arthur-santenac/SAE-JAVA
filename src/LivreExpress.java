@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -18,7 +19,7 @@ public class LivreExpress extends Application {
     private Button boutonConnexion;
     private Button boutonDeconnexion;
     private TextField email;
-    private TextField mdp; 
+    private PasswordField mdp; 
     private Label textErreurConnexion;
 
     private Scene scene;
@@ -37,6 +38,11 @@ public class LivreExpress extends Application {
     private int idMag;
     private TextField idAjouter;
 
+    // ============ADMINISTRATEUR===============
+    private Button btnRetourAdmin;
+    private Button btnLib;
+    private AdminBD adminBD;
+
     /**
      * @param args the command line arguments
      */
@@ -46,17 +52,13 @@ public class LivreExpress extends Application {
 
     @Override
     public void init() {
-
         this.email = new TextField();
-        this.mdp = new TextField();
+        this.mdp = new PasswordField();
         this.textErreurConnexion = new Label();
         this.boutonConnexion = new Button("Connexion");
         this.boutonDeconnexion = new Button("Déconnexion");
-
         ControleurConnexion controleurConnexion = new ControleurConnexion(this, this.email, this.mdp);
-
         this.boutonConnexion.setOnAction(controleurConnexion);
-
         this.boutonDeconnexion.setOnAction(controleurConnexion);
 
 
@@ -67,6 +69,12 @@ public class LivreExpress extends Application {
         this.btnAjout.setOnAction(new ControleurVendeurMajQte(idMag, this.laConnexion));
         this.btnTransfert = new Button("transférer un livre d’une autre librairie");
 
+
+        // ============ADMINISTRATEUR===============
+        this.btnLib = new Button("Librairie");
+        this.btnRetourAdmin = new Button("Retour");
+        this.btnLib.setOnAction(new ControleurAdminLibrairie(this));
+        this.btnRetourAdmin.setOnAction(new ControleurRetourAdmin(this));
 
     }
 
@@ -97,7 +105,14 @@ public class LivreExpress extends Application {
     }
 
     public void affichePageAdmin() {
-        Pane root = new PageAdmin(boutonDeconnexion);
+        Pane root = new PageAdmin(this.boutonDeconnexion, this.btnLib);
+        this.scene.setRoot(root);
+        this.stage.setWidth(900);
+        this.stage.setHeight(450);
+    }
+
+    public void affichePageAdminLib() {
+        Pane root = new PageAdminLibrairie(this.btnRetourAdmin);
         this.scene.setRoot(root);
         this.stage.setWidth(900);
         this.stage.setHeight(450);

@@ -2,6 +2,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Background;
@@ -19,10 +20,10 @@ public class PageConnexion extends BorderPane {
     private boolean estConnecteBD;
     private Button connexion;
     private TextField tfEmail;
-    private TextField tfMdp;
+    private PasswordField tfMdp;
     private Label textErreur;
     
-    public PageConnexion(Button connexion, TextField email, TextField mdp, Label erreurIdentTF, boolean estConnecteBD){
+    public PageConnexion(Button connexion, TextField email, PasswordField mdp, Label erreurIdentTF, boolean estConnecteBD){
         this.connexion = connexion;
         this.tfEmail = email;
         this.tfMdp = mdp;
