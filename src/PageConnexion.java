@@ -24,7 +24,7 @@ public class PageConnexion extends BorderPane {
     private PasswordField tfMdp;
     private Label textErreur;
     
-    public PageConnexion(Button connexion, Button creerButton, TextField email, TextField mdp, Label erreurIdentTF, boolean estConnecteBD){
+    public PageConnexion(Button connexion, Button creerButton, TextField email, PasswordField mdp, Label erreurIdentTF, boolean estConnecteBD){
 
         this.connexion = connexion;
         this.creerCompte = creerButton;

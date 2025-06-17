@@ -25,6 +25,7 @@ public class LivreExpress extends Application {
     private Button boutonCreerLeCompte;
     private TextField identifiant;
     private PasswordField mdp; 
+    private TextField mdpText;
     private TextField nom;
     private TextField prenom;
     private TextField adresse;
@@ -68,14 +69,13 @@ public class LivreExpress extends Application {
 
         this.identifiant = new TextField();
         this.mdp = new PasswordField();
+        this.mdpText = new TextField();
         this.adresse = new TextField();
         this.nom = new TextField();
         this.prenom = new TextField();
         this.adresse = new TextField();
         this.ville = new TextField();
         this.codePostal = new TextField();
-        this.email = new TextField();
-        this.mdp = new 
         this.textErreurConnexion = new Label();
         this.textErreurCreerCompte = new Label();
         this.boutonConnexion = new Button("Connexion");
@@ -85,7 +85,7 @@ public class LivreExpress extends Application {
 
         ControleurConnexion controleurConnexion = new ControleurConnexion(this, this.identifiant, this.mdp);
         ControleurPageCreerCompte controleurPageCreerCompte = new ControleurPageCreerCompte(this);
-        ControleurCreerCompte controleurCreerCompte = new ControleurCreerCompte(this, this.identifiant, this.mdp, this.nom, this.prenom, this.adresse, this.ville, this.codePostal);
+        ControleurCreerCompte controleurCreerCompte = new ControleurCreerCompte(this, this.identifiant, this.mdpText, this.nom, this.prenom, this.adresse, this.ville, this.codePostal);
 
         this.boutonConnexion.setOnAction(controleurConnexion);
         this.boutonDeconnexion.setOnAction(controleurConnexion);
@@ -129,7 +129,7 @@ public class LivreExpress extends Application {
     }
 
     public void afficheCreerCompte() {
-        Pane root = new PageCreerCompte(boutonCreerLeCompte, textErreurCreerCompte, identifiant, mdp, nom, prenom, adresse, ville, codePostal);
+        Pane root = new PageCreerCompte(boutonCreerLeCompte, textErreurCreerCompte, identifiant, mdpText, nom, prenom, adresse, ville, codePostal);
         this.scene.setRoot(root);
         this.stage.setWidth(300);
         this.stage.setHeight(600); 
