@@ -43,7 +43,9 @@ public class ControleurConnexion implements EventHandler<ActionEvent> {
                         if (compte.equals("client")) {
                             appli.affichePageClient();
                         } else if (compte.substring(0, 7).equals("vendeur")) {
-                            //a faire
+                             String idMagStr= compte.substring(7, compte.length());
+                             this.appli.setIdMag( Integer.valueOf(idMagStr));
+                            appli.affichePageVendeur();
                         } else if (compte.equals("administrateur")) {
                             appli.affichePageAdmin();
                         }

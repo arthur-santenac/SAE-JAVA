@@ -38,7 +38,7 @@ public class PageVendeur extends BorderPane {
 
     public HBox top() {
         Label titre = new Label("Livre Express");
-        Button btnDeconnexion = new Button("deconnexion");
+        Button btnDeconnexion = this.deconnexion;
         HBox top = new HBox(20, titre, btnDeconnexion);
         top.setStyle("-fx-padding: 10; -fx-alignment: center_left; -fx-background-color: #666; -fx-spacing: 20;");
         titre.setStyle("-fx-text-fill: white; -fx-font-size: 20px;");
