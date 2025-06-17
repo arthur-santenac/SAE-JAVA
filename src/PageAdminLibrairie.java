@@ -1,27 +1,25 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class PageAdmin extends BorderPane{
+public class PageAdminLibrairie extends BorderPane{
     
 
-    private Button deconnexion;
+    private Button retour;
 
-    private Button btnLib;
-
-
-    public PageAdmin(Button deconnexion, Button librairie){
-        this.deconnexion = deconnexion;
-        this.btnLib = librairie;
+    public PageAdminLibrairie(Button retour){
+        this.retour = retour;
         this.setTop(this.entete());
         this.setCenter(this.centre());
     }
@@ -32,7 +30,7 @@ public class PageAdmin extends BorderPane{
         titre.setText("Livre Express - Administrateur");
         titre.setFont(Font.font("Arial", FontWeight.MEDIUM, 32));
         entete.setLeft(titre);
-        entete.setRight(this.deconnexion);
+        entete.setRight(this.retour);
         entete.setPadding(new Insets(10));
         entete.setBackground( new Background(new BackgroundFill(Color.GRAY,null,null)));
         return entete;
@@ -40,17 +38,18 @@ public class PageAdmin extends BorderPane{
 
     private GridPane centre(){
         GridPane root = new GridPane();
+        Button btnLib = new Button("Librairie");
         Button btnVendeur = new Button("Vendeur");
         Button btnStock = new Button("Stock");
         Button btnStats = new Button("Stats");
-        root.add(this.btnLib, 0, 0, 3, 3);
+        root.add(btnLib, 0, 0, 3, 3);
         root.add(btnVendeur, 3, 0, 3, 3);
         root.add(btnStock, 6, 0, 3, 3);
         root.add(btnStats, 0, 4, 3, 3);
         root.setHgap(60);
         root.setVgap(40);
-        this.btnLib.setPrefHeight(60);
-        this.btnLib.setPrefWidth(200);
+        btnLib.setPrefHeight(60);
+        btnLib.setPrefWidth(200);
         btnVendeur.setPrefHeight(60);
         btnVendeur.setPrefWidth(200);
         btnVendeur.setPrefHeight(60);
@@ -64,4 +63,5 @@ public class PageAdmin extends BorderPane{
         return root;
     }
 
+    
 }
