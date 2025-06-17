@@ -61,10 +61,9 @@ public class VendeurBD {
 	public boolean dispo(int idmag, String isbn, int quantite, boolean afficheMenu) throws SQLException {
 		this.st = this.laConnexion.createStatement();
 
-
-
 		ResultSet verif = this.st.executeQuery(
-				"SELECT qte FROM POSSEDER WHERE idmag = '" + idmag + "' AND isbn = '" + isbn + "' AND (qte >= " + quantite
+				"SELECT qte FROM POSSEDER WHERE idmag = '" + idmag + "' AND isbn = '" + isbn + "' AND (qte >= "
+						+ quantite
 						+ ");");
 
 		if (verif.next()) {
@@ -83,7 +82,6 @@ public class VendeurBD {
 			return false;
 		}
 	}
-	
 
 	public boolean transfer(int idMag, int idMagDestination, String isbn, int quantite) throws SQLException {
 		this.st = this.laConnexion.createStatement();
@@ -105,6 +103,19 @@ public class VendeurBD {
 		} else {
 			Menu.transferFail();
 			System.console().readLine();
+			return false;
+		}
+	}
+
+	public boolean existe(String isbn) throws SQLException {
+		this.st = this.laConnexion.createStatement();
+
+		ResultSet verif = this.st.executeQuery(
+				"SELECT qte FROM LIVRE WHERE isbn = '" + isbn + "');");
+
+		if (verif.next()) {
+			return true;
+		} else {
 			return false;
 		}
 	}

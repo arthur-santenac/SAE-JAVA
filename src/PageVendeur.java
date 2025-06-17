@@ -7,9 +7,9 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javax.swing.plaf.synth.Region;
 
-public class pageVendeur extends BorderPane {
+public class PageVendeur extends BorderPane {
 
-    public pageVendeur() {
+    public PageVendeur() {
 
         super();
 
@@ -33,6 +33,7 @@ public class pageVendeur extends BorderPane {
     public VBox left() {
         Label bonjour = new Label("Bonjour *nom vendeur* !");
         Button btnAjout = new Button("ajouter un livre à la librairie");
+        btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, laConnexion));
         Button btnStock = new Button("modifier les stocks d’un livre");
         Button btnTransfert = new Button("transférer un livre d’une autre librairie");
         VBox left = new VBox(10, bonjour, btnAjout, btnStock, btnTransfert);
