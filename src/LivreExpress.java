@@ -35,6 +35,7 @@ public class LivreExpress extends Application {
     private Button ajouter;
     private Button finaliserCommande;
     private Label bonjour;
+    private int idMag;
     private TextField idAjouter;
 
     // ============ADMINISTRATEUR===============
@@ -59,13 +60,15 @@ public class LivreExpress extends Application {
         ControleurConnexion controleurConnexion = new ControleurConnexion(this, this.email, this.mdp);
         this.boutonConnexion.setOnAction(controleurConnexion);
         this.boutonDeconnexion.setOnAction(controleurConnexion);
-        
-        // Label bonjour = new Label("Bonjour " + nomVendeur + " !");
-        // Button btnAjout = new Button("ajouter un livre à la librairie");
-        // btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.appli.getConnexion));
-        // Button btnStock = new Button("modifier les stocks d’un livre");
-        // btnAjout.setOnAction(new ControleurVendeurMajQte(idMag, this.appli.getConnexion));
-        // Button btnTransfert = new Button("transférer un livre d’une autre librairie");
+
+
+        this.bonjour = new Label("Bonjour !");
+        this.btnAjout = new Button("ajouter un livre à la librairie");
+        this.btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.laConnexion));
+        this.btnStock = new Button("modifier les stocks d’un livre");
+        this.btnAjout.setOnAction(new ControleurVendeurMajQte(idMag, this.laConnexion));
+        this.btnTransfert = new Button("transférer un livre d’une autre librairie");
+
 
         // ============ADMINISTRATEUR===============
         this.btnLib = new Button("Librairie");
@@ -142,8 +145,14 @@ public class LivreExpress extends Application {
         return laConnexion;
     }
 
+
+    public void setIdMag(int idMag) {
+        this.idMag = idMag;
+    }
+
     public void mauvaisMdp() {
         this.textErreurConnexion.setText("Mauvais indentifiants");
     }
+
 
 }
