@@ -26,8 +26,9 @@ public class LivreExpress extends Application {
     private Scene scene;
     private Stage stage;
     private Client utilisateur;
-    private ConnexionMySQL laConnexion;
     private String compte;
+    private ConnexionMySQL laConnexion = null;
+
 
  
     /**
@@ -50,11 +51,11 @@ public class LivreExpress extends Application {
         this.boutonConnexion.setStyle("-fx-border-color:black");
         this.boutonConnexion.setPadding(new Insets(0, 0, 0, 30));
 
-        ControleurConnexion controleurConnexion = new ControleurConnexion(laConnexion, this, email.getText(), mdp.getText());
+        ControleurConnexion controleurConnexion = new ControleurConnexion(this, this.email, this.mdp);
 
         this.boutonConnexion.setOnAction(controleurConnexion);
-        this.boutonDeconnexion.setOnAction(controleurConnexion);
 
+        this.boutonDeconnexion.setOnAction(controleurConnexion);
 
         // Label bonjour = new Label("Bonjour " + nomVendeur + " !");
         // Button btnAjout = new Button("ajouter un livre à la librairie");
@@ -62,11 +63,13 @@ public class LivreExpress extends Application {
         // Button btnStock = new Button("modifier les stocks d’un livre");
         // btnAjout.setOnAction(new ControleurVendeurMajQte(idMag, this.appli.getConnexion));
         // Button btnTransfert = new Button("transférer un livre d’une autre librairie");
+       
+
     }
     
     @Override
     public void start(Stage stage) {
-        Pane root = new PageConnexion(boutonConnexion, email, mdp);
+        Pane root = new PageConnexion(boutonConnexion, email, mdp, false);
         this.scene = new Scene(root);
         this.stage = stage;
         stage.setScene(scene);
@@ -75,10 +78,10 @@ public class LivreExpress extends Application {
     }
  
     public void afficheConnexion() {
-        Pane root = new PageConnexion(boutonConnexion, email, mdp);
+        Pane root = new PageConnexion(boutonConnexion, email, mdp, true);
         this.scene.setRoot(root);
-        this.stage.setWidth(600);
-        this.stage.setHeight(200);
+        this.stage.setWidth(400);
+        this.stage.setHeight(400);
     }
     
     public void affichePageClient() {
@@ -88,14 +91,32 @@ public class LivreExpress extends Application {
         this.stage.setHeight(600);
     }
 
+
+    public void affichePageAdmin() {
+        Pane root = new PageClient(boutonDeconnexion);   
+        this.scene.setRoot(root);
+        this.stage.setWidth(1000);
+        this.stage.setHeight(600);
+    }
+    
     public void setUtilisateur(Client utilisateur) {
         this.utilisateur = utilisateur;
     }
 
     public void setConnexion(String ident, String mdp, String serveur, String nomBase) throws SQLException {
-        this.laConnexion.connecter(ident, mdp, serveur, nomBase);
-        if (!this.laConnexion.isConnecte()) {
-            throw new SQLException();
+        try {
+            this.laConnexion = new ConnexionMySQL();
+            laConnexion.connecter(ident, mdp, serveur, nomBase);
+            if (!laConnexion.isConnecte()) {
+                throw new SQLException();
+            }
+        } catch (ClassNotFoundException e) {
+            System.out.println("classe non trouvé");
         }
+        
+    }
+
+    public ConnexionMySQL getConnexion() {
+        return laConnexion;
     }
 }
