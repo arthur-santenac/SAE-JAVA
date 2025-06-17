@@ -155,8 +155,8 @@ public class LivreExpress extends Application {
         this.magasinBD = new MagasinBD(this.laConnexion);
         Pane root = new PageAdminLibrairie(this.btnRetourAdmin, this.adminBD, this.magasinBD, this.laConnexion);
         this.scene.setRoot(root);
-        this.stage.setWidth(1200);
-        this.stage.setHeight(650);
+        this.stage.setWidth(1000);
+        this.stage.setHeight(700);
     }
 
     public void affichePageVendeur() {

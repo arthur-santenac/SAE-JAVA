@@ -36,9 +36,9 @@ public class PageAdminLibrairie extends BorderPane{
 
     private BorderPane entete() {
         BorderPane entete = new BorderPane();
-        Text titre = new Text();
-        titre.setText("Livre Express - Administrateur");
-        titre.setFont(Font.font("Arial", FontWeight.MEDIUM, 32));
+        Label titre = new Label("Livre Express - Administrateur");
+        titre.setStyle("-fx-text-fill: white;");
+        titre.setFont(Font.font("Arial", FontWeight.BOLD, 32));
         entete.setLeft(titre);
         entete.setRight(this.retour);
         entete.setPadding(new Insets(10));
@@ -49,6 +49,7 @@ public class PageAdminLibrairie extends BorderPane{
     private BorderPane centre(){
         BorderPane root = new BorderPane();
         VBox marge = new VBox(10);
+        marge.setPadding(new Insets(0, 0, 0, 20));
         Button btnAjoutV = new Button("Ajouter un vendeur");
         Button btnSuppV = new Button("Supprimer un vendeur");
         marge.getChildren().addAll(btnAjoutV, btnSuppV);
@@ -56,9 +57,13 @@ public class PageAdminLibrairie extends BorderPane{
         btnAjoutV.setPrefWidth(200);
         btnSuppV.setPrefHeight(60);
         btnSuppV.setPrefWidth(200);
+
         VBox centre = new VBox(10);
+        centre.setPadding(new Insets(0, 20, 0, 0));
         Label titreV = new Label("Vendeur");
+        titreV.setFont(Font.font("Arial", FontWeight.BOLD, 28));
         Label textListe = new Label("Liste de librairies");
+        textListe.setFont(Font.font("Arial", FontWeight.MEDIUM, 20));
         VBox listeL = new VBox(10);
         try{
             List<Magasin> listeLib = this.magasinBD.listeDesMagasins();
