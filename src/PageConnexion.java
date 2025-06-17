@@ -40,20 +40,36 @@ public class PageConnexion extends BorderPane {
     }
 
     private GridPane centre(){
-        GridPane centre = new GridPane();
-        this.tfEmail.setPromptText("Entrez une adresse email");
-        this.tfMdp.setPromptText("Entrez une mot de passe");
-        Button btnCreerCompte = new Button("Créer un compte");
-        this.connexion.setPrefWidth(200);
-        btnCreerCompte.setPrefWidth(200);
-        centre.add(this.tfEmail, 0, 0, 4, 2);
-        centre.add(this.tfMdp, 0, 2, 4, 2);
-        centre.add(this.connexion, 0, 4, 4, 2);
-        centre.add(btnCreerCompte, 0, 8, 4, 2);
-        centre.setAlignment(Pos.BASELINE_CENTER);
-        centre.setHgap(10);
-        centre.setVgap(20);
-        centre.setPadding(new Insets(50));
-        return centre;
+        if(! this.estConnecteBD){
+            GridPane centre = new GridPane();
+            this.tfEmail.setPromptText("Entrez votre identifiant BD");
+            this.tfMdp.setPromptText("Entrez votre mot de passe BD");
+            this.connexion.setPrefWidth(200);
+            centre.add(this.tfEmail, 0, 0, 4, 2);
+            centre.add(this.tfMdp, 0, 2, 4, 2);
+            centre.add(this.connexion, 0, 4, 4, 2);
+            centre.setAlignment(Pos.BASELINE_CENTER);
+            centre.setHgap(10);
+            centre.setVgap(20);
+            centre.setPadding(new Insets(50));
+            return centre;
+        }else{
+            GridPane centre = new GridPane();
+            this.tfEmail.setPromptText("Entrez une adresse email");
+            this.tfMdp.setPromptText("Entrez une mot de passe");
+            Button btnCreerCompte = new Button("Créer un compte");
+            this.connexion.setPrefWidth(200);
+            btnCreerCompte.setPrefWidth(200);
+            centre.add(this.tfEmail, 0, 0, 4, 2);
+            centre.add(this.tfMdp, 0, 2, 4, 2);
+            centre.add(this.connexion, 0, 4, 4, 2);
+            centre.add(btnCreerCompte, 0, 8, 4, 2);
+            centre.setAlignment(Pos.BASELINE_CENTER);
+            centre.setHgap(10);
+            centre.setVgap(20);
+            centre.setPadding(new Insets(50));
+            return centre;
+        }
+        
     }
 }
