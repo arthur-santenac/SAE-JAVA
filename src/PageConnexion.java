@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class PageConnexion extends BorderPane {
@@ -21,6 +22,8 @@ public class PageConnexion extends BorderPane {
     
     public PageConnexion(Button connexion, TextField email, TextField mdp, boolean estConnecteBD){
         this.connexion = connexion;
+        this.connexion.setPrefWidth(200);
+        this.connexion.setPrefHeight(40);
         this.tfEmail = email;
         this.tfMdp = mdp;
         this.tfEmail.setText("");
@@ -31,14 +34,27 @@ public class PageConnexion extends BorderPane {
     }
 
     private BorderPane entete() {
-        BorderPane entete = new BorderPane();
-        Text titre = new Text();
-        titre.setText("Livre Express");
-        titre.setFont(Font.font("Arial", FontWeight.MEDIUM, 32));
-        entete.setLeft(titre);
-        entete.setPadding(new Insets(10));
-        entete.setBackground( new Background(new BackgroundFill(Color.GRAY,null,null)));
-        return entete;
+        if(! this.estConnecteBD){
+            BorderPane entete = new BorderPane();
+            Text titre = new Text();
+            titre.setText("Connexion BD");
+            titre.setFont(Font.font("Arial", FontWeight.MEDIUM, 32));
+            entete.setLeft(titre);
+            entete.setPadding(new Insets(10));
+            entete.setBackground( new Background(new BackgroundFill(Color.GRAY,null,null)));
+            return entete;
+        }
+        else{
+            BorderPane entete = new BorderPane();
+            Text titre = new Text();
+            titre.setText("Livre Express");
+            titre.setFont(Font.font("Arial", FontWeight.MEDIUM, 32));
+            entete.setLeft(titre);
+            entete.setPadding(new Insets(10));
+            entete.setBackground( new Background(new BackgroundFill(Color.GRAY,null,null)));
+            return entete;
+        }
+        
     }
 
     private GridPane centre(){
@@ -46,7 +62,6 @@ public class PageConnexion extends BorderPane {
             GridPane centre = new GridPane();
             this.tfEmail.setPromptText("Entrez votre identifiant BD");
             this.tfMdp.setPromptText("Entrez votre mot de passe BD");
-            this.connexion.setPrefWidth(200);
             centre.add(this.tfEmail, 0, 0, 4, 2);
             centre.add(this.tfMdp, 0, 2, 4, 2);
             centre.add(this.connexion, 0, 4, 4, 2);
@@ -57,15 +72,20 @@ public class PageConnexion extends BorderPane {
             return centre;
         }else{
             GridPane centre = new GridPane();
+            Text textCo = new Text("CONNEXION");
+            textCo.setFont(Font.font("Arial", FontWeight.MEDIUM, 20));
+            textCo.setTextAlignment(TextAlignment.CENTER);
             this.tfEmail.setPromptText("Entrez une adresse email");
             this.tfMdp.setPromptText("Entrez une mot de passe");
-            Button btnCreerCompte = new Button("Créer un compte");
             this.connexion.setPrefWidth(200);
+            this.connexion.setPrefHeight(40);
+            Button btnCreerCompte = new Button("Créer un compte");
             btnCreerCompte.setPrefWidth(200);
-            centre.add(this.tfEmail, 0, 0, 4, 2);
-            centre.add(this.tfMdp, 0, 2, 4, 2);
-            centre.add(this.connexion, 0, 4, 4, 2);
-            centre.add(btnCreerCompte, 0, 8, 4, 2);
+            centre.add(textCo, 0, 0, 4, 2);
+            centre.add(this.tfEmail, 0, 2, 4, 2);
+            centre.add(this.tfMdp, 0, 4, 4, 2);
+            centre.add(this.connexion, 0, 6, 4, 2);
+            centre.add(btnCreerCompte, 0, 11, 4, 2);
             centre.setAlignment(Pos.BASELINE_CENTER);
             centre.setHgap(10);
             centre.setVgap(20);

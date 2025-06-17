@@ -29,6 +29,7 @@ public class PageAdmin extends BorderPane{
         titre.setText("Livre Express - Administrateur");
         titre.setFont(Font.font("Arial", FontWeight.MEDIUM, 32));
         entete.setLeft(titre);
+        entete.setRight(this.deconnexion);
         entete.setPadding(new Insets(10));
         entete.setBackground( new Background(new BackgroundFill(Color.GRAY,null,null)));
         return entete;

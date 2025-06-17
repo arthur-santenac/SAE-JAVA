@@ -45,7 +45,6 @@ public class LivreExpress extends Application {
         this.mdp = new TextField();
         this.boutonConnexion = new Button("Connexion");
         this.boutonDeconnexion = new Button("Déconnexion");
-        this.boutonConnexion.setPadding(new Insets(0, 0, 0, 30));
 
         ControleurConnexion controleurConnexion = new ControleurConnexion(this, this.email, this.mdp);
 
@@ -65,21 +64,21 @@ public class LivreExpress extends Application {
     
     @Override
     public void start(Stage stage) {
-        Pane root = new PageConnexion(boutonConnexion, email, mdp, false);
+        Pane root = new PageConnexion(this.boutonConnexion, email, mdp, false);
         this.scene = new Scene(root);
         this.stage = stage;
-        this.stage.setWidth(350);
-        this.stage.setHeight(400);
+        this.stage.setWidth(550);
+        this.stage.setHeight(500);
         stage.setScene(scene);
         stage.setTitle("LivreExpress");
         stage.show();
     }
  
     public void afficheConnexion() {
-        Pane root = new PageConnexion(boutonConnexion, email, mdp, true);
+        Pane root = new PageConnexion(this.boutonConnexion, email, mdp, true);
         this.scene.setRoot(root);
-        this.stage.setWidth(350);
-        this.stage.setHeight(400);
+        this.stage.setWidth(550);
+        this.stage.setHeight(500);
     }
     
     public void affichePageClient() {
