@@ -25,7 +25,7 @@ public class LivreExpress extends Application {
     private Scene scene;
     private Stage stage;
     private Client utilisateur;
-    private ConnexionMySQL laConnexion;
+    private ConnexionMySQL laConnexion = null;
 
  
     /**
@@ -37,7 +37,6 @@ public class LivreExpress extends Application {
     
     @Override
     public void init(){
-
         this.email = new TextField();
         this.mdp = new TextField();
         this.boutonConnexion = new Button("Connexion");
@@ -48,15 +47,15 @@ public class LivreExpress extends Application {
         this.boutonConnexion.setStyle("-fx-border-color:black");
         this.boutonConnexion.setPadding(new Insets(0, 0, 0, 30));
 
-        ControleurConnexion controleurConnexion = new ControleurConnexion(laConnexion, this, email.getText(), mdp.getText());
+        ControleurConnexion controleurConnexion = new ControleurConnexion(laConnexion, this, this.email, this.mdp);
 
         this.boutonConnexion.setOnAction(controleurConnexion);
-        this.boutonDeconnexion.setOnAction(controleurConnexion);
+        this.boutonDeconnexion.setOnAction(controleurConnexion);            
     }
     
     @Override
     public void start(Stage stage) {
-        Pane root = new PageConnexion(boutonConnexion, email, mdp);
+        Pane root = new PageConnexion(boutonConnexion, email, mdp, false);
         this.scene = new Scene(root);
         this.stage = stage;
         stage.setScene(scene);
@@ -65,7 +64,7 @@ public class LivreExpress extends Application {
     }
  
     public void afficheConnexion() {
-        Pane root = new PageConnexion(boutonConnexion, email, mdp);
+        Pane root = new PageConnexion(boutonConnexion, email, mdp, true);
         this.scene.setRoot(root);
         this.stage.setWidth(600);
         this.stage.setHeight(200);
@@ -83,9 +82,16 @@ public class LivreExpress extends Application {
     }
 
     public void setConnexion(String ident, String mdp, String serveur, String nomBase) throws SQLException {
-        this.laConnexion.connecter(ident, mdp, serveur, nomBase);
-        if (!this.laConnexion.isConnecte()) {
-            throw new SQLException();
+        try {
+            ConnexionMySQL connexionMySQL = new ConnexionMySQL();
+            connexionMySQL.connecter(ident, mdp, serveur, nomBase);
+            if (!connexionMySQL.isConnecte()) {
+                throw new SQLException();
+            }
+            this.laConnexion = connexionMySQL;
+        } catch (ClassNotFoundException e) {
+            System.out.println("classe non trouvé");
         }
+        
     }
 }

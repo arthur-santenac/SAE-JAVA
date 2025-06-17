@@ -14,14 +14,16 @@ import javafx.stage.Stage;
 
 public class PageConnexion extends BorderPane {
   
+    private boolean estConnecteBD;
     private Button connexion;
     private TextField tfEmail;
     private TextField tfMdp;
     
-    public PageConnexion(Button connexion, TextField email, TextField mdp){
+    public PageConnexion(Button connexion, TextField email, TextField mdp, boolean estConnecteBD){
         this.connexion = connexion;
         this.tfEmail = email;
         this.tfMdp = mdp;
+        this.estConnecteBD = estConnecteBD;
         this.setTop(this.entete());
         this.setCenter(this.centre());
     }
