@@ -77,6 +77,14 @@ public class LivreExpress extends Application {
         this.stage.setHeight(600);
     }
 
+
+    public void affichePageAdmin() {
+        Pane root = new PageClient(boutonDeconnexion);   
+        this.scene.setRoot(root);
+        this.stage.setWidth(1000);
+        this.stage.setHeight(600);
+    }
+    
     public void setUtilisateur(Client utilisateur) {
         this.utilisateur = utilisateur;
     }
