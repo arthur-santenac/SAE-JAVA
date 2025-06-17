@@ -1,6 +1,11 @@
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -17,9 +22,14 @@ public class PageAdminLibrairie extends BorderPane{
     
 
     private Button retour;
+    private AdminBD adminBD;
+    private MagasinBD magasinBD;
 
-    public PageAdminLibrairie(Button retour){
+
+    public PageAdminLibrairie(Button retour, AdminBD adminBD, MagasinBD magasinBD, ConnexionMySQL laConnexion){
         this.retour = retour;
+        this.adminBD = new AdminBD(laConnexion);
+        this.magasinBD = new MagasinBD(laConnexion);
         this.setTop(this.entete());
         this.setCenter(this.centre());
     }
@@ -36,30 +46,35 @@ public class PageAdminLibrairie extends BorderPane{
         return entete;
     }
 
-    private GridPane centre(){
-        GridPane root = new GridPane();
-        Button btnLib = new Button("Librairie");
-        Button btnVendeur = new Button("Vendeur");
-        Button btnStock = new Button("Stock");
-        Button btnStats = new Button("Stats");
-        root.add(btnLib, 0, 0, 3, 3);
-        root.add(btnVendeur, 3, 0, 3, 3);
-        root.add(btnStock, 6, 0, 3, 3);
-        root.add(btnStats, 0, 4, 3, 3);
-        root.setHgap(60);
-        root.setVgap(40);
-        btnLib.setPrefHeight(60);
-        btnLib.setPrefWidth(200);
-        btnVendeur.setPrefHeight(60);
-        btnVendeur.setPrefWidth(200);
-        btnVendeur.setPrefHeight(60);
-        btnVendeur.setPrefWidth(200);
-        btnStock.setPrefHeight(60);
-        btnStock.setPrefWidth(200);
-        btnStats.setPrefHeight(60);
-        btnStats.setPrefWidth(200);
+    private BorderPane centre(){
+        BorderPane root = new BorderPane();
+        VBox marge = new VBox(10);
+        Button btnAjoutV = new Button("Ajouter un vendeur");
+        Button btnSuppV = new Button("Supprimer un vendeur");
+        marge.getChildren().addAll(btnAjoutV, btnSuppV);
+        btnAjoutV.setPrefHeight(60);
+        btnAjoutV.setPrefWidth(200);
+        btnSuppV.setPrefHeight(60);
+        btnSuppV.setPrefWidth(200);
+        VBox centre = new VBox(10);
+        Label titreV = new Label("Vendeur");
+        Label textListe = new Label("Liste de librairies");
+        VBox listeL = new VBox(10);
+        try{
+            List<Magasin> listeLib = this.magasinBD.listeDesMagasins();
+            for(Magasin m : listeLib){
+                Label lib = new Label(m.toString());
+                lib.setPadding(new Insets(10));
+                listeL.getChildren().add(lib);
+            }
+        }catch(SQLException e){
+            System.out.println("Erreur d'affichage de la liste des librairies");
+        }
+        listeL.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-style: solid;");
+        centre.getChildren().addAll(titreV,textListe, listeL);
         root.setPadding(new Insets(20));
-        root.setAlignment(Pos.BASELINE_CENTER);
+        root.setCenter(centre);
+        root.setRight(marge);
         return root;
     }
 

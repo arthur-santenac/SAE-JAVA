@@ -42,6 +42,7 @@ public class LivreExpress extends Application {
     private Button btnRetourAdmin;
     private Button btnLib;
     private AdminBD adminBD;
+    private MagasinBD magasinBD;
 
     /**
      * @param args the command line arguments
@@ -112,10 +113,12 @@ public class LivreExpress extends Application {
     }
 
     public void affichePageAdminLib() {
-        Pane root = new PageAdminLibrairie(this.btnRetourAdmin);
+        this.adminBD = new AdminBD(this.laConnexion);
+        this.magasinBD = new MagasinBD(this.laConnexion);
+        Pane root = new PageAdminLibrairie(this.btnRetourAdmin, this.adminBD, this.magasinBD, this.laConnexion);
         this.scene.setRoot(root);
-        this.stage.setWidth(900);
-        this.stage.setHeight(450);
+        this.stage.setWidth(1200);
+        this.stage.setHeight(650);
     }
 
     public void affichePageVendeur() {
