@@ -37,6 +37,7 @@ public class LivreExpress extends Application {
     
     @Override
     public void init(){
+
         this.email = new TextField();
         this.mdp = new TextField();
         this.boutonConnexion = new Button("Connexion");
@@ -47,7 +48,7 @@ public class LivreExpress extends Application {
         this.boutonConnexion.setStyle("-fx-border-color:black");
         this.boutonConnexion.setPadding(new Insets(0, 0, 0, 30));
 
-        ControleurConnexion controleurConnexion = new ControleurConnexion(laConnexion, this, this.email, this.mdp);
+        ControleurConnexion controleurConnexion = new ControleurConnexion(this, this.email, this.mdp);
 
         this.boutonConnexion.setOnAction(controleurConnexion);
         this.boutonDeconnexion.setOnAction(controleurConnexion);            
@@ -66,8 +67,8 @@ public class LivreExpress extends Application {
     public void afficheConnexion() {
         Pane root = new PageConnexion(boutonConnexion, email, mdp, true);
         this.scene.setRoot(root);
-        this.stage.setWidth(600);
-        this.stage.setHeight(200);
+        this.stage.setWidth(400);
+        this.stage.setHeight(400);
     }
     
     public void affichePageClient() {
@@ -91,15 +92,18 @@ public class LivreExpress extends Application {
 
     public void setConnexion(String ident, String mdp, String serveur, String nomBase) throws SQLException {
         try {
-            ConnexionMySQL connexionMySQL = new ConnexionMySQL();
-            connexionMySQL.connecter(ident, mdp, serveur, nomBase);
-            if (!connexionMySQL.isConnecte()) {
+            this.laConnexion = new ConnexionMySQL();
+            laConnexion.connecter(ident, mdp, serveur, nomBase);
+            if (!laConnexion.isConnecte()) {
                 throw new SQLException();
             }
-            this.laConnexion = connexionMySQL;
         } catch (ClassNotFoundException e) {
             System.out.println("classe non trouvé");
         }
         
+    }
+
+    public ConnexionMySQL getConnexion() {
+        return laConnexion;
     }
 }
