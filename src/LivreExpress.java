@@ -93,12 +93,7 @@ public class LivreExpress extends Application {
         this.boutonCreerLeCompte.setOnAction(controleurCreerCompte);
 
 
-        this.bonjour = new Label("Bonjour !");
-        this.btnAjout = new Button("ajouter un livre à la librairie");
-        this.btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.laConnexion));
-        this.btnStock = new Button("modifier les stocks d’un livre");
-        this.btnAjout.setOnAction(new ControleurVendeurMajQte(idMag, this.laConnexion));
-        this.btnTransfert = new Button("transférer un livre d’une autre librairie");
+
 
 
         // ============ADMINISTRATEUR===============
@@ -157,10 +152,17 @@ public class LivreExpress extends Application {
     }
 
     public void affichePageVendeur() {
-        Pane root = new PageVendeur(boutonDeconnexion, bonjour, btnAjout, btnStock, btnTransfert, idAjouter, ajouter, finaliserCommande);
+        this.bonjour = new Label("Bonjour !");
+        this.btnAjout = new Button("ajouter un livre à la librairie");
+        this.btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.laConnexion));
+        this.btnStock = new Button("modifier les stocks d’un livre");
+        this.btnStock.setOnAction(new ControleurVendeurMajQte(idMag, this.laConnexion));
+        this.btnTransfert = new Button("transférer un livre d’une autre librairie");
+        Pane root = new PageVendeur(this.boutonDeconnexion, this.bonjour, this.btnAjout, this.btnStock, this.btnTransfert, this.idAjouter, this.ajouter, this.finaliserCommande);
         this.scene.setRoot(root);
         this.stage.setWidth(1500);
         this.stage.setHeight(1000);
+
     }
 
     public void setUtilisateur(Client utilisateur) {
