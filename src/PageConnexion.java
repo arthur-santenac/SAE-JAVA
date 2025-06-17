@@ -23,6 +23,8 @@ public class PageConnexion extends BorderPane {
         this.connexion = connexion;
         this.tfEmail = email;
         this.tfMdp = mdp;
+        this.tfEmail.setText("");
+        this.tfMdp.setText("");
         this.estConnecteBD = estConnecteBD;
         this.setTop(this.entete());
         this.setCenter(this.centre());
