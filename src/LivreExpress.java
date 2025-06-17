@@ -13,15 +13,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-
- 
 public class LivreExpress extends Application {
-    
+
     private Button boutonConnexion;
     private Button boutonDeconnexion;
     private TextField email;
-    private TextField mdp; 
-
+    private TextField mdp;
 
     private Scene scene;
     private Stage stage;
@@ -29,17 +26,24 @@ public class LivreExpress extends Application {
     private String compte;
     private ConnexionMySQL laConnexion = null;
 
+    // ============VENDEUR===============
+    private Button btnAjout;
+    private Button btnStock;
+    private Button btnTransfert;
+    private Button ajouter;
+    private Button finaliserCommande;
+    private Label bonjour;
+    private TextField idAjouter;
 
- 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(LivreExpress.class, args);
     }
-    
+
     @Override
-    public void init(){
+    public void init() {
 
         this.email = new TextField();
         this.mdp = new TextField();
@@ -52,16 +56,15 @@ public class LivreExpress extends Application {
 
         this.boutonDeconnexion.setOnAction(controleurConnexion);
 
-        // Label bonjour = new Label("Bonjour " + nomVendeur + " !");
-        // Button btnAjout = new Button("ajouter un livre à la librairie");
-        // btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.appli.getConnexion));
-        // Button btnStock = new Button("modifier les stocks d’un livre");
-        // btnAjout.setOnAction(new ControleurVendeurMajQte(idMag, this.appli.getConnexion));
-        // Button btnTransfert = new Button("transférer un livre d’une autre librairie");
-       
+        Label bonjour = new Label("Bonjour " + nomVendeur + " !");
+        Button btnAjout = new Button("ajouter un livre à la librairie");
+        btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.appli.getConnexion));
+        Button btnStock = new Button("modifier les stocks d’un livre");
+        btnAjout.setOnAction(new ControleurVendeurMajQte(idMag, this.appli.getConnexion));
+        Button btnTransfert = new Button("transférer un livre d’une autre librairie");
 
     }
-    
+
     @Override
     public void start(Stage stage) {
         Pane root = new PageConnexion(this.boutonConnexion, email, mdp, false);
@@ -73,29 +76,35 @@ public class LivreExpress extends Application {
         stage.setTitle("LivreExpress");
         stage.show();
     }
- 
+
     public void afficheConnexion() {
         Pane root = new PageConnexion(this.boutonConnexion, email, mdp, true);
         this.scene.setRoot(root);
         this.stage.setWidth(550);
         this.stage.setHeight(500);
     }
-    
+
     public void affichePageClient() {
-        Pane root = new PageClient(boutonDeconnexion);   
+        Pane root = new PageClient(boutonDeconnexion);
         this.scene.setRoot(root);
         this.stage.setWidth(1000);
         this.stage.setHeight(600);
     }
 
-
     public void affichePageAdmin() {
-        Pane root = new PageAdmin(boutonDeconnexion);   
+        Pane root = new PageAdmin(boutonDeconnexion);
         this.scene.setRoot(root);
         this.stage.setWidth(900);
         this.stage.setHeight(450);
     }
-    
+
+    public void affichePageVendeur() {
+        Pane root = new PageVendeur(boutonDeconnexion, bonjour, btnAjout, btnStock, btnTransfert, idAjouter, ajouter, finaliserCommande);
+        this.scene.setRoot(root);
+        this.stage.setWidth(1000);
+        this.stage.setHeight(600);
+    }
+
     public void setUtilisateur(Client utilisateur) {
         this.utilisateur = utilisateur;
     }
@@ -110,7 +119,7 @@ public class LivreExpress extends Application {
         } catch (ClassNotFoundException e) {
             System.out.println("classe non trouvé");
         }
-        
+
     }
 
     public ConnexionMySQL getConnexion() {
