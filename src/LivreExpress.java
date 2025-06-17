@@ -93,8 +93,8 @@ public class LivreExpress extends Application {
     public void affichePageAdmin() {
         Pane root = new PageAdmin(boutonDeconnexion);   
         this.scene.setRoot(root);
-        this.stage.setWidth(1000);
-        this.stage.setHeight(600);
+        this.stage.setWidth(900);
+        this.stage.setHeight(450);
     }
     
     public void setUtilisateur(Client utilisateur) {
