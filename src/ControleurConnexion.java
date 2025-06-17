@@ -23,12 +23,12 @@ public class ControleurConnexion implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
         Button button = (Button) (event.getSource());
-        if (this.appli.getConnexion() == null) {
+        if (this.appli.getConnexion() == null || !this.appli.getConnexion().isConnecte()) {
             try {
                 this.appli.setConnexion(email.getText(), mdp.getText(), "servinfo-maria", "DB" + email.getText());
                 this.appli.afficheConnexion();
             } catch (SQLException e) {
-                System.out.println("erreur sql");
+                this.appli.mauvaisMdp();
             } 
         } else if (button.getText().equals("Déconnexion")) {
             this.appli.afficheConnexion();
@@ -51,9 +51,9 @@ public class ControleurConnexion implements EventHandler<ActionEvent> {
                         }
                     }
                 }
-                // mauvais mdp
+                this.appli.mauvaisMdp();
             } catch (SQLException e) {
-                // mauvais mdp
+                this.appli.mauvaisMdp();
             }
         }
     }
