@@ -58,12 +58,12 @@ public class LivreExpress extends Application {
 
         this.boutonDeconnexion.setOnAction(controleurConnexion);
 
-        Label bonjour = new Label("Bonjour " + nomVendeur + " !");
-        Button btnAjout = new Button("ajouter un livre à la librairie");
-        btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.appli.getConnexion));
-        Button btnStock = new Button("modifier les stocks d’un livre");
-        btnAjout.setOnAction(new ControleurVendeurMajQte(idMag, this.appli.getConnexion));
-        Button btnTransfert = new Button("transférer un livre d’une autre librairie");
+        // Label bonjour = new Label("Bonjour " + nomVendeur + " !");
+        // Button btnAjout = new Button("ajouter un livre à la librairie");
+        // btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.appli.getConnexion));
+        // Button btnStock = new Button("modifier les stocks d’un livre");
+        // btnAjout.setOnAction(new ControleurVendeurMajQte(idMag, this.appli.getConnexion));
+        // Button btnTransfert = new Button("transférer un livre d’une autre librairie");
 
     }
 
@@ -72,8 +72,8 @@ public class LivreExpress extends Application {
         Pane root = new PageConnexion(boutonConnexion, email, mdp, textErreurConnexion, false);
         this.scene = new Scene(root);
         this.stage = stage;
-        this.stage.setWidth(550);
-        this.stage.setHeight(500);
+        this.stage.setWidth(320);
+        this.stage.setHeight(300);
         stage.setScene(scene);
         stage.setTitle("LivreExpress");
         stage.show();
@@ -82,8 +82,8 @@ public class LivreExpress extends Application {
     public void afficheConnexion() {
         Pane root = new PageConnexion(boutonConnexion, email, mdp, textErreurConnexion, true);
         this.scene.setRoot(root);
-        this.stage.setWidth(550);
-        this.stage.setHeight(500);
+        this.stage.setWidth(300);
+        this.stage.setHeight(400);
     }
 
     public void affichePageClient() {
