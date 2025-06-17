@@ -16,11 +16,25 @@ import javafx.stage.Stage;
 
 public class LivreExpress extends Application {
 
+    private ClientBD clientBD;
+
+    // ============CONNEXION / CREER COMPTE===============
     private Button boutonConnexion;
     private Button boutonDeconnexion;
-    private TextField email;
+    private Button boutonCreerUnCompte;
+    private Button boutonCreerLeCompte;
+    private TextField identifiant;
     private PasswordField mdp; 
+    private TextField mdpText;
+    private TextField nom;
+    private TextField prenom;
+    private TextField adresse;
+    private TextField ville;
+    private TextField codePostal;
+
+
     private Label textErreurConnexion;
+    private Label textErreurCreerCompte;
 
     private Scene scene;
     private Stage stage;
@@ -53,14 +67,31 @@ public class LivreExpress extends Application {
 
     @Override
     public void init() {
-        this.email = new TextField();
+
+        this.identifiant = new TextField();
         this.mdp = new PasswordField();
+        this.mdpText = new TextField();
+        this.adresse = new TextField();
+        this.nom = new TextField();
+        this.prenom = new TextField();
+        this.adresse = new TextField();
+        this.ville = new TextField();
+        this.codePostal = new TextField();
         this.textErreurConnexion = new Label();
+        this.textErreurCreerCompte = new Label();
         this.boutonConnexion = new Button("Connexion");
         this.boutonDeconnexion = new Button("Déconnexion");
-        ControleurConnexion controleurConnexion = new ControleurConnexion(this, this.email, this.mdp);
+        this.boutonCreerUnCompte = new Button("Créer un compte");
+        this.boutonCreerLeCompte = new Button("Créer le compte");
+
+        ControleurConnexion controleurConnexion = new ControleurConnexion(this, this.identifiant, this.mdp);
+        ControleurPageCreerCompte controleurPageCreerCompte = new ControleurPageCreerCompte(this);
+        ControleurCreerCompte controleurCreerCompte = new ControleurCreerCompte(this, this.identifiant, this.mdpText, this.nom, this.prenom, this.adresse, this.ville, this.codePostal);
+
         this.boutonConnexion.setOnAction(controleurConnexion);
         this.boutonDeconnexion.setOnAction(controleurConnexion);
+        this.boutonCreerUnCompte.setOnAction(controleurPageCreerCompte);
+        this.boutonCreerLeCompte.setOnAction(controleurCreerCompte);
 
 
         this.bonjour = new Label("Bonjour !");
@@ -81,7 +112,7 @@ public class LivreExpress extends Application {
 
     @Override
     public void start(Stage stage) {
-        Pane root = new PageConnexion(boutonConnexion, email, mdp, textErreurConnexion, false);
+        Pane root = new PageConnexion(boutonConnexion, boutonCreerUnCompte, identifiant, mdp, textErreurConnexion, false);
         this.scene = new Scene(root);
         this.stage = stage;
         this.stage.setWidth(320);
@@ -92,10 +123,17 @@ public class LivreExpress extends Application {
     }
 
     public void afficheConnexion() {
-        Pane root = new PageConnexion(boutonConnexion, email, mdp, textErreurConnexion, true);
+        Pane root = new PageConnexion(boutonConnexion, boutonCreerUnCompte, identifiant, mdp, textErreurConnexion, true);
         this.scene.setRoot(root);
         this.stage.setWidth(300);
-        this.stage.setHeight(400);
+        this.stage.setHeight(350);
+    }
+
+    public void afficheCreerCompte() {
+        Pane root = new PageCreerCompte(boutonCreerLeCompte, textErreurCreerCompte, identifiant, mdpText, nom, prenom, adresse, ville, codePostal);
+        this.scene.setRoot(root);
+        this.stage.setWidth(300);
+        this.stage.setHeight(600); 
     }
 
     public void affichePageClient() {
@@ -139,6 +177,7 @@ public class LivreExpress extends Application {
             if (!laConnexion.isConnecte()) {
                 throw new SQLException();
             }
+            this.clientBD = new ClientBD(laConnexion);
         } catch (ClassNotFoundException e) {
             System.out.println("classe non trouvé");
         }
@@ -157,5 +196,12 @@ public class LivreExpress extends Application {
         this.textErreurConnexion.setText("Mauvais indentifiants");
     }
 
+    public void erreurCreerCompte() {
+        this.textErreurCreerCompte.setText("Erreur veuiller réessayer");
+    }
+
+    public ClientBD getClientBD() {
+        return clientBD;
+    }
 
 }

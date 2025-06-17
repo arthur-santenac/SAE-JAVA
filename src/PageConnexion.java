@@ -19,12 +19,15 @@ public class PageConnexion extends BorderPane {
   
     private boolean estConnecteBD;
     private Button connexion;
+    private Button creerCompte;
     private TextField tfEmail;
     private PasswordField tfMdp;
     private Label textErreur;
     
-    public PageConnexion(Button connexion, TextField email, PasswordField mdp, Label erreurIdentTF, boolean estConnecteBD){
+    public PageConnexion(Button connexion, Button creerButton, TextField email, PasswordField mdp, Label erreurIdentTF, boolean estConnecteBD){
+
         this.connexion = connexion;
+        this.creerCompte = creerButton;
         this.tfEmail = email;
         this.tfMdp = mdp;
         this.textErreur = erreurIdentTF;
@@ -37,10 +40,11 @@ public class PageConnexion extends BorderPane {
     }
 
     private BorderPane entete() {
-        if(! this.estConnecteBD){
+        if (!this.estConnecteBD) {
             BorderPane entete = new BorderPane();
             Label titre = new Label();
             titre.setText("Connexion BD");
+            titre.setStyle("-fx-font-size: 24px;");
             entete.setLeft(titre);
             entete.setPadding(new Insets(10));
             return entete;
@@ -48,7 +52,7 @@ public class PageConnexion extends BorderPane {
             BorderPane entete = new BorderPane();
             Label titre = new Label();
             titre.setText("Livre Express");
-            titre.setStyle("-fx-text-fill: white; -fx-font-size: 20px;");
+            titre.setStyle("-fx-text-fill: white; -fx-font-size: 24px;");
             entete.setLeft(titre);
             entete.setPadding(new Insets(10));
             entete.setBackground( new Background(new BackgroundFill(Color.GRAY,null,null)));
@@ -57,7 +61,7 @@ public class PageConnexion extends BorderPane {
     }
 
     private GridPane centre() {
-        if(! this.estConnecteBD){
+        if (!this.estConnecteBD) {
             GridPane centre = new GridPane();
             this.tfEmail.setPromptText("Entrez votre identifiant BD");
             this.tfMdp.setPromptText("Entrez votre mot de passe BD");
@@ -79,15 +83,14 @@ public class PageConnexion extends BorderPane {
             this.tfEmail.setPromptText("Entrez une adresse email");
             this.tfMdp.setPromptText("Entrez une mot de passe");
             this.connexion.setPrefWidth(200);
-            Button btnCreerCompte = new Button("Créer un compte");
-            btnCreerCompte.setPrefWidth(200);
+            creerCompte.setPrefWidth(200);
 
             centre.add(textCo, 0, 0, 4, 2);
             centre.add(this.tfEmail, 0, 2, 4, 2);
             centre.add(this.tfMdp, 0, 4, 4, 2);
             centre.add(this.textErreur, 0, 5, 4, 2);
             centre.add(this.connexion, 0, 6, 4, 2);
-            centre.add(btnCreerCompte, 0, 8, 4, 2);
+            centre.add(creerCompte, 0, 8, 4, 2);
 
             centre.setAlignment(Pos.BASELINE_CENTER);
             centre.setHgap(10);
