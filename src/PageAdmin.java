@@ -1,4 +1,5 @@
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
@@ -28,6 +29,7 @@ public class PageAdmin extends BorderPane{
         titre.setText("Livre Express - Administrateur");
         titre.setFont(Font.font("Arial", FontWeight.MEDIUM, 32));
         entete.setLeft(titre);
+        entete.setRight(this.deconnexion);
         entete.setPadding(new Insets(10));
         entete.setBackground( new Background(new BackgroundFill(Color.GRAY,null,null)));
         return entete;
@@ -39,10 +41,24 @@ public class PageAdmin extends BorderPane{
         Button btnVendeur = new Button("Vendeur");
         Button btnStock = new Button("Stock");
         Button btnStats = new Button("Stats");
-        root.add(btnLib, 0, 0, 2, 1);
-        root.add(btnVendeur, 2, 1, 2, 1);
-        root.add(btnStock, 4, 0, 2, 1);
-        root.add(btnStats, 6, 0, 2, 1);
+        root.add(btnLib, 0, 0, 3, 3);
+        root.add(btnVendeur, 3, 0, 3, 3);
+        root.add(btnStock, 6, 0, 3, 3);
+        root.add(btnStats, 0, 4, 3, 3);
+        root.setHgap(60);
+        root.setVgap(40);
+        btnLib.setPrefHeight(60);
+        btnLib.setPrefWidth(200);
+        btnVendeur.setPrefHeight(60);
+        btnVendeur.setPrefWidth(200);
+        btnVendeur.setPrefHeight(60);
+        btnVendeur.setPrefWidth(200);
+        btnStock.setPrefHeight(60);
+        btnStock.setPrefWidth(200);
+        btnStats.setPrefHeight(60);
+        btnStats.setPrefWidth(200);
+        root.setPadding(new Insets(20));
+        root.setAlignment(Pos.BASELINE_CENTER);
         return root;
     }
 
