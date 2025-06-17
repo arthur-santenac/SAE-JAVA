@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS CLIENT;
 DROP TABLE IF EXISTS MAGASIN;
 
 CREATE TABLE CONNEXION (
-  PRIMARY KEY (adresseemail, motdepasse, compte),
+  PRIMARY KEY (adresseemail),
   adresseemail varchar(30) NOT NULL,
   motdepasse varchar(30) NOT NULL,
   idcli int NOT NULL,
