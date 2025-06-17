@@ -18,7 +18,8 @@ public class LivreExpress extends Application {
     private Button boutonConnexion;
     private Button boutonDeconnexion;
     private TextField email;
-    private TextField mdp;
+    private TextField mdp; 
+    private Label textErreurConnexion;
 
     private Scene scene;
     private Stage stage;
@@ -47,6 +48,7 @@ public class LivreExpress extends Application {
 
         this.email = new TextField();
         this.mdp = new TextField();
+        this.textErreurConnexion = new Label();
         this.boutonConnexion = new Button("Connexion");
         this.boutonDeconnexion = new Button("Déconnexion");
 
@@ -67,7 +69,7 @@ public class LivreExpress extends Application {
 
     @Override
     public void start(Stage stage) {
-        Pane root = new PageConnexion(this.boutonConnexion, email, mdp, false);
+        Pane root = new PageConnexion(boutonConnexion, email, mdp, textErreurConnexion, false);
         this.scene = new Scene(root);
         this.stage = stage;
         this.stage.setWidth(550);
@@ -78,7 +80,7 @@ public class LivreExpress extends Application {
     }
 
     public void afficheConnexion() {
-        Pane root = new PageConnexion(this.boutonConnexion, email, mdp, true);
+        Pane root = new PageConnexion(boutonConnexion, email, mdp, textErreurConnexion, true);
         this.scene.setRoot(root);
         this.stage.setWidth(550);
         this.stage.setHeight(500);
@@ -87,7 +89,7 @@ public class LivreExpress extends Application {
     public void affichePageClient() {
         Pane root = new PageClient(boutonDeconnexion);
         this.scene.setRoot(root);
-        this.stage.setWidth(1000);
+        this.stage.setWidth(1500);
         this.stage.setHeight(600);
     }
 
@@ -101,8 +103,8 @@ public class LivreExpress extends Application {
     public void affichePageVendeur() {
         Pane root = new PageVendeur(boutonDeconnexion, bonjour, btnAjout, btnStock, btnTransfert, idAjouter, ajouter, finaliserCommande);
         this.scene.setRoot(root);
-        this.stage.setWidth(1000);
-        this.stage.setHeight(600);
+        this.stage.setWidth(1500);
+        this.stage.setHeight(1000);
     }
 
     public void setUtilisateur(Client utilisateur) {
@@ -119,10 +121,14 @@ public class LivreExpress extends Application {
         } catch (ClassNotFoundException e) {
             System.out.println("classe non trouvé");
         }
-
     }
 
     public ConnexionMySQL getConnexion() {
         return laConnexion;
     }
+
+    public void mauvaisMdp() {
+        this.textErreurConnexion.setText("Mauvais indentifiants");
+    }
+
 }

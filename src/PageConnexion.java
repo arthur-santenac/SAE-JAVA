@@ -1,6 +1,7 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Background;
@@ -19,15 +20,18 @@ public class PageConnexion extends BorderPane {
     private Button connexion;
     private TextField tfEmail;
     private TextField tfMdp;
+    private Label textErreur;
     
-    public PageConnexion(Button connexion, TextField email, TextField mdp, boolean estConnecteBD){
+    public PageConnexion(Button connexion, TextField email, TextField mdp, Label erreurIdentTF, boolean estConnecteBD){
         this.connexion = connexion;
         this.connexion.setPrefWidth(200);
         this.connexion.setPrefHeight(40);
         this.tfEmail = email;
         this.tfMdp = mdp;
+        this.textErreur = erreurIdentTF;
         this.tfEmail.setText("");
         this.tfMdp.setText("");
+        this.textErreur.setText("");
         this.estConnecteBD = estConnecteBD;
         this.setTop(this.entete());
         this.setCenter(this.centre());
@@ -64,7 +68,8 @@ public class PageConnexion extends BorderPane {
             this.tfMdp.setPromptText("Entrez votre mot de passe BD");
             centre.add(this.tfEmail, 0, 0, 4, 2);
             centre.add(this.tfMdp, 0, 2, 4, 2);
-            centre.add(this.connexion, 0, 4, 4, 2);
+            centre.add(this.textErreur, 0, 4, 4, 2);
+            centre.add(this.connexion, 0, 5, 4, 2);
             centre.setAlignment(Pos.BASELINE_CENTER);
             centre.setHgap(10);
             centre.setVgap(20);
@@ -81,11 +86,14 @@ public class PageConnexion extends BorderPane {
             this.connexion.setPrefHeight(40);
             Button btnCreerCompte = new Button("Créer un compte");
             btnCreerCompte.setPrefWidth(200);
+
             centre.add(textCo, 0, 0, 4, 2);
             centre.add(this.tfEmail, 0, 2, 4, 2);
             centre.add(this.tfMdp, 0, 4, 4, 2);
+            centre.add(this.textErreur, 0, 5, 4, 2);
             centre.add(this.connexion, 0, 6, 4, 2);
             centre.add(btnCreerCompte, 0, 11, 4, 2);
+
             centre.setAlignment(Pos.BASELINE_CENTER);
             centre.setHgap(10);
             centre.setVgap(20);
