@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -26,6 +27,7 @@ public class LivreExpress extends Application {
     private Stage stage;
     private Client utilisateur;
     private ConnexionMySQL laConnexion;
+    private String compte;
 
  
     /**
@@ -52,6 +54,14 @@ public class LivreExpress extends Application {
 
         this.boutonConnexion.setOnAction(controleurConnexion);
         this.boutonDeconnexion.setOnAction(controleurConnexion);
+
+
+        // Label bonjour = new Label("Bonjour " + nomVendeur + " !");
+        // Button btnAjout = new Button("ajouter un livre à la librairie");
+        // btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.appli.getConnexion));
+        // Button btnStock = new Button("modifier les stocks d’un livre");
+        // btnAjout.setOnAction(new ControleurVendeurMajQte(idMag, this.appli.getConnexion));
+        // Button btnTransfert = new Button("transférer un livre d’une autre librairie");
     }
     
     @Override

@@ -9,6 +9,11 @@ import javax.swing.plaf.synth.Region;
 
 public class PageVendeur extends BorderPane {
 
+    private Label bonjour;
+    private Button btnAjout;
+    private Button btnStock;
+    private Button btnTransfert;
+
     public PageVendeur() {
 
         super();
@@ -31,12 +36,8 @@ public class PageVendeur extends BorderPane {
     }
 
     public VBox left() {
-        Label bonjour = new Label("Bonjour *nom vendeur* !");
-        Button btnAjout = new Button("ajouter un livre à la librairie");
-        btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, laConnexion));
-        Button btnStock = new Button("modifier les stocks d’un livre");
-        Button btnTransfert = new Button("transférer un livre d’une autre librairie");
-        VBox left = new VBox(10, bonjour, btnAjout, btnStock, btnTransfert);
+
+        VBox left = new VBox(10, this.bonjour, this.btnAjout, this.btnStock, this.btnTransfert);
         left.setStyle("-fx-padding: 10;");
         return left;
     }
