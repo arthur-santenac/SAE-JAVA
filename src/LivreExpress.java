@@ -59,6 +59,8 @@ public class LivreExpress extends Application {
         Pane root = new PageConnexion(boutonConnexion, email, mdp, false);
         this.scene = new Scene(root);
         this.stage = stage;
+        this.stage.setWidth(350);
+        this.stage.setHeight(400);
         stage.setScene(scene);
         stage.setTitle("LivreExpress");
         stage.show();
@@ -67,7 +69,7 @@ public class LivreExpress extends Application {
     public void afficheConnexion() {
         Pane root = new PageConnexion(boutonConnexion, email, mdp, true);
         this.scene.setRoot(root);
-        this.stage.setWidth(400);
+        this.stage.setWidth(350);
         this.stage.setHeight(400);
     }
     

@@ -45,7 +45,7 @@ public class ControleurConnexion implements EventHandler<ActionEvent> {
                         } else if (compte.substring(0, 7).equals("vendeur")) {
                             //a faire
                         } else if (compte.equals("administrateur")) {
-                            //a faire
+                            appli.affichePageAdmin();
                         }
                     }
                 }
