@@ -63,8 +63,6 @@ public class LivreExpress extends Application {
     private Label bonjour;
     private int idMag;
     private TextField idAjouter;
-
-    // ============ADMINISTRATEUR===============
     private Button btnRetourAdmin;
     private Button btnLib;
     private Button btnAddLib;
