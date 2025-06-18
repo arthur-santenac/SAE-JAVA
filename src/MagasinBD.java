@@ -1,6 +1,10 @@
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javafx.scene.chart.XYChart;
 
 public class MagasinBD {
     
@@ -67,6 +71,31 @@ public class MagasinBD {
 		rs.close();
 		ps.close();
 		return res;
+	}
+
+
+	public List<XYChart.Series<String, Number>> getVentesParAnnee() throws SQLException {
+		String query = "SELECT nommag, YEAR(datecom) AS annee, SUM(qte) AS qte " +
+					"FROM MAGASIN " +
+					"NATURAL JOIN COMMANDE " +
+					"NATURAL JOIN DETAILCOMMANDE " +
+					"GROUP BY nommag, YEAR(datecom)";
+		Map<String, XYChart.Series<String, Number>> seriesParAnnee = new HashMap<>();
+
+		PreparedStatement ps = this.laConnexion.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			String magasin = rs.getString("nommag");
+			String annee = rs.getString("annee");
+			int quantite = rs.getInt("qte");
+			XYChart.Series<String, Number> serie = seriesParAnnee.computeIfAbsent(annee, a -> {
+				XYChart.Series<String, Number> s = new XYChart.Series<>();
+				s.setName(a);
+				return s;
+			});
+			serie.getData().add(new XYChart.Data<>(magasin, quantite));
+		}
+		return new ArrayList<>(seriesParAnnee.values());
 	}
 
 	public List<String> valeurStocksParMag()throws SQLException{
