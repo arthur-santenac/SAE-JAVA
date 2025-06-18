@@ -38,63 +38,33 @@ public class CommandeBD {
         ps.executeUpdate();
     }
 
-    public static String editerFacture(Connection bd, int idClient) {
-        final String REQ_DATE = "SELECT DATE_FORMAT(MAX(com.datecom), '%Y-%m') AS date_max " +
-                "FROM commande com " +
-                "JOIN client c ON c.idcli = com.idcli " +
-                "WHERE c.idcli = ?";
+    public String faireFactures(Connection conn, int mois, int annee) throws SQLException {
+        String sql = "SELECT nommag, idcli, nomcli, prenomcli, adressecli, codepostal, villecli, " +
+                "       numcom, datecom, qte, prixvente, isbn, titre " +
+                "  FROM MAGASIN " +
+                "  NATURAL JOIN COMMANDE " +
+                "  NATURAL JOIN CLIENT " +
+                "  NATURAL JOIN DETAILCOMMANDE " +
+                "  NATURAL JOIN LIVRE " +
+                " WHERE MONTH(datecom) = ? " +
+                "   AND YEAR(datecom)  = ?";
 
-        String moisAnnee;
-        try (PreparedStatement ps = bd.prepareStatement(REQ_DATE)) {
-            ps.setInt(1, idClient);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (!rs.next() || rs.getString("date_max") == null) {
-                    return "Aucune commande trouvée pour ce client : aucune facture à éditer.\n";
-                }
-                moisAnnee = rs.getString("date_max"); // ex: "2025-06"
-            }
-        } catch (SQLException e) {
-            return "Erreur lors de la récupération de la date : " + e.getMessage();
-        }
-
-        final String REQ_FACTURE = "SELECT m.nommag AS nommag, " +
-                "       c.idcli AS idcli, " +
-                "       c.nomcli AS nomcli, " +
-                "       c.prenomcli AS prenomcli, " +
-                "       c.adressecli AS adressecli, " +
-                "       c.codepostal AS codepostal, " +
-                "       c.villecli AS villecli, " +
-                "       com.numcom AS numcom, " +
-                "       com.datecom AS datecom, " +
-                "       l.isbn AS isbn, " +
-                "       l.titre AS titre, " +
-                "       dc.qte AS qte, " +
-                "       dc.prixvente AS prixvente " +
-                "FROM   commande com " +
-                "JOIN   client c ON c.idcli = com.idcli " +
-                "JOIN   magasin m ON m.idmag = com.idmag " +
-                "JOIN   detailcommande dc ON dc.numcom = com.numcom " +
-                "JOIN   livre l ON l.isbn = dc.isbn " +
-                "WHERE  c.idcli = ? AND DATE_FORMAT(com.datecom, '%Y-%m') = ? " +
-                "ORDER  BY m.nommag, com.numcom, l.titre";
-
-        StringBuilder res = new StringBuilder("Facture du ").append(moisAnnee).append(" pour client ").append(idClient)
-                .append('\n');
-
-        String ancienMag = null;
-        int ligneIdx = 0, totalClient = 0;
-        int nbFacturesMag = 0, nbLivresMag = 0;
-        int CA = 0, nbLivresGlobaux = 0;
-
-        try (PreparedStatement ps = bd.prepareStatement(REQ_FACTURE)) {
-            ps.setInt(1, idClient);
-            ps.setString(2, moisAnnee);
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, mois);
+            ps.setInt(2, annee);
 
             try (ResultSet rs = ps.executeQuery()) {
+                StringBuilder res = new StringBuilder();
+                res.append("Facture du ").append(mois).append("/").append(annee).append("\n");
 
-                if (!rs.isBeforeFirst()) {
-                    return "Aucune facture pour ce client en " + moisAnnee + ".\n";
-                }
+                String ancienMag = null;
+                int ancienPers = -1;
+                int cptFac = 0;
+                int cptLivre = 0;
+                int cpt = 0;
+                int nbVente = 0;
+                double totalPers = 0.0;
+                double caTot = 0.0;
 
                 while (rs.next()) {
                     String nomMag = rs.getString("nommag");
@@ -102,71 +72,72 @@ public class CommandeBD {
                         if (ancienMag != null) {
                             res.append(
                                     "---------------------------------------------------------------------------------\n")
-                                    .append(nbFacturesMag).append(" factures éditées\n")
-                                    .append(nbLivresMag).append(" livres vendus\n")
-                                    .append("**\n");
+                                    .append(cptFac).append(" factures éditées\n")
+                                    .append(cptLivre).append(" livres vendus\n")
+                                    .append("*********************************************************************************\n");
                         }
                         ancienMag = nomMag;
-                        res.append("Edition des factures du magasin ").append(nomMag).append('\n');
-                        nbFacturesMag = 0;
-                        nbLivresMag = 0;
+                        res.append("Edition des factures du magasin ").append(nomMag).append("\n");
+                        cptLivre = 0;
+                        cptFac = 0;
                     }
 
-                    if (ligneIdx == 0) {
+                    int idCli = rs.getInt("idcli");
+                    if (ancienPers == -1 || ancienPers != idCli) {
+                        if (ancienPers != -1) {
+                            res.append(String.format("%80s\n", "--------"))
+                                    .append(String.format("%71s%9.2f\n", "Total", totalPers));
+                        }
+                        ancienPers = idCli;
                         res.append(
                                 "---------------------------------------------------------------------------------\n")
-                                .append(rs.getString("nomcli")).append(' ')
-                                .append(rs.getString("prenomcli")).append('\n')
-                                .append(rs.getString("adressecli")).append('\n')
-                                .append(rs.getString("codepostal")).append(' ')
-                                .append(rs.getString("villecli")).append('\n');
-                    }
-
-                    if (ligneIdx == 0 || rs.getInt("numcom") != ligneIdx) {
-                        res.append("                         commande n°")
-                                .append(rs.getInt("numcom")).append(" du ")
-                                .append(rs.getDate("datecom")).append('\n')
+                                .append(rs.getString("nomcli")).append(" ").append(rs.getString("prenomcli"))
+                                .append("\n")
+                                .append(rs.getString("adressecli")).append("\n")
+                                .append(rs.getString("codepostal")).append(" ").append(rs.getString("villecli"))
+                                .append("\n")
+                                .append("                         commande n°")
+                                .append(rs.getInt("numcom"))
+                                .append(" du ")
+                                .append(rs.getDate("datecom"))
+                                .append("\n")
                                 .append("         ISBN                    Titre                      qte    prix    total\n");
-                        nbFacturesMag++;
+                        cpt = 0;
+                        totalPers = 0.0;
+                        cptFac++;
+                    }
+                    int qte = rs.getInt("qte");
+                    double prix = rs.getDouble("prixvente");
+                    double total = qte * prix;
+
+                    nbVente += qte;
+                    cptLivre += qte;
+                    cpt++;
+                    totalPers += total;
+                    caTot += total;
+
+                    String ligneIsbn = cpt + " " + rs.getString("isbn") + " " + rs.getString("titre");
+                    if (ligneIsbn.length() > 60) {
+                        ligneIsbn = ligneIsbn.substring(0, 60);
                     }
 
-                    int qte = rs.getInt("qte");
-                    int prix = rs.getInt("prixvente");
-                    nbLivresGlobaux += qte;
-                    nbLivresMag += qte;
-                    ligneIdx++;
-                    totalClient += qte * prix;
-                    CA += qte * prix;
-
-                    String ligne = ligneIdx + " " + rs.getString("isbn") + " " + rs.getString("titre");
-                    if (ligne.length() > 60)
-                        ligne = ligne.substring(0, 60);
-                    ligne = String.format("%-60s", ligne);
-
-                    res.append(ligne)
-                            .append(String.format("%3d", qte))
-                            .append(String.format("%8d", prix))
-                            .append(String.format("%9d%n", qte * prix));
+                    res.append(String.format("%-60s%3d%8.2f%9.2f\n", ligneIsbn, qte, prix, total));
                 }
+                if (ancienPers != -1) {
+                    res.append(String.format("%80s\n", "--------"))
+                            .append(String.format("%71s%9.2f\n", "Total", totalPers));
+                }
+                if (ancienMag != null) {
+                    res.append("---------------------------------------------------------------------------------\n")
+                            .append(cptFac).append(" factures éditées\n")
+                            .append(cptLivre).append(" livres vendus\n")
+                            .append("*********************************************************************************\n");
+                }
+                res.append("Chiffre d'affaire global: ").append(caTot).append("\n")
+                        .append("Nombre de livres vendus: ").append(nbVente);
 
-                res.append(String.format("%80s%n", "--------"))
-                        .append(String.format("%71s%9d%n", "Total", totalClient));
-
-                res.append("---------------------------------------------------------------------------------\n")
-                        .append(nbFacturesMag).append(" factures éditées\n")
-                        .append(nbLivresMag).append(" livres vendus\n");
-
-                res.append("*********************************************************************************\n")
-                        .append("Chiffre d'affaire global: ").append(CA).append('\n')
-                        .append("Nombre de livres vendus: ").append(nbLivresGlobaux);
+                return res.toString();
             }
-
-        } catch (SQLException e) {
-            res.append("\nErreur lors de l'édition de la facture : ")
-                    .append(e.getMessage());
         }
-
-        return res.toString();
     }
-
 }
