@@ -27,10 +27,10 @@ public class ControleurVendeurAjoute implements EventHandler<ActionEvent> {
         try {
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle("Ajouter un livre");
-            dialog.setHeaderText("Entrez l'ID du livre à ajouter :");
+            dialog.setHeaderText("Entrez l'ID du livre à ajouter à la librairie :");
             dialog.setContentText("ID :");
             Optional<String> idLivre = dialog.showAndWait();
-                        TextInputDialog dialog2 = new TextInputDialog();
+            TextInputDialog dialog2 = new TextInputDialog();
             dialog2.setTitle("Ajouter un livre");
             dialog2.setHeaderText("Entrez la quatité à ajouter");
             dialog2.setContentText("Quantité :");

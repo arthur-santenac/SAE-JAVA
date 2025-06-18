@@ -4,7 +4,9 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
@@ -17,6 +19,8 @@ import javafx.stage.Stage;
 public class LivreExpress extends Application {
 
     private ClientBD clientBD;
+
+    private Commande panier;
 
     // ============CONNEXION / CREER COMPTE===============
     private Button boutonConnexion;
@@ -41,6 +45,14 @@ public class LivreExpress extends Application {
     private Client utilisateur;
     private String compte;
     private ConnexionMySQL laConnexion = null;
+
+    // ============CLIENT===============
+
+    private ListView<Livre> catalogue;
+    private ComboBox<String> filtreTheme;
+    private ComboBox<String> filtreFiltre;
+    private ComboBox<Integer> qteCatalogue;
+    private Button ajouteCatalogue;
 
     // ============VENDEUR===============
     private Button btnAjout;
@@ -75,6 +87,8 @@ public class LivreExpress extends Application {
     @Override
     public void init() {
 
+        this.panier = new Commande('0', '0', null, utilisateur);
+
         this.identifiant = new TextField();
         this.mdp = new PasswordField();
         this.mdpText = new TextField();
@@ -100,13 +114,26 @@ public class LivreExpress extends Application {
         this.boutonCreerUnCompte.setOnAction(controleurPageCreerCompte);
         this.boutonCreerLeCompte.setOnAction(controleurCreerCompte);
 
+        // ============CLIENT===============
 
-        this.bonjour = new Label("Bonjour !");
-        this.btnAjout = new Button("ajouter un livre à la librairie");
-        this.btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.laConnexion));
-        this.btnStock = new Button("modifier les stocks d’un livre");
-        this.btnAjout.setOnAction(new ControleurVendeurMajQte(idMag, this.laConnexion));
-        this.btnTransfert = new Button("transférer un livre d’une autre librairie");
+        this.catalogue = new ListView<Livre>();
+        this.filtreTheme = new ComboBox<>();
+        this.filtreTheme.getItems().addAll("Tout", "Arts et Loisirs", "Histoire et Géographie", "Informatique, généralités", "Langues", "Littérature", "Philosophie et psychologie", "Religion", "Science naturelles et mathématiques", "Sciences sociales", "Technologie et sciences appliqués");
+        this.filtreTheme.setValue("Tout");
+        this.filtreFiltre = new ComboBox<>();
+        this.filtreFiltre.getItems().addAll("Par défaut", "Popularité", "Prix croissant", "Prix décroissant");
+        this.filtreFiltre.setValue("Classique");
+        this.qteCatalogue = new ComboBox<>();
+        this.qteCatalogue.getItems().addAll(1, 2, 3, 4, 5);
+        this.qteCatalogue.setValue(1);
+        this.ajouteCatalogue = new Button("Ajouter au panier");
+        this.ajouteCatalogue.setOnAction(new ControleurBoutonCatalogue(this, this.qteCatalogue.getValue(), this.catalogue.getSelectionModel().getSelectedItem()));
+        
+        
+
+        // ============VENDEUR===============
+
+
 
 
         // ============ADMINISTRATEUR===============
@@ -151,10 +178,16 @@ public class LivreExpress extends Application {
     }
 
     public void affichePageClient() {
-        Pane root = new PageClient(boutonDeconnexion);
-        this.scene.setRoot(root);
-        this.stage.setWidth(1500);
-        this.stage.setHeight(600);
+        try {
+            this.catalogue = this.clientBD.getCatalogue(this.filtreTheme.getPromptText(), this.filtreFiltre.getPromptText());
+            Pane root = new PageClient(boutonDeconnexion, ajouteCatalogue, catalogue, filtreTheme, filtreFiltre, qteCatalogue);
+            this.scene.setRoot(root);
+            this.stage.setWidth(1750);
+            this.stage.setHeight(850);
+        } catch (SQLException e) {
+            System.out.println("erreur");
+        }
+        
     }
 
     public void affichePageAdmin() {
@@ -183,10 +216,17 @@ public class LivreExpress extends Application {
     }
 
     public void affichePageVendeur() {
-        Pane root = new PageVendeur(boutonDeconnexion, bonjour, btnAjout, btnStock, btnTransfert, idAjouter, ajouter, finaliserCommande);
+        this.bonjour = new Label("Bonjour !");
+        this.btnAjout = new Button("ajouter un livre à la librairie");
+        this.btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.laConnexion));
+        this.btnStock = new Button("modifier les stocks d’un livre");
+        this.btnStock.setOnAction(new ControleurVendeurMajQte(idMag, this.laConnexion));
+        this.btnTransfert = new Button("transférer un livre d’une autre librairie");
+        Pane root = new PageVendeur(this.boutonDeconnexion, this.bonjour, this.btnAjout, this.btnStock, this.btnTransfert, this.idAjouter, this.ajouter, this.finaliserCommande);
         this.scene.setRoot(root);
         this.stage.setWidth(1500);
         this.stage.setHeight(1000);
+
     }
 
     public void setUtilisateur(Client utilisateur) {
@@ -210,6 +250,9 @@ public class LivreExpress extends Application {
         return laConnexion;
     }
 
+    public Commande getPanier() {
+        return panier;
+    }
 
     public void setIdMag(int idMag) {
         this.idMag = idMag;
@@ -225,6 +268,18 @@ public class LivreExpress extends Application {
 
     public ClientBD getClientBD() {
         return clientBD;
+    }
+
+    public void setEnLigne(char enLigne) {
+        this.panier.setEnLigne(enLigne);
+    }
+
+    public void setLivraison(char livraison) {
+        this.panier.setLivraison(livraison);
+    }
+
+    public void setMagasin(Magasin magasin) {
+        this.panier.setMagasin(magasin);
     }
 
 }

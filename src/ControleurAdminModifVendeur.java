@@ -52,31 +52,39 @@ public class ControleurAdminModifVendeur implements EventHandler<ActionEvent>{
                 grid.setPadding(new Insets(20, 150, 10, 10));
                 grid.add(new Label("Nom :"), 0, 0);
                 grid.add(nomField, 1, 0);
-                grid.add(new Label("Téléphone :"), 0, 4);
-                grid.add(prenomField, 1, 4);
-                grid.add(new Label("Ville :"), 0, 1);
-                grid.add(villeField, 1, 1);
+                grid.add(new Label("Prénom :"), 0, 1);
+                grid.add(prenomField, 1, 1);
+                grid.add(new Label("Ville :"), 0, 2);
+                grid.add(villeField, 1, 2);
                 grid.add(new Label("Code Postal :"), 0, 3);
                 grid.add(codePostalField, 1, 3);
-                grid.add(new Label("Rue :"), 0, 2);
-                grid.add(adresseField, 1, 2);
+                grid.add(new Label("adresse :"), 0, 4);
+                grid.add(adresseField, 1, 4);
                 grid.add(new Label("Email :"), 0, 5);
                 grid.add(emailField, 1, 5);
-
                 dialog.getDialogPane().setContent(grid);
 
-                // Affichage de la boîte
                 Optional<ButtonType> result = dialog.showAndWait();
                 if (result.isPresent() && result.get() == boutonAjouter) {
-                    String nom = nomField.getText();
-                    String prenom = prenomField.getText();
-                    String ville = villeField.getText();
-                    String adresse = adresseField.getText();
-                    String cp = codePostalField.getText();
-                    String email = emailField.getText();
-                    Magasin m = new Magasin(adminBD.maxNumMagasin()+1, nom, ville);
-                    adminBD.insererLibrairie(m);
-                    this.appli.affichePageAdminLib();
+                    if(!nomField.isEmpty() && !prenomField.isEmpty() && !villeField.isEmpty() && !codePostalField.isEmpty() && !adresseField.isEmpty() && !emailField.isEmpty() ){
+                        String nom = nomField.getText();
+                        String prenom = prenomField.getText();
+                        String ville = villeField.getText();
+                        String adresse = adresseField.getText();
+                        String cp = codePostalField.getText();
+                        String email = emailField.getText();
+                        Magasin m = new Magasin(adminBD.maxNumMagasin()+1, nom, ville);
+                        adminBD.insererLibrairie(m);
+                        this.appli.affichePageAdminVendeur();
+                    }
+                    else{
+                        Alert erreurAjout = new Alert(AlertType.ERROR);
+                        erreurAjout.setTitle("Erreur de création du vendeur");
+                        erreurAjout.setHeaderText("Veuillez remplir tous les champs avant d'ajouter le vendeur");
+                        erreurAjout.setContentText("Retentez à nouveau");
+                        erreurAjout.showAndWait();
+                    }
+                    
                 }
             }catch(SQLException ex){
                 System.out.println("Erreur dans l'ajout d'une librairie");
