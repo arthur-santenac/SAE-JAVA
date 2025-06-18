@@ -30,10 +30,18 @@ public class ControleurVendeurMajQte implements EventHandler<ActionEvent> {
             dialog.setHeaderText("Entrez l'ID du livre à ajouter au stock:");
             dialog.setContentText("ID :");
             Optional<String> idLivre = dialog.showAndWait();
+            if (modele.dispo(idMag, idLivre.get(), 1, false)) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Reussite");
+                alert.setHeaderText(null);
+                alert.setContentText("La librairie ne possède pas ce livre. Ajoutez-le");
+                alert.showAndWait();
+                return;
+            }
             TextInputDialog dialog2 = new TextInputDialog();
             dialog2.setTitle("Ajouter un livre");
             dialog2.setHeaderText("Entrez la quantité à ajouter :");
-            dialog2.setContentText("ID :");
+            dialog2.setContentText("Quantité :");
             Optional<String> qte = dialog2.showAndWait();
 
             if (!idLivre.isEmpty() && !qte.isEmpty() && modele.existe(idLivre.get())) {
@@ -45,17 +53,15 @@ public class ControleurVendeurMajQte implements EventHandler<ActionEvent> {
                 alert.setContentText("quantité mise à jour");
                 alert.showAndWait();
             }
-        } 
-        catch (SQLException e) {
+        } catch (SQLException e) {
 
-        }
-        catch (NumberFormatException e){
-            
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Reussite");
-                alert.setHeaderText(null);
-                alert.setContentText("quantité mise à jour");
-                alert.showAndWait(); 
+        } catch (NumberFormatException e) {
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Reussite");
+            alert.setHeaderText(null);
+            alert.setContentText("quantité mise à jour");
+            alert.showAndWait();
         }
 
     }
