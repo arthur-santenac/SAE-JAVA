@@ -19,7 +19,9 @@ public class PageVendeur extends BorderPane {
     private TextField idAjout;
     private Button ajouter;
     private Button finaliser;
-    public PageVendeur(Button deconnexion, Label bonjour, Button btnAjout, Button btnStock, Button btnTransfert, TextField idAjout, Button ajouter, Button finaliser) {
+
+    public PageVendeur(Button deconnexion, Label bonjour, Button btnAjout, Button btnStock, Button btnTransfert,
+            TextField idAjout, Button ajouter, Button finaliser) {
 
         super();
         this.deconnexion = deconnexion;
@@ -30,7 +32,6 @@ public class PageVendeur extends BorderPane {
         this.idAjout = idAjout;
         this.ajouter = ajouter;
         this.finaliser = finaliser;
-
 
         this.setTop(this.top());
         this.setLeft(this.left());
@@ -47,7 +48,7 @@ public class PageVendeur extends BorderPane {
         entete.setLeft(titre);
         entete.setRight(this.deconnexion);
         entete.setPadding(new Insets(10));
-        entete.setBackground( new Background(new BackgroundFill(Color.GRAY,null,null)));
+        entete.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
         return entete;
     }
 
