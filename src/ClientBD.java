@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.AbstractMap;
 import java.util.Map;
 
+import javafx.scene.control.ListView;
+
 public class ClientBD {
 	ConnexionMySQL laConnexion;
 	Statement st;
@@ -104,75 +106,85 @@ public class ClientBD {
 		}
 	}
 
-public List<Livre> getLivresCommandesParClient(int idClient) throws SQLException {
-    List<Livre> livreCommander = new ArrayList<>();
+	public List<Livre> getLivresCommandesParClient(int idClient) throws SQLException {
+		List<Livre> livreCommander = new ArrayList<>();
 
-    String requete =
-        "SELECT DISTINCT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix, " +
-        "CLASSIFICATION.iddewey, CLASSIFICATION.nomclass " +
-        "FROM CLIENT " +
-        "JOIN COMMANDE ON CLIENT.idcli = COMMANDE.idcli " +
-        "JOIN DETAILCOMMANDE ON COMMANDE.numcom = DETAILCOMMANDE.numcom " +
-        "JOIN LIVRE ON DETAILCOMMANDE.isbn = LIVRE.isbn " +
-        "LEFT JOIN THEMES ON LIVRE.isbn = THEMES.isbn " +
-        "LEFT JOIN CLASSIFICATION ON THEMES.iddewey = CLASSIFICATION.iddewey " +
-        "WHERE CLIENT.idcli = ?";
+		String requete =
+			"SELECT DISTINCT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix, " +
+			"CLASSIFICATION.iddewey, CLASSIFICATION.nomclass " +
+			"FROM CLIENT " +
+			"JOIN COMMANDE ON CLIENT.idcli = COMMANDE.idcli " +
+			"JOIN DETAILCOMMANDE ON COMMANDE.numcom = DETAILCOMMANDE.numcom " +
+			"JOIN LIVRE ON DETAILCOMMANDE.isbn = LIVRE.isbn " +
+			"LEFT JOIN THEMES ON LIVRE.isbn = THEMES.isbn " +
+			"LEFT JOIN CLASSIFICATION ON THEMES.iddewey = CLASSIFICATION.iddewey " +
+			"WHERE CLIENT.idcli = ?";
 
-    PreparedStatement pst = this.laConnexion.prepareStatement(requete);
-    pst.setInt(1, idClient);
+		PreparedStatement pst = this.laConnexion.prepareStatement(requete);
+		pst.setInt(1, idClient);
 
-    ResultSet rs = pst.executeQuery();
-    while (rs.next()) {
-        String isbn      = rs.getString("isbn");
-        String titre     = rs.getString("titre");
-        int    nbpages   = rs.getInt("nbpages");
-        int    datepubli = rs.getInt("datepubli");
-        double prix      = rs.getDouble("prix");
-        livreCommander.add(new Livre(isbn, titre, nbpages, datepubli, prix));
-    }
+		ResultSet rs = pst.executeQuery();
+		while (rs.next()) {
+			String isbn      = rs.getString("isbn");
+			String titre     = rs.getString("titre");
+			int    nbpages   = rs.getInt("nbpages");
+			int    datepubli = rs.getInt("datepubli");
+			double prix      = rs.getDouble("prix");
+			livreCommander.add(new Livre(isbn, titre, nbpages, datepubli, prix));
+		}
 
-    return livreCommander;
-}
+		return livreCommander;
+	}
 
 
-public List<Livre> onVousRecommande(int idClient) throws SQLException {
-    List<Livre> recommandations = new ArrayList<>();
+	public List<Livre> onVousRecommande(int idClient) throws SQLException {
+		List<Livre> recommandations = new ArrayList<>();
 
-    String requete =
-        "SELECT DISTINCT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix " +
-        "FROM THEMES " +
-        "JOIN LIVRE ON LIVRE.isbn = THEMES.isbn " +
-        "WHERE THEMES.iddewey IN ( " +
-        "        SELECT DISTINCT THEMES.iddewey " +
-        "        FROM COMMANDE " +
-        "        JOIN DETAILCOMMANDE ON DETAILCOMMANDE.numcom = COMMANDE.numcom " +
-        "        JOIN THEMES ON THEMES.isbn = DETAILCOMMANDE.isbn " +
-        "        WHERE COMMANDE.idcli = ? ) " +
-        "AND LIVRE.isbn NOT IN ( " +
-        "        SELECT DETAILCOMMANDE.isbn " +
-        "        FROM COMMANDE " +
-        "        JOIN DETAILCOMMANDE ON DETAILCOMMANDE.numcom = COMMANDE.numcom " +
-        "        WHERE COMMANDE.idcli = ? ) " +
-        "ORDER BY LIVRE.datepubli DESC";
+		String requete =
+			"SELECT DISTINCT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix " +
+			"FROM THEMES " +
+			"JOIN LIVRE ON LIVRE.isbn = THEMES.isbn " +
+			"WHERE THEMES.iddewey IN ( " +
+			"        SELECT DISTINCT THEMES.iddewey " +
+			"        FROM COMMANDE " +
+			"        JOIN DETAILCOMMANDE ON DETAILCOMMANDE.numcom = COMMANDE.numcom " +
+			"        JOIN THEMES ON THEMES.isbn = DETAILCOMMANDE.isbn " +
+			"        WHERE COMMANDE.idcli = ? ) " +
+			"AND LIVRE.isbn NOT IN ( " +
+			"        SELECT DETAILCOMMANDE.isbn " +
+			"        FROM COMMANDE " +
+			"        JOIN DETAILCOMMANDE ON DETAILCOMMANDE.numcom = COMMANDE.numcom " +
+			"        WHERE COMMANDE.idcli = ? ) " +
+			"ORDER BY LIVRE.datepubli DESC";
 
-    try (PreparedStatement pst = this.laConnexion.prepareStatement(requete)) {
-        pst.setInt(1, idClient);
-        pst.setInt(2, idClient);
+		try (PreparedStatement pst = this.laConnexion.prepareStatement(requete)) {
+			pst.setInt(1, idClient);
+			pst.setInt(2, idClient);
 
-        try (ResultSet rs = pst.executeQuery()) {
-            while (rs.next()) {
-                recommandations.add(new Livre(
-                    rs.getString("isbn"),
-                    rs.getString("titre"),
-                    rs.getInt("nbpages"),
-                    rs.getInt("datepubli"),
-                    rs.getDouble("prix")));
-            }
-        }
-    }
+			try (ResultSet rs = pst.executeQuery()) {
+				while (rs.next()) {
+					recommandations.add(new Livre(
+						rs.getString("isbn"),
+						rs.getString("titre"),
+						rs.getInt("nbpages"),
+						rs.getInt("datepubli"),
+						rs.getDouble("prix")));
+				}
+			}
+		}
 
-    return recommandations;
-}
+		return recommandations;
+	}
+
+	public ListView<Livre> getCatalogue(String theme, String filtre) throws SQLException{
+		st = laConnexion.createStatement();
+        ResultSet set = st.executeQuery("select * from LIVRE");
+        ListView<Livre> listeLivre = new ListView<>();
+        while (set.next()) {
+			listeLivre.getItems().add(new Livre(set.getString("isbn"), set.getString("titre"), set.getInt("nbpages"), set.getInt("datepubli"), set.getDouble("prix")));
+		}
+		return listeLivre;
+	}
 
 
 

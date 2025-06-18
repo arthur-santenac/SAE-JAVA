@@ -85,4 +85,9 @@ public class Livre {
         return this.isbn.equals(tmp.isbn) && this.titre.equals(tmp.titre) && this.nbPages== tmp.nbPages && this.datePubli == tmp.datePubli && this.prix == tmp.prix ;
     }
 
+    @Override
+    public String toString() {
+        return this.titre + " " + this.datePubli + " " + this.prix;
+    }
+
 }
