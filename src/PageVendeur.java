@@ -4,6 +4,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javax.swing.plaf.synth.Region;
 
@@ -36,14 +39,16 @@ public class PageVendeur extends BorderPane {
 
     }
 
-    public HBox top() {
-        Label titre = new Label("Livre Express");
-        Button btnDeconnexion = this.deconnexion;
-        HBox top = new HBox(20, titre, btnDeconnexion);
-        top.setStyle("-fx-padding: 10; -fx-alignment: center_left; -fx-background-color: #666; -fx-spacing: 20;");
-        titre.setStyle("-fx-text-fill: white; -fx-font-size: 20px;");
-        btnDeconnexion.setStyle("-fx-background-color: #ddd;");
-        return top;
+    private BorderPane top() {
+        BorderPane entete = new BorderPane();
+        Label titre = new Label("Livre Express - Vendeur");
+        titre.setStyle("-fx-text-fill: white;");
+        titre.setFont(Font.font("Arial", FontWeight.BOLD, 32));
+        entete.setLeft(titre);
+        entete.setRight(this.deconnexion);
+        entete.setPadding(new Insets(10));
+        entete.setBackground( new Background(new BackgroundFill(Color.GRAY,null,null)));
+        return entete;
     }
 
     public VBox left() {

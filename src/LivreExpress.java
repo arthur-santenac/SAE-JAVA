@@ -198,7 +198,9 @@ public class LivreExpress extends Application {
         this.btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.laConnexion));
         this.btnStock = new Button("modifier les stocks d’un livre");
         this.btnStock.setOnAction(new ControleurVendeurMajQte(idMag, this.laConnexion));
+        
         this.btnTransfert = new Button("transférer un livre d’une autre librairie");
+        this.btnTransfert.setOnAction(new ControleurVendeurTransfert(idMag, this.laConnexion));
         Pane root = new PageVendeur(this.boutonDeconnexion, this.bonjour, this.btnAjout, this.btnStock, this.btnTransfert, this.idAjouter, this.ajouter, this.finaliserCommande);
         this.scene.setRoot(root);
         this.stage.setWidth(1500);
