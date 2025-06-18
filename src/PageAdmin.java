@@ -1,6 +1,7 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -34,9 +35,9 @@ public class PageAdmin extends BorderPane{
 
     private BorderPane entete() {
         BorderPane entete = new BorderPane();
-        Text titre = new Text();
-        titre.setText("Livre Express - Administrateur");
-        titre.setFont(Font.font("Arial", FontWeight.MEDIUM, 32));
+        Label titre = new Label("Livre Express - Administrateur");
+        titre.setStyle("-fx-text-fill: white;");
+        titre.setFont(Font.font("Arial", FontWeight.BOLD, 32));
         entete.setLeft(titre);
         entete.setRight(this.deconnexion);
         entete.setPadding(new Insets(10));

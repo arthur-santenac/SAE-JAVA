@@ -7,6 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -39,29 +41,23 @@ public class PageAdminStats extends BorderPane{
         return entete;
     }
 
-    private BorderPane centre(){
-        BorderPane root = new BorderPane();
-        VBox centre = new VBox(10);
-        centre.setPadding(new Insets(0, 20, 0, 0));
-        Label titreV = new Label("Stats");
-        titreV.setFont(Font.font("Arial", FontWeight.BOLD, 28));
-        Label textListe = new Label("Liste de librairies");
-        textListe.setFont(Font.font("Arial", FontWeight.MEDIUM, 20));
-        VBox listeL = new VBox(10);
-        try{
-            List<Magasin> listeLib = this.magasinBD.listeDesMagasins();
-            for(Magasin m : listeLib){
-                Label lib = new Label(m.getIdMag()+" - "+ m.toString());
-                lib.setPadding(new Insets(10));
-                listeL.getChildren().add(lib);
-            }
-        }catch(SQLException e){
-            System.out.println("Erreur d'affichage de la liste des librairies");
-        }
-        listeL.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-style: solid;");
-        centre.getChildren().addAll(titreV,textListe, listeL);
+    private VBox centre(){
+        VBox root = new VBox(10);
+        HBox titre = new HBox(10);
+        Label dash = new Label("Dashboard");
+        titre.getChildren().add(dash);
+        
+        GridPane centre = new GridPane();
+        VBox stats1 = new VBox(10);
+        Label txt1 = new Label("titre1");
+        txt1.setFont(Font.font("Arial", FontWeight.MEDIUM, 20));
+        Label txt2 = new Label("titre2");
+
+        stats1.getChildren().add(txt1);
+        centre.add(stats1, 0, 0, 2, 3);
+        centre.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #cccccc; -fx-border-width: 1;");
+        root.getChildren().addAll(titre, centre);
         root.setPadding(new Insets(20));
-        root.setCenter(centre);
         return root;
     }
     
