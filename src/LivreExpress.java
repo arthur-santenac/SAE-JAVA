@@ -19,6 +19,8 @@ import javafx.stage.Stage;
 public class LivreExpress extends Application {
 
     private ClientBD clientBD;
+    private AdminBD adminBD;
+    private MagasinBD magasinBD;
 
     private Commande panier;
 
@@ -63,6 +65,8 @@ public class LivreExpress extends Application {
     private Label bonjour;
     private int idMag;
     private TextField idAjouter;
+
+    // ============ADMIN===============
     private Button btnRetourAdmin;
     private Button btnLib;
     private Button btnAddLib;
@@ -72,8 +76,10 @@ public class LivreExpress extends Application {
     private Button btnAddVendeur;
     private Button btnSuppVendeur;
 
-    private AdminBD adminBD;
-    private MagasinBD magasinBD;
+    private Button btnStats;
+
+
+    
 
     /**
      * @param args the command line arguments
@@ -138,12 +144,14 @@ public class LivreExpress extends Application {
         this.btnRetourAdmin = new Button("Retour");
         this.btnLib = new Button("Librairie");
         this.btnVend = new Button("Vendeur");
+        this.btnStats = new Button("Statistiques");
         this.btnAddLib = new Button("Ajouter une librairie");
         this.btnSuppLib = new Button("Supprimer une librairie");
         this.btnAddVendeur = new Button("Ajouter un vendeur");
         this.btnSuppVendeur = new Button("Supprimer un vendeur");
         this.btnLib.setOnAction(new ControleurAdminLibrairie(this));
         this.btnVend.setOnAction(new ControleurAdminVendeur(this));
+        this.btnStats.setOnAction(new ControleurAdminStats(this));
         this.btnRetourAdmin.setOnAction(new ControleurRetourAdmin(this));
         
 
@@ -189,7 +197,7 @@ public class LivreExpress extends Application {
     }
 
     public void affichePageAdmin() {
-        Pane root = new PageAdmin(this.boutonDeconnexion, this.btnLib, this.btnVend);
+        Pane root = new PageAdmin(this.boutonDeconnexion, this.btnLib, this.btnVend, this.btnStats);
         this.scene.setRoot(root);
         this.stage.setWidth(900);
         this.stage.setHeight(450);
@@ -208,6 +216,13 @@ public class LivreExpress extends Application {
         this.btnAddVendeur.setOnAction(new ControleurAdminModifVendeur(this, this.laConnexion));
         this.btnSuppVendeur.setOnAction(new ControleurAdminModifVendeur(this, this.laConnexion));
         Pane root = new PageAdminVendeur(this.btnRetourAdmin,this.btnAddVendeur, this.btnSuppVendeur, this.clientBD, this.laConnexion);
+        this.scene.setRoot(root);
+        this.stage.setWidth(1000);
+        this.stage.setHeight(700);
+    }
+
+    public void affichePageAdminStats() {
+        Pane root = new PageAdminStats(this.btnRetourAdmin, this.laConnexion);
         this.scene.setRoot(root);
         this.stage.setWidth(1000);
         this.stage.setHeight(700);
