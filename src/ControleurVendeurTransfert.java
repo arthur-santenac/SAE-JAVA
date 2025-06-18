@@ -27,7 +27,8 @@ public class ControleurVendeurTransfert implements EventHandler<ActionEvent> {
             isbnDialog.setHeaderText("Quel est l'ISBN du livre à transférer ?");
             isbnDialog.setContentText("ISBN :");
             Optional<String> isbnOpt = isbnDialog.showAndWait();
-            if (!isbnOpt.isPresent()) return;
+            if (!isbnOpt.isPresent())
+                return;
             String isbn = isbnOpt.get();
 
             // Étape 2 : saisie de la quantité
@@ -36,14 +37,21 @@ public class ControleurVendeurTransfert implements EventHandler<ActionEvent> {
             qteDialog.setHeaderText("Combien d'exemplaires transférer ?");
             qteDialog.setContentText("Quantité :");
             Optional<String> qteOpt = qteDialog.showAndWait();
-            if (!qteOpt.isPresent()) return;
+            if (!qteOpt.isPresent())
+                return;
 
-            int quantite = Integer.parseInt(qteOpt.get());
+            String qteStr = qteOpt.get().trim();
+            if (!qteStr.matches("\\d+")) {
+                new Alert(Alert.AlertType.ERROR, "Veuillez entrer une quantité entière valide.").showAndWait();
+                return;
+            }
+            int quantite = Integer.parseInt(qteStr);
 
             // Étape 3 : récupérer les librairies sources possibles
             List<String> sourcesPossibles = modele.librairiesPossedent(isbn, quantite);
             if (sourcesPossibles.isEmpty()) {
-                new Alert(Alert.AlertType.ERROR, "Aucune librairie ne possède ce livre en quantité suffisante.").showAndWait();
+                new Alert(Alert.AlertType.ERROR, "Aucune librairie ne possède ce livre en quantité suffisante.")
+                        .showAndWait();
                 return;
             }
 
@@ -52,15 +60,15 @@ public class ControleurVendeurTransfert implements EventHandler<ActionEvent> {
             choixDialog.setTitle("Choix de la librairie source");
             choixDialog.setHeaderText("Choisissez la librairie depuis laquelle transférer le livre :");
             Optional<String> sourceChoisie = choixDialog.showAndWait();
-            if (!sourceChoisie.isPresent()) return;
+            if (!sourceChoisie.isPresent())
+                return;
+
+            // Extraction de l'identifiant du magasin source depuis le début de la ligne
+            String idStr = sourceChoisie.get().substring(0, 1);
+            int idMagSource = Integer.parseInt(idStr);
 
             // Étape 5 : appel de la fonction de transfert
-            boolean transfertOK = modele.transfer(
-                Integer.parseInt(sourceChoisie.get().substring(1)),
-                this.idMagDestination,
-                isbn,
-                quantite
-            );
+            boolean transfertOK = modele.transfer(idMagSource, this.idMagDestination, isbn, quantite);
 
             if (transfertOK) {
                 new Alert(Alert.AlertType.INFORMATION, "Transfert effectué avec succès.").showAndWait();
@@ -69,7 +77,8 @@ public class ControleurVendeurTransfert implements EventHandler<ActionEvent> {
             }
 
         } catch (NumberFormatException e) {
-            new Alert(Alert.AlertType.ERROR, "Veuillez entrer une quantité valide.").showAndWait();
+            System.out.println(e);
+            new Alert(Alert.AlertType.ERROR, "Erreur de format numérique.").showAndWait();
         } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Erreur SQL : " + e.getMessage()).showAndWait();

@@ -36,8 +36,8 @@ public class VendeurBD {
 		}
 	}
 
-	public boolean majQte(int idmag, String isbn, int qte, boolean afficheMenu) throws SQLException, NumberFormatException {
-		Integer.parseInt(isbn);
+	public boolean majQte(int idmag, String isbn, int qte, boolean afficheMenu)
+			throws SQLException, NumberFormatException {
 		this.st = this.laConnexion.createStatement();
 		ResultSet verif = this.st.executeQuery(
 				"SELECT * FROM POSSEDER WHERE idmag = '" + idmag + "' AND isbn = '" + isbn + "';");
@@ -48,14 +48,14 @@ public class VendeurBD {
 							" WHERE isbn = '" + isbn + "' AND idmag = " + idmag + " AND qte + " + qte + " >= 0;");
 			if (afficheMenu) {
 				Menu.vendeurModifReussi();
-				System.console().readLine();
+				// System.console().readLine();
 			}
 
 			return true;
 		} else {
 			if (afficheMenu) {
 				Menu.vendeurErreurModif();
-				System.console().readLine();
+				// System.console().readLine();
 			}
 
 			return false;
@@ -73,14 +73,14 @@ public class VendeurBD {
 		if (verif.next()) {
 			if (afficheMenu) {
 				Menu.vendeurDispo(verif.getInt(1));
-				System.console().readLine();
+				// System.console().readLine();
 			}
 
 			return true;
 		} else {
 			if (afficheMenu) {
 				Menu.vendeurPasDispo(quantite);
-				System.console().readLine();
+				// System.console().readLine();
 			}
 
 			return false;
@@ -102,11 +102,11 @@ public class VendeurBD {
 			}
 			majQte(idMag, isbn, -quantite, false);
 			Menu.tranfertReussi();
-			System.console().readLine();
+			// System.console().readLine();
 			return true;
 		} else {
 			Menu.transferFail();
-			System.console().readLine();
+			// System.console().readLine();
 			return false;
 		}
 	}
@@ -124,7 +124,7 @@ public class VendeurBD {
 		}
 	}
 
-		public boolean estDansUneLibrairie(String isbn) throws SQLException {
+	public boolean estDansUneLibrairie(String isbn) throws SQLException {
 		this.st = this.laConnexion.createStatement();
 
 		ResultSet verif = this.st.executeQuery(
@@ -142,16 +142,14 @@ public class VendeurBD {
 		List<String> res = new ArrayList<>();
 
 		ResultSet verif = this.st.executeQuery(
-				"select distinct * from MAGASIN natural join POSSEDER where qte >= "+qte+ "AND isbn = "+ isbn + ";");
+				"select distinct * from MAGASIN natural join POSSEDER where qte >= " + qte + " AND isbn = '" + isbn
+						+ "';");
 
-		if (verif.next()) {
-			for (int i = 0; i<res.size(); i++){
-				res.add(verif.getString(1)+ " " + verif.getString(2) + ", stock : " + verif.getInt(5));
-			}
-			return res;
-		} else {
-			return res;
+		while (verif.next()) {
+			res.add(verif.getInt("idmag") + " " + verif.getString("nommag") + ", stock : " + verif.getInt("qte"));
 		}
+		return res;
+
 	}
 
 }
