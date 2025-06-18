@@ -17,8 +17,7 @@ public class panierClient extends Application {
     @Override
     public void start(Stage stage) {
         Button boutonDeconnexion = new Button("Déconnexion");
-        PageClient pageClientRoot = new PageClient(boutonDeconnexion);
-        Scene scenePageClient = new Scene(pageClientRoot, 1024, 640);
+
         HBox barreHaut = new HBox();
         barreHaut.setAlignment(Pos.CENTER_LEFT);
         barreHaut.setPadding(new Insets(8));
@@ -34,7 +33,7 @@ public class panierClient extends Application {
 
         Button boutonRetour = new Button("précédent");
         boutonRetour.setStyle("-fx-background-radius:6;");
-        boutonRetour.setOnAction(e -> stage.setScene(scenePageClient));
+
 
         barreHaut.getChildren().addAll(titreLabel, espacement, boutonRetour);
         ObservableList<Livre> articlesPanier = FXCollections.observableArrayList();
