@@ -8,21 +8,31 @@ import javafx.stage.Stage;
 public class PageClient extends BorderPane {
 
     private Button boutonDeconnexion;
-    private Button btnAjouterPanier;
+    private Button btnAjouterPanierRecherche;
+    private Button btnAjouterPanierCatalogue;
+    private Button recherche;
+    private ListView<Livre> listeRecherche;
     private ListView<Livre> catalogue;
     private ComboBox<String> filtreTheme;
     private ComboBox<String> filtreFiltre;
-    private ComboBox<Integer> qte;
+    private ComboBox<Integer> qteClient;
+    private ComboBox<Integer> qteCatalogue;
+    private TextField txtRecherche;
 
-    public PageClient(Button boutonDeconnexion, Button btnAjouterPanier, ListView<Livre> catalogue, ComboBox<String> filtreTheme, ComboBox<String> filtreFiltre, ComboBox<Integer> qte) {
+    public PageClient(Button boutonDeconnexion, Button recherche, Button btnAjouterPanierRecherche, Button btnAjouterPanierCatalogue, TextField txtRecherche, ListView<Livre> listeRecherche, ListView<Livre> catalogue, ComboBox<String> filtreTheme, ComboBox<String> filtreFiltre, ComboBox<Integer> qteClient, ComboBox<Integer> qteCatalogue) {
 
         super();
         this.boutonDeconnexion = boutonDeconnexion;
-        this.btnAjouterPanier = btnAjouterPanier;
+        this.btnAjouterPanierCatalogue = btnAjouterPanierCatalogue;
         this.catalogue = catalogue;
+        this.recherche = recherche;
         this.filtreTheme = filtreTheme;
+        this.listeRecherche = listeRecherche;
         this.filtreFiltre = filtreFiltre;
-        this.qte = qte;
+        this.qteCatalogue = qteCatalogue;
+        this.txtRecherche = txtRecherche;
+        this.qteClient = qteClient;
+        this.btnAjouterPanierRecherche = btnAjouterPanierRecherche;
         this.setTop(this.top());
         this.setLeft(this.left());
         this.setCenter(this.center());
@@ -42,15 +52,21 @@ public class PageClient extends BorderPane {
     }
 
     public VBox left() {
-        TextField txtRecherche = new TextField();
-        txtRecherche.setPromptText("Entrez le nom d'un livre");
-        txtRecherche.setMaxWidth(Double.MAX_VALUE);
+        BorderPane teteLeft = new BorderPane();
+        teteLeft.setLeft(txtRecherche);
+        teteLeft.setRight(recherche);
 
-        TextArea resultatRecherche = new TextArea();
-        resultatRecherche.setPrefHeight(400);
 
-        Label info = new Label("Information pour plus trad a renter si on a besotting");
-        VBox left = new VBox(10, txtRecherche, resultatRecherche, );    
+        listeRecherche.setPrefHeight(400);
+        listeRecherche.setPrefWidth(400);
+        BorderPane basLeft = new BorderPane();
+        Label lblQte = new Label("Quantité : ");
+        lblQte.setStyle("-fx-font-size: 20px;");
+        HBox quantite = new HBox(lblQte, qteClient);
+        basLeft.setLeft(btnAjouterPanierRecherche);
+        basLeft.setRight(quantite);
+        
+        VBox left = new VBox(10, teteLeft, listeRecherche, basLeft);    
         left.setPadding(new Insets(10));
         left.setFillWidth(true);
         return left;
@@ -67,8 +83,8 @@ public class PageClient extends BorderPane {
         BorderPane basCenter = new BorderPane();
         Label lblQte = new Label("Quantité : ");
         lblQte.setStyle("-fx-font-size: 20px;");
-        HBox quantite = new HBox(lblQte, qte);
-        basCenter.setLeft(btnAjouterPanier);
+        HBox quantite = new HBox(lblQte, qteCatalogue);
+        basCenter.setLeft(btnAjouterPanierCatalogue);
         basCenter.setRight(quantite);
         catalogue.setPrefHeight(600);
         VBox center = new VBox(10, teteCenter, catalogue, basCenter);
