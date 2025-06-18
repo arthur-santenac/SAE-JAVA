@@ -30,7 +30,7 @@ public class ControleurVendeurMajQte implements EventHandler<ActionEvent> {
             dialog.setHeaderText("Entrez l'ID du livre à ajouter au stock:");
             dialog.setContentText("ID :");
             Optional<String> idLivre = dialog.showAndWait();
-            if (modele.dispo(idMag, idLivre.get(), 1, false)) {
+            if (!modele.dispo(idMag, idLivre.get(), 1, false)) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Reussite");
                 alert.setHeaderText(null);

@@ -37,7 +37,6 @@ public class PageClient extends BorderPane {
         this.setLeft(this.left());
         this.setCenter(this.center());
         this.setRight(this.right());
-
     }
 
     public BorderPane top() {
