@@ -151,10 +151,10 @@ public class LivreExpress extends Application {
         this.btnSuppLib = new Button("Supprimer une librairie");
         this.btnAddVendeur = new Button("Ajouter un vendeur");
         this.btnSuppVendeur = new Button("Supprimer un vendeur");
-        this.btnLib.setOnAction(new ControleurAdminLibrairie(this));
-        this.btnVend.setOnAction(new ControleurAdminVendeur(this));
-        this.btnStats.setOnAction(new ControleurAdminStats(this));
-        this.btnRetourAdmin.setOnAction(new ControleurRetourAdmin(this));
+        this.btnLib.setOnAction(e -> this.affichePageAdminLib());
+        this.btnVend.setOnAction(e -> this.affichePageAdminVendeur());
+        this.btnStats.setOnAction(e -> this.affichePageAdminStats());
+        this.btnRetourAdmin.setOnAction(e -> this.affichePageAdmin());
         
 
     }
