@@ -50,7 +50,7 @@ public class PageClient extends BorderPane {
         resultatRecherche.setPrefHeight(400);
 
         Label info = new Label("Information pour plus trad a renter si on a besotting");
-        VBox left = new VBox(10, txtRecherche, resultatRecherche, info);    
+        VBox left = new VBox(10, txtRecherche, resultatRecherche, );    
         left.setPadding(new Insets(10));
         left.setFillWidth(true);
         return left;

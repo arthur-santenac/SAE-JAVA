@@ -178,7 +178,38 @@ public class ClientBD {
 
 	public ListView<Livre> getCatalogue(String theme, String filtre) throws SQLException{
 		st = laConnexion.createStatement();
-        ResultSet set = st.executeQuery("select * from LIVRE");
+		String rajout1 = "";
+		String rajout2 = "";
+		if (filtre.equals("Prix croissant")) {
+			rajout2 = "order by prix";
+		} else if (filtre.equals("Prix décroissant")) {
+			rajout2 = "order by prix DESC";
+		} else if (filtre.equals("Popularité")) {
+			rajout2 = "";
+		}
+		if (theme.equals("Arts et Loisirs")) {
+			rajout1 = "natural join THEMES natural join CLASSIFICATION where LEFT(iddewey, 1) = 7";
+		} else if (theme.equals("Histoire et Géographie")) {
+			rajout1 = "natural join THEMES natural join CLASSIFICATION where LEFT(iddewey, 1) = 9";
+		} else if (theme.equals("Informatique, généralités")) {
+			rajout1 = "natural join THEMES natural join CLASSIFICATION where LEFT(iddewey, 1) = 0";
+		} else if (theme.equals("Langues")) {
+			rajout1 = "natural join THEMES natural join CLASSIFICATION where LEFT(iddewey, 1) = 4";
+		} else if (theme.equals("Littérature")) {
+			rajout1 = "natural join THEMES natural join CLASSIFICATION where LEFT(iddewey, 1) = 8";
+		} else if (theme.equals("Philosophie et psychologie")) {
+			rajout1 = "natural join THEMES natural join CLASSIFICATION where LEFT(iddewey, 1) = 1";
+		} else if (theme.equals("Religion")) {
+			rajout1 = "natural join THEMES natural join CLASSIFICATION where LEFT(iddewey, 1) = 2";
+		} else if (theme.equals("Science naturelles et mathématiques")) {
+			rajout1 = "natural join THEMES natural join CLASSIFICATION where LEFT(iddewey, 1) = 5";
+		} else if (theme.equals("Sciences sociales")) {
+			rajout1 = "natural join THEMES natural join CLASSIFICATION where LEFT(iddewey, 1) = 3";
+		} else if (theme.equals("Technologie et sciences appliqués")) {
+			rajout1 = "natural join THEMES natural join CLASSIFICATION where LEFT(iddewey, 1) = 6";
+		}
+		String requete = "select * from LIVRE " + rajout1 + " " + rajout2;
+        ResultSet set = st.executeQuery(requete);
         ListView<Livre> listeLivre = new ListView<>();
         while (set.next()) {
 			listeLivre.getItems().add(new Livre(set.getString("isbn"), set.getString("titre"), set.getInt("nbpages"), set.getInt("datepubli"), set.getDouble("prix")));
