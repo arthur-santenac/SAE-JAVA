@@ -217,6 +217,21 @@ public class ClientBD {
 		return listeLivre;
 	}
 
+	public ListView<Livre> getRecherche(String recherche) throws SQLException{
+		ListView<Livre> listeLivre = new ListView<>();
+		if (recherche.length() > 0) {
+			st = laConnexion.createStatement();
+			String requete = "select * from LIVRE";
+			System.out.println(requete);
+			ResultSet set = st.executeQuery(requete);
+			while (set.next()) {
+				if (set.getString("titre").contains(recherche)) {
+					listeLivre.getItems().add(new Livre(set.getString("isbn"), set.getString("titre"), set.getInt("nbpages"), set.getInt("datepubli"), set.getDouble("prix")));
+				}
+			}
+		}
+		return listeLivre;
+	}
 
 
 }

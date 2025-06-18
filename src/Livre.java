@@ -87,7 +87,7 @@ public class Livre {
 
     @Override
     public String toString() {
-        return this.titre + " " + this.datePubli + " " + this.prix;
+        return this.titre + " " + this.datePubli + " " + this.prix + "€";
     }
 
 }
