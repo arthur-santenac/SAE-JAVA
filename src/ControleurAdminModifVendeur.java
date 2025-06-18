@@ -46,35 +46,47 @@ public class ControleurAdminModifVendeur implements EventHandler<ActionEvent>{
                 TextField adresseField = new TextField();
                 TextField codePostalField = new TextField();
                 TextField emailField = new TextField();
+                TextField mdpField = new TextField();
+                TextField idMagField = new TextField();
+                Button btnListeLib = new Button("Afficher la liste de librairies");
+                btnListeLib.setOnAction(new ControleurAfficheListeLib(magasinBD, this.laConnexion));
                 GridPane grid = new GridPane();
                 grid.setHgap(10);
                 grid.setVgap(10);
                 grid.setPadding(new Insets(20, 150, 10, 10));
                 grid.add(new Label("Nom :"), 0, 0);
-                grid.add(nomField, 1, 0);
+                grid.add(nomField, 1, 0, 3, 1);
                 grid.add(new Label("Prénom :"), 0, 1);
-                grid.add(prenomField, 1, 1);
+                grid.add(prenomField, 1, 1, 3, 1);
                 grid.add(new Label("Ville :"), 0, 2);
-                grid.add(villeField, 1, 2);
+                grid.add(villeField, 1, 2, 3, 1);
                 grid.add(new Label("Code Postal :"), 0, 3);
-                grid.add(codePostalField, 1, 3);
+                grid.add(codePostalField, 1, 3, 3, 1);
                 grid.add(new Label("adresse :"), 0, 4);
-                grid.add(adresseField, 1, 4);
+                grid.add(adresseField, 1, 4, 3, 1);
                 grid.add(new Label("Email :"), 0, 5);
-                grid.add(emailField, 1, 5);
+                grid.add(emailField, 1, 5, 3, 1);
+                grid.add(new Label("Mot de passe :"), 0, 6);
+                grid.add(mdpField, 1, 6, 3, 1);
+                grid.add(new Label("Id de sa librairie attribuée :"), 0, 7);
+                grid.add(idMagField, 1, 7, 3, 1);
+                grid.add(btnListeLib, 0, 8);
+                
                 dialog.getDialogPane().setContent(grid);
 
                 Optional<ButtonType> result = dialog.showAndWait();
                 if (result.isPresent() && result.get() == boutonAjouter) {
-                    if(!nomField.isEmpty() && !prenomField.isEmpty() && !villeField.isEmpty() && !codePostalField.isEmpty() && !adresseField.isEmpty() && !emailField.isEmpty() ){
+                    if(!nomField.getText().trim().isEmpty() && !prenomField.getText().trim().isEmpty() && !villeField.getText().trim().isEmpty() && !codePostalField.getText().trim().isEmpty() && !adresseField.getText().trim().isEmpty() &&  !emailField.getText().trim().isEmpty()){
                         String nom = nomField.getText();
                         String prenom = prenomField.getText();
                         String ville = villeField.getText();
                         String adresse = adresseField.getText();
                         String cp = codePostalField.getText();
                         String email = emailField.getText();
-                        Magasin m = new Magasin(adminBD.maxNumMagasin()+1, nom, ville);
-                        adminBD.insererLibrairie(m);
+                        String mdp = mdpField.getText();
+                        Integer idMag = Integer.parseInt(idMagField.getText());
+                        Client client = new Client(nom, prenom, adresse, cp, ville, clientBD.maxNum()+1);
+                        clientBD.insererVendeur(client, email, mdp, idMag);
                         this.appli.affichePageAdminVendeur();
                     }
                     else{
@@ -87,13 +99,13 @@ public class ControleurAdminModifVendeur implements EventHandler<ActionEvent>{
                     
                 }
             }catch(SQLException ex){
-                System.out.println("Erreur dans l'ajout d'une librairie");
+                System.out.println("Erreur dans l'ajout d'un vendeur");
             }
         }
         else{
             TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Supprimer une librairie");
-            dialog.setHeaderText("Entrez l'id de la librairie à supprimer :");
+            dialog.setTitle("Supprimer un vendeur");
+            dialog.setHeaderText("Entrez l'id du vendeur à supprimer :");
             dialog.setContentText("Id :");
             Optional<String> idLib = dialog.showAndWait();                
             if (!idLib.isEmpty()){
@@ -102,23 +114,23 @@ public class ControleurAdminModifVendeur implements EventHandler<ActionEvent>{
                 ButtonType non = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", oui, non);
                 try{
-                    Magasin m = magasinBD.rechercherMagasinParId(id);
-                    alert.setTitle("Confirmer la suppresion de la librairie");
-                    alert.setHeaderText("Êtes-vous sûr de vouloir supprimer la librairie :\n "+m.getNomMag()+" situé à "+m.getVilleMag());
+                    Client c = clientBD.rechercherVendeurParId(id);
+                    alert.setTitle("Confirmer la suppresion du vendeur");
+                    alert.setHeaderText("Êtes-vous sûr de vouloir supprimer le vendeur :\n "+c.toString());
                     alert.setContentText("Cette action est irréversible.");
                     Optional<ButtonType> res = alert.showAndWait();
                     if (res.isPresent() && res.get() == oui) {
                         try {
-                            this.appli.affichePageAdminVendeur(); 
-                            clientBD.supprimerVendeur(id); 
+                            clientBD.supprimerVendeur(id);
+                            this.appli.affichePageAdminVendeur();
                         } catch (SQLException ex) {
-                            System.out.println("Erreur dans la suppression de la librairie");
+                            System.out.println("Erreur dans la suppression du vendeur");
                         }
                     } else {
                         System.out.println("Suppression annulée par l'utilisateur.");
                     }
                 }catch(SQLException ex){
-                        System.out.println("Erreur dans la recherche de la librairie");
+                        System.out.println("Erreur dans la recherche du vendeur");
                 }
             } 
         }
