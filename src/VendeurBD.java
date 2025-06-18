@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.AbstractMap;
 import java.util.Map;
 
+import javafx.scene.control.Alert;
+
 public class VendeurBD {
 	ConnexionMySQL laConnexion;
 	Statement st;
@@ -23,12 +25,13 @@ public class VendeurBD {
 			this.st.executeUpdate(
 					"INSERT INTO POSSEDER(idmag, isbn, qte) VALUES ('" + idmag + "', '" + isbn + "', " + qte + ");");
 			Menu.vendeurModifReussi();
-			System.console().readLine();
+			// mode terminal : System.console().readLine();
 			return true;
 		} else {
 
 			Menu.vendeurErreurAjout();
-			System.console().readLine();
+			// mode terminal : System.console().readLine();
+			new Alert(Alert.AlertType.INFORMATION, "Modification echec").showAndWait();
 			return false;
 		}
 	}
@@ -118,6 +121,36 @@ public class VendeurBD {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+		public boolean estDansUneLibrairie(String isbn) throws SQLException {
+		this.st = this.laConnexion.createStatement();
+
+		ResultSet verif = this.st.executeQuery(
+				"SELECT * FROM POSSEDER WHERE isbn = '" + isbn + "';");
+
+		if (verif.next()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public List<String> librairiesPossedent(String isbn, int qte) throws SQLException {
+		this.st = this.laConnexion.createStatement();
+		List<String> res = new ArrayList<>();
+
+		ResultSet verif = this.st.executeQuery(
+				"select distinct * from MAGASIN natural join POSSEDER where qte >= "+qte+ "AND isbn = "+ isbn + ";");
+
+		if (verif.next()) {
+			for (int i = 0; i<res.size(); i++){
+				res.add(verif.getString(1)+ " " + verif.getString(2) + ", stock : " + verif.getInt(5));
+			}
+			return res;
+		} else {
+			return res;
 		}
 	}
 
