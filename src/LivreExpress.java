@@ -63,10 +63,15 @@ public class LivreExpress extends Application {
     private Label bonjour;
     private int idMag;
     private TextField idAjouter;
-
-    // ============ADMINISTRATEUR===============
     private Button btnRetourAdmin;
     private Button btnLib;
+    private Button btnAddLib;
+    private Button btnSuppLib;
+
+    private Button btnVend;
+    private Button btnAddVendeur;
+    private Button btnSuppVendeur;
+
     private AdminBD adminBD;
     private MagasinBD magasinBD;
 
@@ -132,11 +137,18 @@ public class LivreExpress extends Application {
 
 
         // ============ADMINISTRATEUR===============
-        this.btnLib = new Button("Librairie");
         this.btnRetourAdmin = new Button("Retour");
+        this.btnLib = new Button("Librairie");
+        this.btnVend = new Button("Vendeur");
+        this.btnAddLib = new Button("Ajouter une librairie");
+        this.btnSuppLib = new Button("Supprimer une librairie");
+        this.btnAddVendeur = new Button("Ajouter un vendeur");
+        this.btnSuppVendeur = new Button("Supprimer un vendeur");
         this.btnLib.setOnAction(new ControleurAdminLibrairie(this));
+        this.btnVend.setOnAction(new ControleurAdminVendeur(this));
         this.btnRetourAdmin.setOnAction(new ControleurRetourAdmin(this));
-    
+        
+
     }
 
     @Override
@@ -179,16 +191,25 @@ public class LivreExpress extends Application {
     }
 
     public void affichePageAdmin() {
-        Pane root = new PageAdmin(this.boutonDeconnexion, this.btnLib);
+        Pane root = new PageAdmin(this.boutonDeconnexion, this.btnLib, this.btnVend);
         this.scene.setRoot(root);
         this.stage.setWidth(900);
         this.stage.setHeight(450);
     }
 
     public void affichePageAdminLib() {
-        this.adminBD = new AdminBD(this.laConnexion);
-        this.magasinBD = new MagasinBD(this.laConnexion);
-        Pane root = new PageAdminLibrairie(this.btnRetourAdmin, this.adminBD, this.magasinBD, this.laConnexion);
+        this.btnAddLib.setOnAction(new ControleurAdminModifLib(this, this.laConnexion));
+        this.btnSuppLib.setOnAction(new ControleurAdminModifLib(this, this.laConnexion));
+        Pane root = new PageAdminLibrairie(this.btnRetourAdmin,this.btnAddLib, this.btnSuppLib, this.magasinBD, this.laConnexion);
+        this.scene.setRoot(root);
+        this.stage.setWidth(1000);
+        this.stage.setHeight(700);
+    }
+
+    public void affichePageAdminVendeur() {
+        this.btnAddVendeur.setOnAction(new ControleurAdminModifVendeur(this, this.laConnexion));
+        this.btnSuppVendeur.setOnAction(new ControleurAdminModifVendeur(this, this.laConnexion));
+        Pane root = new PageAdminVendeur(this.btnRetourAdmin,this.btnAddVendeur, this.btnSuppVendeur, this.clientBD, this.laConnexion);
         this.scene.setRoot(root);
         this.stage.setWidth(1000);
         this.stage.setHeight(700);
@@ -200,7 +221,9 @@ public class LivreExpress extends Application {
         this.btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.laConnexion));
         this.btnStock = new Button("modifier les stocks d’un livre");
         this.btnStock.setOnAction(new ControleurVendeurMajQte(idMag, this.laConnexion));
+        
         this.btnTransfert = new Button("transférer un livre d’une autre librairie");
+        this.btnTransfert.setOnAction(new ControleurVendeurTransfert(idMag, this.laConnexion));
         Pane root = new PageVendeur(this.boutonDeconnexion, this.bonjour, this.btnAjout, this.btnStock, this.btnTransfert, this.idAjouter, this.ajouter, this.finaliserCommande);
         this.scene.setRoot(root);
         this.stage.setWidth(1500);

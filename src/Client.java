@@ -51,7 +51,7 @@ public class Client {
 
     @Override
     public String toString(){
-        return this.idCli+" "+this.nom+" "+this.prenom+" "+this.adresse+" "+this.codePostal+" "+this.ville;
+        return this.idCli+" - "+this.nom+" "+this.prenom+" "+this.adresse+" "+this.codePostal+" "+this.ville;
 
     }
 
