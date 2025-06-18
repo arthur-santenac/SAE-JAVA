@@ -118,9 +118,11 @@ public class LivreExpress extends Application {
         this.filtreTheme = new ComboBox<>();
         this.filtreTheme.getItems().addAll("Tout", "Arts et Loisirs", "Histoire et Géographie", "Informatique, généralités", "Langues", "Littérature", "Philosophie et psychologie", "Religion", "Science naturelles et mathématiques", "Sciences sociales", "Technologie et sciences appliqués");
         this.filtreTheme.setValue("Tout");
+        this.filtreTheme.setOnAction(e -> affichePageClient());
         this.filtreFiltre = new ComboBox<>();
         this.filtreFiltre.getItems().addAll("Par défaut", "Popularité", "Prix croissant", "Prix décroissant");
-        this.filtreFiltre.setValue("Classique");
+        this.filtreFiltre.setValue("Par défaut");
+        this.filtreFiltre.setOnAction(e -> affichePageClient());
         this.qteCatalogue = new ComboBox<>();
         this.qteCatalogue.getItems().addAll(1, 2, 3, 4, 5);
         this.qteCatalogue.setValue(1);
@@ -177,7 +179,7 @@ public class LivreExpress extends Application {
 
     public void affichePageClient() {
         try {
-            this.catalogue = this.clientBD.getCatalogue(this.filtreTheme.getPromptText(), this.filtreFiltre.getPromptText());
+            this.catalogue = this.clientBD.getCatalogue(this.filtreTheme.getSelectionModel().getSelectedItem(), this.filtreFiltre.getSelectionModel().getSelectedItem());
             Pane root = new PageClient(boutonDeconnexion, ajouteCatalogue, catalogue, filtreTheme, filtreFiltre, qteCatalogue);
             this.scene.setRoot(root);
             this.stage.setWidth(1750);
