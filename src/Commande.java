@@ -63,6 +63,18 @@ public class Commande {
         return res;
     }
 
+    public void setEnLigne(char enLigne) {
+        this.enLigne = enLigne;
+    }
+
+    public void setLivraison(char livraison) {
+        this.livraison = livraison;
+    }
+
+    public void setMagasin(Magasin magasin) {
+        this.magasin = magasin;
+    }
+
     @Override
     public boolean equals(Object o){
         if(o == null){
@@ -82,6 +94,8 @@ public class Commande {
     public String toString(){
         return "Commande N°"+this.numCom+" commandée le "+this.dateCom+", mode de réception: "+this.enLigne+" livraison: "+this.livraison+", numéro de client: "+this.client.getIdCli()+", numéro de magasin:  "+this.magasin.getIdMag();
     }
+
+
 
 
 

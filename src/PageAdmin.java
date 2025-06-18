@@ -18,10 +18,13 @@ public class PageAdmin extends BorderPane{
 
     private Button btnLib;
 
+    private Button btnVendeur;
 
-    public PageAdmin(Button deconnexion, Button librairie){
+
+    public PageAdmin(Button deconnexion, Button librairie, Button vendeur){
         this.deconnexion = deconnexion;
         this.btnLib = librairie;
+        this.btnVendeur = vendeur;
         this.setTop(this.entete());
         this.setCenter(this.centre());
     }
@@ -40,7 +43,6 @@ public class PageAdmin extends BorderPane{
 
     private GridPane centre(){
         GridPane root = new GridPane();
-        Button btnVendeur = new Button("Vendeur");
         Button btnStock = new Button("Stock");
         Button btnStats = new Button("Stats");
         root.add(this.btnLib, 0, 0, 3, 3);
@@ -51,10 +53,8 @@ public class PageAdmin extends BorderPane{
         root.setVgap(40);
         this.btnLib.setPrefHeight(60);
         this.btnLib.setPrefWidth(200);
-        btnVendeur.setPrefHeight(60);
-        btnVendeur.setPrefWidth(200);
-        btnVendeur.setPrefHeight(60);
-        btnVendeur.setPrefWidth(200);
+        this.btnVendeur.setPrefHeight(60);
+        this.btnVendeur.setPrefWidth(200);
         btnStock.setPrefHeight(60);
         btnStock.setPrefWidth(200);
         btnStats.setPrefHeight(60);
