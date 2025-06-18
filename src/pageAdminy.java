@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
-public class pageAdmin {
+public class pageAdminy {
 
     private final Scene scene;
 
@@ -21,7 +21,7 @@ public class pageAdmin {
     private Button btnStats = new Button("Afficher les statistiques");
     private Button btnLogout = new Button("Déconnexion");
 
-    public pageAdmin(Stage stage) {
+    public pageAdminy(Stage stage) {
         BorderPane root = new BorderPane();
         root.setPrefSize(800, 450);
         root.setStyle("-fx-background-color: #d9d9d9;");

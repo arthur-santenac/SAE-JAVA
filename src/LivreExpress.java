@@ -18,7 +18,6 @@ public class LivreExpress extends Application {
 
     private ClientBD clientBD;
 
-    // ============CONNEXION / CREER COMPTE===============
     private Button boutonConnexion;
     private Button boutonDeconnexion;
     private Button boutonCreerUnCompte;
@@ -42,7 +41,6 @@ public class LivreExpress extends Application {
     private String compte;
     private ConnexionMySQL laConnexion = null;
 
-    // ============VENDEUR===============
     private Button btnAjout;
     private Button btnStock;
     private Button btnTransfert;
@@ -51,8 +49,6 @@ public class LivreExpress extends Application {
     private Label bonjour;
     private int idMag;
     private TextField idAjouter;
-
-    // ============ADMINISTRATEUR===============
     private Button btnRetourAdmin;
     private Button btnLib;
     private AdminBD adminBD;
