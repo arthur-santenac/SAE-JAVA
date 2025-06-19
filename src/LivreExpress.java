@@ -19,6 +19,8 @@ import javafx.stage.Stage;
 public class LivreExpress extends Application {
 
     private ClientBD clientBD;
+    private AdminBD adminBD;
+    private MagasinBD magasinBD;
 
     private Commande panier;
 
@@ -48,11 +50,16 @@ public class LivreExpress extends Application {
 
     // ============CLIENT===============
 
+    private Button btnAjouterPanierRecherche;
+    private Button recherche;
+    private ListView<Livre> listeRecherche;
     private ListView<Livre> catalogue;
     private ComboBox<String> filtreTheme;
     private ComboBox<String> filtreFiltre;
     private ComboBox<Integer> qteCatalogue;
+    private ComboBox<Integer> qteClient;
     private Button ajouteCatalogue;
+    private TextField txtRecherche;
 
     // ============VENDEUR===============
     private Button btnAjout;
@@ -63,6 +70,8 @@ public class LivreExpress extends Application {
     private Label bonjour;
     private int idMag;
     private TextField idAjouter;
+
+    // ============ADMIN===============
     private Button btnRetourAdmin;
     private Button btnLib;
     private Button btnAddLib;
@@ -72,8 +81,10 @@ public class LivreExpress extends Application {
     private Button btnAddVendeur;
     private Button btnSuppVendeur;
 
-    private AdminBD adminBD;
-    private MagasinBD magasinBD;
+    private Button btnStats;
+
+
+    
 
     /**
      * @param args the command line arguments
@@ -114,7 +125,14 @@ public class LivreExpress extends Application {
 
         // ============CLIENT===============
 
-        this.catalogue = new ListView<Livre>();
+        this.btnAjouterPanierRecherche = new Button("Ajouter au panier");
+        this.recherche = new Button("Rechercher");
+        this.recherche.setOnAction(e -> affichePageClient());
+        this.txtRecherche = new TextField();
+        this.txtRecherche.setPromptText("Entrez le nom d'un livre");
+        this.txtRecherche.setMaxWidth(Double.MAX_VALUE);
+        this.catalogue = new ListView<>();
+        this.listeRecherche = new ListView<>();
         this.filtreTheme = new ComboBox<>();
         this.filtreTheme.getItems().addAll("Tout", "Arts et Loisirs", "Histoire et Géographie", "Informatique, généralités", "Langues", "Littérature", "Philosophie et psychologie", "Religion", "Science naturelles et mathématiques", "Sciences sociales", "Technologie et sciences appliqués");
         this.filtreTheme.setValue("Tout");
@@ -123,6 +141,9 @@ public class LivreExpress extends Application {
         this.filtreFiltre.getItems().addAll("Par défaut", "Popularité", "Prix croissant", "Prix décroissant");
         this.filtreFiltre.setValue("Par défaut");
         this.filtreFiltre.setOnAction(e -> affichePageClient());
+        this.qteClient = new ComboBox<>();
+        this.qteClient.getItems().addAll(1, 2, 3, 4, 5);
+        this.qteClient.setValue(1);
         this.qteCatalogue = new ComboBox<>();
         this.qteCatalogue.getItems().addAll(1, 2, 3, 4, 5);
         this.qteCatalogue.setValue(1);
@@ -140,13 +161,15 @@ public class LivreExpress extends Application {
         this.btnRetourAdmin = new Button("Retour");
         this.btnLib = new Button("Librairie");
         this.btnVend = new Button("Vendeur");
+        this.btnStats = new Button("Statistiques");
         this.btnAddLib = new Button("Ajouter une librairie");
         this.btnSuppLib = new Button("Supprimer une librairie");
         this.btnAddVendeur = new Button("Ajouter un vendeur");
         this.btnSuppVendeur = new Button("Supprimer un vendeur");
-        this.btnLib.setOnAction(new ControleurAdminLibrairie(this));
-        this.btnVend.setOnAction(new ControleurAdminVendeur(this));
-        this.btnRetourAdmin.setOnAction(new ControleurRetourAdmin(this));
+        this.btnLib.setOnAction(e -> this.affichePageAdminLib());
+        this.btnVend.setOnAction(e -> this.affichePageAdminVendeur());
+        this.btnStats.setOnAction(e -> this.affichePageAdminStats());
+        this.btnRetourAdmin.setOnAction(e -> this.affichePageAdmin());
         
 
     }
@@ -180,18 +203,18 @@ public class LivreExpress extends Application {
     public void affichePageClient() {
         try {
             this.catalogue = this.clientBD.getCatalogue(this.filtreTheme.getSelectionModel().getSelectedItem(), this.filtreFiltre.getSelectionModel().getSelectedItem());
-            Pane root = new PageClient(boutonDeconnexion, ajouteCatalogue, catalogue, filtreTheme, filtreFiltre, qteCatalogue);
+            this.listeRecherche = this.clientBD.getRecherche(this.txtRecherche.getText());
+            Pane root = new PageClient(boutonDeconnexion, recherche, btnAjouterPanierRecherche, ajouteCatalogue, txtRecherche, listeRecherche, catalogue, filtreTheme, filtreFiltre, qteClient, qteCatalogue);
             this.scene.setRoot(root);
-            this.stage.setWidth(1750);
+            this.stage.setWidth(1550);
             this.stage.setHeight(850);
         } catch (SQLException e) {
             System.out.println("erreur");
         }
-        
     }
 
     public void affichePageAdmin() {
-        Pane root = new PageAdmin(this.boutonDeconnexion, this.btnLib, this.btnVend);
+        Pane root = new PageAdmin(this.boutonDeconnexion, this.btnLib, this.btnVend, this.btnStats);
         this.scene.setRoot(root);
         this.stage.setWidth(900);
         this.stage.setHeight(450);
@@ -210,6 +233,13 @@ public class LivreExpress extends Application {
         this.btnAddVendeur.setOnAction(new ControleurAdminModifVendeur(this, this.laConnexion));
         this.btnSuppVendeur.setOnAction(new ControleurAdminModifVendeur(this, this.laConnexion));
         Pane root = new PageAdminVendeur(this.btnRetourAdmin,this.btnAddVendeur, this.btnSuppVendeur, this.clientBD, this.laConnexion);
+        this.scene.setRoot(root);
+        this.stage.setWidth(1000);
+        this.stage.setHeight(700);
+    }
+
+    public void affichePageAdminStats() {
+        Pane root = new PageAdminStats(this.btnRetourAdmin, this.laConnexion);
         this.scene.setRoot(root);
         this.stage.setWidth(1000);
         this.stage.setHeight(700);
