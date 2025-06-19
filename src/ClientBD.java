@@ -176,6 +176,45 @@ public class ClientBD {
 		return recommandations;
 	}
 
+	public ListView<Livre> onVousRecommandeIHM(int idClient) throws SQLException {
+		ListView<Livre> recommandations = new ListView<>();
+
+		String requete =
+			"SELECT DISTINCT LIVRE.isbn, LIVRE.titre, LIVRE.nbpages, LIVRE.datepubli, LIVRE.prix " +
+			"FROM THEMES " +
+			"JOIN LIVRE ON LIVRE.isbn = THEMES.isbn " +
+			"WHERE THEMES.iddewey IN ( " +
+			"        SELECT DISTINCT THEMES.iddewey " +
+			"        FROM COMMANDE " +
+			"        JOIN DETAILCOMMANDE ON DETAILCOMMANDE.numcom = COMMANDE.numcom " +
+			"        JOIN THEMES ON THEMES.isbn = DETAILCOMMANDE.isbn " +
+			"        WHERE COMMANDE.idcli = ? ) " +
+			"AND LIVRE.isbn NOT IN ( " +
+			"        SELECT DETAILCOMMANDE.isbn " +
+			"        FROM COMMANDE " +
+			"        JOIN DETAILCOMMANDE ON DETAILCOMMANDE.numcom = COMMANDE.numcom " +
+			"        WHERE COMMANDE.idcli = ? ) " +
+			"ORDER BY LIVRE.datepubli DESC";
+
+		try (PreparedStatement pst = this.laConnexion.prepareStatement(requete)) {
+			pst.setInt(1, idClient);
+			pst.setInt(2, idClient);
+
+			try (ResultSet rs = pst.executeQuery()) {
+				while (rs.next()) {
+					recommandations.getItems().add(new Livre(
+						rs.getString("isbn"),
+						rs.getString("titre"),
+						rs.getInt("nbpages"),
+						rs.getInt("datepubli"),
+						rs.getDouble("prix")));
+				}
+			}
+		}
+
+		return recommandations;
+	}
+
 	public ListView<Livre> getCatalogue(String theme, String filtre) throws SQLException{
 		st = laConnexion.createStatement();
 		String rajout1 = "";
@@ -222,7 +261,6 @@ public class ClientBD {
 		if (recherche.length() > 0) {
 			st = laConnexion.createStatement();
 			String requete = "select * from LIVRE";
-			System.out.println(requete);
 			ResultSet set = st.executeQuery(requete);
 			while (set.next()) {
 				if (set.getString("titre").contains(recherche)) {

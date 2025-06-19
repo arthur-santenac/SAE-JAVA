@@ -8,36 +8,15 @@ import javafx.scene.text.FontWeight;
 
 public class PagePanierClient extends BorderPane {
 
-    private ListView<String> listeArticles;
-    private Label lblNbArticles;
-    private Label lblPrixTotal;
-    private Button btnCommander;
-    private Button btnSupprSel;
-    private Button btnViderPanier;
-    private Button boutonRetour;
+    private LivreExpress appli;
+    private Label lblNbArticles = new Label("");
+    private Label lblPrixTotal = new Label(""); 
     
 
-    public PagePanierClient(
-            Button boutonRetour,
-            ListView<String> listeArticles,
-            Label lblNbArticles,
-            Label lblPrixTotal,
-            Button btnCommander,
-            Button btnSupprSel,
-            Button btnViderPanier,
-            ObservableList<String> donneesPanier) {
-        this.boutonRetour = boutonRetour;
-        this.listeArticles = listeArticles;
-        this.lblNbArticles = lblNbArticles;
-        this.lblPrixTotal = lblPrixTotal;
-        this.btnCommander = btnCommander;
-        this.btnSupprSel = btnSupprSel;
-        this.btnViderPanier = btnViderPanier;
+    public PagePanierClient(LivreExpress appli) {
+        this.appli = appli;
 
-        this.listeArticles.setItems(donneesPanier);
-        this.listeArticles.setPrefSize(400, 320);
-        mettreAJourCompteur(donneesPanier);
-        ajouterListenerCompteur(donneesPanier);
+        mettreAJourCompteur();
 
         this.setTop(this.entete());
         this.setCenter(this.centre());
@@ -50,7 +29,7 @@ public class PagePanierClient extends BorderPane {
         titre.setStyle("-fx-text-fill: white;");
 
         top.setLeft(titre);
-        top.setRight(boutonRetour);
+        top.setRight(this.appli.getBoutonRetourClient());
         top.setPadding(new Insets(10));
         top.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
 
@@ -67,11 +46,12 @@ public class PagePanierClient extends BorderPane {
         Label titrePanier = new Label("Votre panier");
         titrePanier.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 
-        btnSupprSel.setPrefWidth(180);
-        btnViderPanier.setPrefWidth(180);
-        HBox boutons = new HBox(10, btnSupprSel, btnViderPanier);
+        this.appli.getBtnSupprSel().setPrefWidth(180);
+        this.appli.getBtnViderPanier().setPrefWidth(180);
+        HBox boutons = new HBox(10, this.appli.getBtnSupprSel(), this.appli.getBtnViderPanier());
 
-        gauche.getChildren().addAll(titrePanier, listeArticles, boutons);
+        this.appli.getListeArticles().setPrefSize(400, 320);
+        gauche.getChildren().addAll(titrePanier, this.appli.getListeArticles(), boutons);
 
         VBox droite = new VBox(10);
         droite.setPrefWidth(200);
@@ -81,8 +61,11 @@ public class PagePanierClient extends BorderPane {
         recap.setPadding(new Insets(10));
         recap.setStyle("-fx-border-color: black; -fx-border-width: 1;");
 
-        btnCommander.setPrefWidth(180);
-        droite.getChildren().addAll(recap, btnCommander);
+        Label lblMagasin = new Label("Magasins :");
+        Label lblModeLivraison = new Label("Mode de Livraison :");        
+
+        this.appli.getBtnCommander().setPrefWidth(180);
+        droite.getChildren().addAll(recap, lblMagasin, this.appli.getCBMagasins(), lblModeLivraison, this.appli.getLivraisonDomicile(), this.appli.getRetraitMagasin(), this.appli.getBtnCommander());
 
         HBox contenu = new HBox(40, gauche, droite);
         centre.setCenter(contenu);
@@ -90,8 +73,8 @@ public class PagePanierClient extends BorderPane {
         return centre;
     }
 
-    private void mettreAJourCompteur(ObservableList<String> donneesPanier) {
-        int taille = donneesPanier.size();
+    private void mettreAJourCompteur() {
+        int taille = this.appli.getPanier().size();
         if (taille <= 1) {
             lblNbArticles.setText(taille + " article");
         } else {
@@ -99,11 +82,4 @@ public class PagePanierClient extends BorderPane {
         }
     }
 
-    private void ajouterListenerCompteur(ObservableList<String> donneesPanier) {
-        donneesPanier.addListener(new javafx.collections.ListChangeListener<String>() {
-            public void onChanged(Change<? extends String> changement) {
-                mettreAJourCompteur(donneesPanier);
-            }
-        });
-    }
 }
