@@ -79,25 +79,32 @@ public class PageAdminStats extends BorderPane{
 
         VBox stats2 = new VBox(10);
         Label titrePie = new Label("Chiffre d'affaire par thèmes \n sur une année donnée");
-        titrePie.setAlignment(Pos.BASELINE_CENTER);
         ComboBox<String> choixAnnee = new ComboBox<String>();
         choixAnnee.getItems().addAll("2020", "2021", "2022", "2023", "2024", "2025");
         choixAnnee.setValue("2025");
         Map<String, Double> caParTheme = new HashMap<>();
         ObservableList<PieChart.Data> pieChartCA = FXCollections.observableArrayList();
         PieChart pieChart = new PieChart(pieChartCA);
+        pieChart.setPrefSize(300, 300);
+        pieChart.setMinSize(400, 400);
+        pieChart.setMaxSize(200, 200);
+        pieChart.setLabelsVisible(false);
         choixAnnee.setOnAction(new ControleurAdminAnnee(choixAnnee, pieChartCA, this.adminBD));
         String anneeChoisie = choixAnnee.getValue();
         if (anneeChoisie != null) {
             try {
                 int annee = Integer.parseInt(anneeChoisie);
-                caParTheme = adminBD.caParTheme(annee);
+                caParTheme = this.adminBD.caParTheme(annee);
                 pieChartCA.clear();
+                double total = caParTheme.values().stream().mapToDouble(Double::doubleValue).sum();
                 for (Map.Entry<String, Double> entry : caParTheme.entrySet()) {
                     String theme = entry.getKey();
                     double value = entry.getValue();
-                    if (value > 0) { 
-                        pieChartCA.add(new PieChart.Data(theme, value));
+                    if (value > 0 && total > 0) {
+                        double pourcentage = (value / total) * 100;
+                        double pourcentageArrondi = Math.round(pourcentage * 10) / 10.0;  
+                        String label = theme + " (" + pourcentageArrondi + "%)";
+                        pieChartCA.add(new PieChart.Data(label, value));
                     }
                 }
             } catch (SQLException e) {
@@ -105,14 +112,16 @@ public class PageAdminStats extends BorderPane{
             }
         }   
         titrePie.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        titrePie.setAlignment(Pos.BASELINE_CENTER);
         titrePie.setPadding(new Insets(10));
         stats2.getChildren().addAll(titrePie, choixAnnee, pieChart);
+        stats2.setAlignment(Pos.CENTER);
         
 
         stats1.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: lightgray; -fx-border-radius: 10;");
         stats2.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: lightgray; -fx-border-radius: 10;");
         centre.add(stats1, 0, 0, 2, 3);
-        centre.add(stats2, 2, 0, 2, 3);
+        centre.add(stats2, 2, 0, 3, 3);
         centre.setHgap(20);
         centre.setVgap(20);
         root.getChildren().addAll(titre, centre);
