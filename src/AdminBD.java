@@ -1,6 +1,8 @@
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AdminBD {
     ConnexionMySQL laConnexion;
@@ -107,6 +109,23 @@ public class AdminBD {
 		while (rs.next()) {
 			String chaine = rs.getString(1)+" : "+rs.getInt(2);
 			res.add(chaine);
+		}
+		rs.close();
+		ps.close();
+		return res;
+	}
+
+
+	public Map<String, Double> caParTheme(int annee) throws SQLException{
+		PreparedStatement ps = this.laConnexion.prepareStatement("Select  nomclass Theme , SUM(prixvente * qte) Montant " + 
+						"From CLASSIFICATION natural join THEMES natural join LIVRE natural join DETAILCOMMANDE natural join COMMANDE " + 
+						"Where YEAR(datecom) = ? " + 
+						"Group by LEFT(iddewey, 1)");
+		ps.setInt(1, annee);
+		ResultSet rs = ps.executeQuery();
+		Map<String, Double > res = new HashMap<>();
+		while(rs.next()){
+			res.put(rs.getString(1), rs.getDouble(2));
 		}
 		rs.close();
 		ps.close();

@@ -12,13 +12,18 @@ insert into MAGASIN(idmag, nommag, villemag) values
 INSERT INTO CLIENT(idcli, nomcli, prenomcli, adressecli, codepostal, villecli) VALUES
     (1, 'hugo', 'hugo', 'rue', 45000, 'orleans'),
     (2, 'louis', 'louis', 'rue', 75000, 'orelans'),
-	(3, 'arthur', 'arthur', 'rue', 75000, 'orelans');
+	(3, 'arthur', 'arthur', 'rue', 75000, 'orelans'),
+	(4, 'Dubois', 'Lucas', '45 place de la Paix', 34000, 'Montpellier'),
+    (5, 'Ferrari', 'Omar', '32 impasse de l''Université', 35000, 'Rennes'),
+	(6, 'Leroy', 'Antoine', '85 chemin de la Paix', 75001, 'Paris');
 
 INSERT INTO CONNEXION(adresseemail, motdepasse, idcli, compte) VALUES
     ('client', 'client', 3, 'client'),
 	('admin', 'admin', 1, 'administrateur'),
-    ('vendeur', 'vendeur', 2, 'vendeur1');
-
+    ('vendeur', 'vendeur', 2, 'vendeur1'),
+	('lucas.dubois@gmail.com', 'mdpLucas', 4, 'client'),
+	('omar.ferrari@gmail.com', 'toto', 5, 'client'),
+	('antoine.leroy@gmail.com', 'antoine45', 6 , 'client');
 
 
 -- La classification
@@ -12559,21 +12564,33 @@ insert into POSSEDER(idmag, isbn, qte) values
 	(7, '9782070570669', 6);
 
 insert into COMMANDE(numcom, datecom, enligne, livraison, idcli, idmag) values
-	(1,str_to_date('1/1/2020','%d/%m/%Y'),'N','M',1,7),
-	(2,str_to_date('1/1/2020','%d/%m/%Y'),'O','C',1,7),
-	(3,str_to_date('2/1/2020','%d/%m/%Y'),'O','C',1,1),
-	(4,str_to_date('2/1/2020','%d/%m/%Y'),'N','M',1,6),
-	(5,str_to_date('1/1/2022','%d/%m/%Y'),'N','M',1,7),
-	(6,str_to_date('1/1/2022','%d/%m/%Y'),'O','C',1,2),
-	(7,str_to_date('2/1/2022','%d/%m/%Y'),'O','C',1,1),
-	(8,str_to_date('2/1/2022','%d/%m/%Y'),'N','M',1,2),
-	(9,str_to_date('1/1/2025','%d/%m/%Y'),'N','M',1,7),
-	(10,str_to_date('1/1/2025','%d/%m/%Y'),'O','C',1,3),
-	(11,str_to_date('2/1/2025','%d/%m/%Y'),'O','C',1,1),
-	(12,str_to_date('2/1/2025','%d/%m/%Y'),'N','M',1,4);
+	(1,str_to_date('29/5/2020','%d/%m/%Y'),'N','M',6,7),
+	(2,str_to_date('5/11/2020','%d/%m/%Y'),'O','C',6,7),
+	(3,str_to_date('2/9/2020','%d/%m/%Y'),'O','C',1,1),
+	(4,str_to_date('6/1/2020','%d/%m/%Y'),'N','M',5,6),
+	(5,str_to_date('10/2/2021','%d/%m/%Y'),'O','C',5,6),
+	(6,str_to_date('2/3/2021','%d/%m/%Y'),'O','C',1,6),
+	(7,str_to_date('23/6/2021','%d/%m/%Y'),'O','C',1,6),
+	(8,str_to_date('12/9/2021','%d/%m/%Y'),'O','C',1,6),
+	(9,str_to_date('7/4/2020','%d/%m/%Y'),'O','C',1,6),
+	(10,str_to_date('1/5/2022','%d/%m/%Y'),'N','M',6,7),
+	(11,str_to_date('21/1/2022','%d/%m/%Y'),'O','C',1,2),
+	(12,str_to_date('15/1/2022','%d/%m/%Y'),'O','C',4,1),
+	(13,str_to_date('18/3/2022','%d/%m/%Y'),'O','C',5,5),
+	(14,str_to_date('5/3/2023','%d/%m/%Y'),'O','C',4,2),
+	(15,str_to_date('9/6/2023','%d/%m/%Y'),'O','C',5,3),
+	(16,str_to_date('3/8/2023','%d/%m/%Y'),'O','C',4,1),
+	(17,str_to_date('13/1/2024','%d/%m/%Y'),'O','C',5,2),
+	(18,str_to_date('25/2/2024','%d/%m/%Y'),'O','C',4,3),
+	(19,str_to_date('4/8/2024','%d/%m/%Y'),'O','C',4,7),
+	(20,str_to_date('1/2/2025','%d/%m/%Y'),'N','M',6,7),
+	(21,str_to_date('20/3/2025','%d/%m/%Y'),'O','C',1,3),
+	(22,str_to_date('6/3/2025','%d/%m/%Y'),'O','C',4,1),
+	(23,str_to_date('9/5/2025','%d/%m/%Y'),'O','C',1,4),
+	(24,str_to_date('3/6/2025','%d/%m/%Y'),'O','C',5,1);
 
 insert into DETAILCOMMANDE(numcom, numlig, isbn, qte, prixvente) values
-	(1,1,'9782070570669',2, 22.1),
+	(1,1,'9782070570669',2, 12.0),
 	(2,1,'9782226002884',1,6.8),
 	(3,1,'9782081270114',1, 9.0),
 	(4,1,'9782205055740',1, 9.0),
@@ -12581,7 +12598,22 @@ insert into DETAILCOMMANDE(numcom, numlig, isbn, qte, prixvente) values
 	(6,1,'9782081271654',2, 22.1),
 	(7,1,'9782081271654',1,6.8),
 	(8,1,'9782020251594',1, 9.0),
-	(9,1,'9782012440098',1, 9.0),
-	(10,1,'9782012372498',1, 35.1),
-	(11,1,'9782081271654',1, 35.1),
-	(12,1,'9782226151155',1, 35.1);
+	(9,1,'9782012440098',2, 9.0),
+	(10,1,'9782012372498',1, 6.0),
+	(11,1,'9782081271654',1, 7.99),
+	(12,1,'9782227487130',1, 18.50),
+	(13,1,'9782070315451',1, 8.99),
+	(14,1,'9782020251594',1, 10.50),
+	(15,1,'9782012372498',1, 12.01),
+	(16,1,'9782226085962',2, 12.2),
+	(17,1,'9782020310055',1, 12.99),
+	(18,1,'9782020049726',1, 7.99),
+	(19,1,'9782082111225',1, 16.20),
+	(20,1,'9782227303065',1, 10.30),
+	(21,1,'9782020069298',1, 15.0),
+	(22,1,'9782020251594',1, 20.99),
+	(23,1,'9782226151155',1, 11.99),
+	(24,1,'9782227303065',1, 11.99),
+	(24,2,'9782020093453',1, 10.50);
+
+
