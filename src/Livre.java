@@ -16,12 +16,24 @@ public class Livre {
 
     private List<Editeur> editeurs;
 
+    private int qte;
+
     public Livre(String isbn, String titre, int nbPages, int datePubli, double prix){
         this.isbn = isbn;
         this.titre = titre;
         this.nbPages = nbPages;
         this.datePubli = datePubli;
         this.prix = prix;
+
+    }
+
+    public Livre(String isbn, String titre, int nbPages, int datePubli, double prix, int qte){
+        this.isbn = isbn;
+        this.titre = titre;
+        this.nbPages = nbPages;
+        this.datePubli = datePubli;
+        this.prix = prix;
+        this.qte = qte;
 
     }
 
@@ -88,6 +100,10 @@ public class Livre {
     @Override
     public String toString() {
         return this.titre + " " + this.datePubli + " " + this.prix + "€";
+    }
+
+    public String toStringVendeur() {
+        return this.titre + " " + this.datePubli + " " + this.prix + "€; stock : " + this.qte +" exemplaires";
     }
 
 }
