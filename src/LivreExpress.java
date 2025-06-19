@@ -71,6 +71,7 @@ public class LivreExpress extends Application {
     private int idMag;
     private TextField idAjouter;
     private ListView<String> listeRechercheVendeur;
+    private Button rechercheV;
 
     // ============ADMIN===============
     private Button btnRetourAdmin;
@@ -158,6 +159,7 @@ public class LivreExpress extends Application {
         this.btnStock = new Button("modifier les stocks d’un livre");
         this.btnTransfert = new Button("transférer un livre d’une autre librairie");
         this.listeRechercheVendeur = new ListView<>();
+        this.rechercheV = new Button("Rechercher");
 
         // ============ADMINISTRATEUR===============
 
@@ -255,14 +257,14 @@ public class LivreExpress extends Application {
     }
 
     public void affichePageVendeur() {
-        this.recherche.setOnAction(e -> affichePageVendeur());
+        this.rechercheV.setOnAction(e -> affichePageVendeur());
         try {
             this.btnTransfert.setOnAction(new ControleurVendeurTransfert(idMag, this.laConnexion));
             this.btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.laConnexion));
             this.btnStock.setOnAction(new ControleurVendeurMajQte(idMag, this.laConnexion));
             this.listeRechercheVendeur = this.vendeurBD.getRecherche(this.txtRecherche.getText(), idMag);
             Pane root = new PageVendeur(this.boutonDeconnexion, this.btnAjout, this.btnStock, this.btnTransfert,
-                    this.idAjouter, this.ajouter, this.finaliserCommande, this.recherche, this.txtRecherche,
+                    this.idAjouter, this.ajouter, this.finaliserCommande, this.rechercheV, this.txtRecherche,
                     this.listeRechercheVendeur);
             this.scene.setRoot(root);
             this.stage.setWidth(1500);
