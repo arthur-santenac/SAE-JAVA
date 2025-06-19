@@ -236,10 +236,6 @@ public class LivreExpress extends Application {
         this.livraisonDomicile.setToggleGroup(this.modeLivraison);
         this.retraitMagasin.setToggleGroup(this.modeLivraison);
         
-
-        this.ajouteCatalogue.setOnAction(new ControleurBoutonCatalogue(this, this.qteCatalogue.getValue(),
-                this.catalogue.getSelectionModel().getSelectedItem()));
-
         // ============VENDEUR===============
 
         this.btnAjout = new Button("ajouter un livre à la librairie");
@@ -590,10 +586,6 @@ public class LivreExpress extends Application {
 
     public Button getFinaliserCommande() {
         return finaliserCommande;
-    }
-
-    public Label getBonjour() {
-        return bonjour;
     }
 
     public int getIdMag() {
