@@ -100,6 +100,9 @@ public class PageVendeur extends BorderPane {
         Button btnFinaliser = new Button("finaliser commande");
         btnFinaliser.setStyle("-fx-background-color: #666; -fx-text-fill: white;");
 
+        Button btnSupprimer = new Button("finaliser commande");
+        btnFinaliser.setStyle("-fx-background-color: #666; -fx-text-fill: white;");
+
         VBox rightPanel = new VBox(15, ajoutZone, resumeBox, btnFinaliser);
         rightPanel.setPadding(new Insets(20));
         rightPanel.setAlignment(Pos.TOP_RIGHT);
