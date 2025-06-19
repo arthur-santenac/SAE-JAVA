@@ -12,7 +12,6 @@ import javax.swing.plaf.synth.Region;
 
 public class PageVendeur extends BorderPane {
     private Button deconnexion;
-    private Label bonjour;
     private Button btnAjout;
     private Button btnStock;
     private Button btnTransfert;
@@ -20,18 +19,24 @@ public class PageVendeur extends BorderPane {
     private Button ajouter;
     private Button finaliser;
 
-    public PageVendeur(Button deconnexion, Label bonjour, Button btnAjout, Button btnStock, Button btnTransfert,
-            TextField idAjout, Button ajouter, Button finaliser) {
+    private Button recherche;
+    private ListView<String> listeRecherche;
+    private TextField txtRecherche;
+
+    public PageVendeur(Button deconnexion,  Button btnAjout, Button btnStock, Button btnTransfert,
+            TextField idAjout, Button ajouter, Button finaliser, Button recherche, TextField txtRecherche, ListView<String> listeRecherche) {
 
         super();
         this.deconnexion = deconnexion;
-        this.bonjour = bonjour;
         this.btnAjout = btnAjout;
         this.btnStock = btnStock;
         this.btnTransfert = btnTransfert;
         this.idAjout = idAjout;
         this.ajouter = ajouter;
         this.finaliser = finaliser;
+        this.recherche = recherche;
+        this.txtRecherche = txtRecherche;
+        this. listeRecherche = listeRecherche;
 
         this.setTop(this.top());
         this.setLeft(this.left());
@@ -53,15 +58,26 @@ public class PageVendeur extends BorderPane {
     }
 
     public VBox left() {
+        Label bonjour = new Label("Bonjour !");
 
-        VBox left = new VBox(10, this.bonjour, this.btnAjout, this.btnStock, this.btnTransfert);
+        VBox left = new VBox(10, bonjour, this.btnAjout, this.btnStock, this.btnTransfert);
         left.setStyle("-fx-padding: 10;");
         return left;
     }
 
     public VBox center() {
-        VBox center = new VBox();
-        return center;
+        BorderPane teteLeft = new BorderPane();
+        teteLeft.setLeft(txtRecherche);
+        teteLeft.setRight(recherche);
+
+
+        listeRecherche.setPrefHeight(400);
+        listeRecherche.setPrefWidth(400);
+        
+        VBox left = new VBox(10, teteLeft, listeRecherche);    
+        left.setPadding(new Insets(10));
+        left.setFillWidth(true);
+        return left;
     }
 
     public VBox right() {
@@ -84,9 +100,14 @@ public class PageVendeur extends BorderPane {
         Button btnFinaliser = new Button("finaliser commande");
         btnFinaliser.setStyle("-fx-background-color: #666; -fx-text-fill: white;");
 
+        Button btnSupprimer = new Button("finaliser commande");
+        btnFinaliser.setStyle("-fx-background-color: #666; -fx-text-fill: white;");
+
         VBox rightPanel = new VBox(15, ajoutZone, resumeBox, btnFinaliser);
         rightPanel.setPadding(new Insets(20));
         rightPanel.setAlignment(Pos.TOP_RIGHT);
         return rightPanel;
     }
+
+    
 }

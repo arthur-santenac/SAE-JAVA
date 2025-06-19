@@ -23,6 +23,7 @@ public class LivreExpress extends Application {
 
     private ClientBD clientBD;
     private AdminBD adminBD;
+    private VendeurBD vendeurBD;
     private MagasinBD magasinBD;
     private CommandeBD commandeBD;
 
@@ -35,15 +36,13 @@ public class LivreExpress extends Application {
     private Button boutonCreerUnCompte;
     private Button boutonCreerLeCompte;
     private TextField identifiant;
-    private PasswordField mdp; 
+    private PasswordField mdp;
     private TextField mdpText;
     private TextField nom;
     private TextField prenom;
     private TextField adresse;
     private TextField ville;
     private TextField codePostal;
-
-  
 
     private Label textErreurConnexion;
     private Label textErreurCreerCompte;
@@ -92,9 +91,10 @@ public class LivreExpress extends Application {
     private Button btnTransfert;
     private Button ajouter;
     private Button finaliserCommande;
-    private Label bonjour;
     private int idMag;
     private TextField idAjouter;
+    private ListView<String> listeRechercheVendeur;
+    private Button rechercheV;
 
     // ============ADMIN===============
 
@@ -108,9 +108,6 @@ public class LivreExpress extends Application {
     private Button btnSuppVendeur;
 
     private Button btnStats;
-
-
-    
 
     /**
      * @param args the command line arguments
@@ -142,7 +139,8 @@ public class LivreExpress extends Application {
 
         ControleurConnexion controleurConnexion = new ControleurConnexion(this, this.identifiant, this.mdp);
         ControleurPageCreerCompte controleurPageCreerCompte = new ControleurPageCreerCompte(this);
-        ControleurCreerCompte controleurCreerCompte = new ControleurCreerCompte(this, this.identifiant, this.mdpText, this.nom, this.prenom, this.adresse, this.ville, this.codePostal);
+        ControleurCreerCompte controleurCreerCompte = new ControleurCreerCompte(this, this.identifiant, this.mdpText,
+                this.nom, this.prenom, this.adresse, this.ville, this.codePostal);
 
         this.boutonConnexion.setOnAction(controleurConnexion);
         this.boutonDeconnexion.setOnAction(controleurConnexion);
@@ -176,7 +174,9 @@ public class LivreExpress extends Application {
 
 
         this.filtreTheme = new ComboBox<>();
-        this.filtreTheme.getItems().addAll("Tout", "Arts et Loisirs", "Histoire et Géographie", "Informatique, généralités", "Langues", "Littérature", "Philosophie et psychologie", "Religion", "Science naturelles et mathématiques", "Sciences sociales", "Technologie et sciences appliqués");
+        this.filtreTheme.getItems().addAll("Tout", "Arts et Loisirs", "Histoire et Géographie",
+                "Informatique, généralités", "Langues", "Littérature", "Philosophie et psychologie", "Religion",
+                "Science naturelles et mathématiques", "Sciences sociales", "Technologie et sciences appliqués");
         this.filtreTheme.setValue("Tout");
         this.filtreTheme.setOnAction(e -> affichePageClient());
 
@@ -187,6 +187,7 @@ public class LivreExpress extends Application {
 
         this.ajouteRecherche = new Button("Ajouter au panier");
         this.ajouteCatalogue = new Button("Ajouter au panier");
+
         this.ajouteRecom = new Button("Ajouter au panier");
         
         this.ajouteRecherche.setOnAction(e -> {
@@ -236,8 +237,16 @@ public class LivreExpress extends Application {
         this.retraitMagasin.setToggleGroup(this.modeLivraison);
         
 
+        this.ajouteCatalogue.setOnAction(new ControleurBoutonCatalogue(this, this.qteCatalogue.getValue(),
+                this.catalogue.getSelectionModel().getSelectedItem()));
+
         // ============VENDEUR===============
 
+        this.btnAjout = new Button("ajouter un livre à la librairie");
+        this.btnStock = new Button("modifier les stocks d’un livre");
+        this.btnTransfert = new Button("transférer un livre d’une autre librairie");
+        this.listeRechercheVendeur = new ListView<>();
+        this.rechercheV = new Button("Rechercher");
 
 
         // ============ADMINISTRATEUR===============
@@ -254,12 +263,13 @@ public class LivreExpress extends Application {
         this.btnVend.setOnAction(e -> this.affichePageAdminVendeur());
         this.btnStats.setOnAction(e -> this.affichePageAdminStats());
         this.btnRetourAdmin.setOnAction(e -> this.affichePageAdmin());
-        
+
     }
 
     @Override
     public void start(Stage stage) {
-        Pane root = new PageConnexion(boutonConnexion, boutonCreerUnCompte, identifiant, mdp, textErreurConnexion, false);
+        Pane root = new PageConnexion(boutonConnexion, boutonCreerUnCompte, identifiant, mdp, textErreurConnexion,
+                false);
         this.scene = new Scene(root);
         this.stage = stage;
         this.stage.setWidth(320);
@@ -270,25 +280,30 @@ public class LivreExpress extends Application {
     }
 
     public void afficheConnexion() {
-        Pane root = new PageConnexion(boutonConnexion, boutonCreerUnCompte, identifiant, mdp, textErreurConnexion, true);
+        Pane root = new PageConnexion(boutonConnexion, boutonCreerUnCompte, identifiant, mdp, textErreurConnexion,
+                true);
         this.scene.setRoot(root);
         this.stage.setWidth(300);
         this.stage.setHeight(350);
     }
 
     public void afficheCreerCompte() {
-        Pane root = new PageCreerCompte(boutonCreerLeCompte, textErreurCreerCompte, identifiant, mdpText, nom, prenom, adresse, ville, codePostal);
+        Pane root = new PageCreerCompte(boutonCreerLeCompte, textErreurCreerCompte, identifiant, mdpText, nom, prenom,
+                adresse, ville, codePostal);
         this.scene.setRoot(root);
         this.stage.setWidth(300);
-        this.stage.setHeight(600); 
+        this.stage.setHeight(600);
     }
 
     public void affichePageClient() {
         try {
-            this.catalogue = this.clientBD.getCatalogue(this.filtreTheme.getSelectionModel().getSelectedItem(), this.filtreFiltre.getSelectionModel().getSelectedItem());
+            this.catalogue = this.clientBD.getCatalogue(this.filtreTheme.getSelectionModel().getSelectedItem(),
+                    this.filtreFiltre.getSelectionModel().getSelectedItem());
             this.listeRecherche = this.clientBD.getRecherche(this.txtRecherche.getText());
+
             this.recommande = this.clientBD.onVousRecommandeIHM(this.utilisateur.getIdCli());
             Pane root = new PageClient(this);
+
             this.scene.setRoot(root);
             this.stage.setWidth(1450);
             this.stage.setHeight(800);
@@ -315,7 +330,8 @@ public class LivreExpress extends Application {
     public void affichePageAdminLib() {
         this.btnAddLib.setOnAction(new ControleurAdminModifLib(this, this.laConnexion));
         this.btnSuppLib.setOnAction(new ControleurAdminModifLib(this, this.laConnexion));
-        Pane root = new PageAdminLibrairie(this.btnRetourAdmin,this.btnAddLib, this.btnSuppLib, this.magasinBD, this.laConnexion);
+        Pane root = new PageAdminLibrairie(this.btnRetourAdmin, this.btnAddLib, this.btnSuppLib, this.magasinBD,
+                this.laConnexion);
         this.scene.setRoot(root);
         this.stage.setWidth(1000);
         this.stage.setHeight(700);
@@ -324,7 +340,8 @@ public class LivreExpress extends Application {
     public void affichePageAdminVendeur() {
         this.btnAddVendeur.setOnAction(new ControleurAdminModifVendeur(this, this.laConnexion));
         this.btnSuppVendeur.setOnAction(new ControleurAdminModifVendeur(this, this.laConnexion));
-        Pane root = new PageAdminVendeur(this.btnRetourAdmin,this.btnAddVendeur, this.btnSuppVendeur, this.clientBD, this.laConnexion);
+        Pane root = new PageAdminVendeur(this.btnRetourAdmin, this.btnAddVendeur, this.btnSuppVendeur, this.clientBD,
+                this.laConnexion);
         this.scene.setRoot(root);
         this.stage.setWidth(1000);
         this.stage.setHeight(700);
@@ -333,23 +350,26 @@ public class LivreExpress extends Application {
     public void affichePageAdminStats() {
         Pane root = new PageAdminStats(this.btnRetourAdmin, this.laConnexion);
         this.scene.setRoot(root);
-        this.stage.setWidth(1000);
-        this.stage.setHeight(700);
+        this.stage.setWidth(1400);
+        this.stage.setHeight(1000);
     }
 
     public void affichePageVendeur() {
-        this.bonjour = new Label("Bonjour !");
-        this.btnAjout = new Button("ajouter un livre à la librairie");
-        this.btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.laConnexion));
-        this.btnStock = new Button("modifier les stocks d’un livre");
-        this.btnStock.setOnAction(new ControleurVendeurMajQte(idMag, this.laConnexion));
-        
-        this.btnTransfert = new Button("transférer un livre d’une autre librairie");
-        this.btnTransfert.setOnAction(new ControleurVendeurTransfert(idMag, this.laConnexion));
-        Pane root = new PageVendeur(this.boutonDeconnexion, this.bonjour, this.btnAjout, this.btnStock, this.btnTransfert, this.idAjouter, this.ajouter, this.finaliserCommande);
-        this.scene.setRoot(root);
-        this.stage.setWidth(1500);
-        this.stage.setHeight(1000);
+        this.rechercheV.setOnAction(e -> affichePageVendeur());
+        try {
+            this.btnTransfert.setOnAction(new ControleurVendeurTransfert(idMag, this.laConnexion));
+            this.btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.laConnexion));
+            this.btnStock.setOnAction(new ControleurVendeurMajQte(idMag, this.laConnexion));
+            this.listeRechercheVendeur = this.vendeurBD.getRecherche(this.txtRecherche.getText(), idMag);
+            Pane root = new PageVendeur(this.boutonDeconnexion, this.btnAjout, this.btnStock, this.btnTransfert,
+                    this.idAjouter, this.ajouter, this.finaliserCommande, this.rechercheV, this.txtRecherche,
+                    this.listeRechercheVendeur);
+            this.scene.setRoot(root);
+            this.stage.setWidth(1500);
+            this.stage.setHeight(1000);
+        } catch (SQLException e) {
+            System.out.println("erreur");
+        }
 
     }
 
@@ -365,10 +385,12 @@ public class LivreExpress extends Application {
                 throw new SQLException();
             }
             this.clientBD = new ClientBD(laConnexion);
+
             this.commandeBD = new CommandeBD(laConnexion);
             this.magasinBD = new MagasinBD(laConnexion);
             this.CBMagasins = new ComboBox<>();
             this.CBMagasins.getItems().addAll(this.magasinBD.listeDesMagasins());
+            this.vendeurBD = new VendeurBD(laConnexion);
         } catch (ClassNotFoundException e) {
             System.out.println("classe non trouvé");
         }

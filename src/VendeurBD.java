@@ -6,6 +6,7 @@ import java.util.AbstractMap;
 import java.util.Map;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ListView;
 
 public class VendeurBD {
 	ConnexionMySQL laConnexion;
@@ -150,6 +151,28 @@ public class VendeurBD {
 		}
 		return res;
 
+	}
+
+	public ListView<String> getRecherche(String recherche, int idMag) throws SQLException {
+		ListView<String> listeLivre = new ListView<>();
+		if (recherche.length() > 0) {
+			st = laConnexion.createStatement();
+			String requete = "select * from LIVRE natural join POSSEDER where idmag = " + idMag;
+			ResultSet set = st.executeQuery(requete);
+			while (set.next()) {
+				if (set.getString("titre").contains(recherche)) {
+					Livre livre = new Livre(
+							set.getString("isbn"),
+							set.getString("titre"),
+							set.getInt("nbpages"),
+							set.getInt("datepubli"),
+							set.getDouble("prix"),
+							set.getInt("qte"));
+					listeLivre.getItems().add(livre.toStringVendeur());
+				}
+			}
+		}
+		return listeLivre;
 	}
 
 }
