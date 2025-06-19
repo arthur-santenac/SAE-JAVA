@@ -250,7 +250,7 @@ public class LivreExpress extends Application {
     public void affichePageAdminStats() {
         Pane root = new PageAdminStats(this.btnRetourAdmin, this.laConnexion);
         this.scene.setRoot(root);
-        this.stage.setWidth(1200);
+        this.stage.setWidth(1400);
         this.stage.setHeight(1000);
     }
 
