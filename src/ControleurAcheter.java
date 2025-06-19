@@ -2,13 +2,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 
-public class ControleurBoutonRecherche implements EventHandler<ActionEvent>{
+public class ControleurAcheter implements EventHandler<ActionEvent>{
     
     private LivreExpress appli;
     private Integer qte;
     private Livre selection;
 
-    public ControleurBoutonRecherche(LivreExpress vue, Integer qte, Livre selection){
+    public ControleurAcheter(LivreExpress vue, Integer qte, Livre selection){
         this.appli = vue;
         this.qte = qte;
         this.selection = selection;

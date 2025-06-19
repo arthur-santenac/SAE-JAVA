@@ -27,6 +27,11 @@ public class DetailCommande {
         return this.numCom;
     }
 
+    @Override
+    public String toString() {
+        return this.livre.getIsbn() + " " + this.qte + " " + this.prixVente;
+    }
+
 }
 
 

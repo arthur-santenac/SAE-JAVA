@@ -8,7 +8,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
@@ -22,10 +25,12 @@ public class LivreExpress extends Application {
     private AdminBD adminBD;
     private VendeurBD vendeurBD;
     private MagasinBD magasinBD;
+    private CommandeBD commandeBD;
 
     private Commande panier;
 
     // ============CONNEXION / CREER COMPTE===============
+
     private Button boutonConnexion;
     private Button boutonDeconnexion;
     private Button boutonCreerUnCompte;
@@ -50,16 +55,34 @@ public class LivreExpress extends Application {
 
     // ============CLIENT===============
 
-    private Button btnAjouterPanierRecherche;
+    private Button ajouteRecherche;
+    private Button ajouteCatalogue;
+    private Button ajouteRecom;
     private Button recherche;
+    private Button boutonPanier;
+    private Button boutonRetourClient;
+
     private ListView<Livre> listeRecherche;
     private ListView<Livre> catalogue;
+    private ListView<Livre> recommande;
     private ComboBox<String> filtreTheme;
     private ComboBox<String> filtreFiltre;
     private ComboBox<Integer> qteCatalogue;
     private ComboBox<Integer> qteClient;
-    private Button ajouteCatalogue;
+    private ComboBox<Integer> qteRecom;
+    private ComboBox<Magasin> CBMagasins;
+
     private TextField txtRecherche;
+
+    private Button btnCommander;
+    private Button btnSupprSel;
+    private Button btnViderPanier;
+
+    private ListView<DetailCommande> listeArticles;
+
+    private RadioButton livraisonDomicile;
+    private RadioButton retraitMagasin;
+    private ToggleGroup modeLivraison;
 
     // ============VENDEUR===============
 
@@ -74,6 +97,7 @@ public class LivreExpress extends Application {
     private Button rechercheV;
 
     // ============ADMIN===============
+
     private Button btnRetourAdmin;
     private Button btnLib;
     private Button btnAddLib;
@@ -125,31 +149,94 @@ public class LivreExpress extends Application {
 
         // ============CLIENT===============
 
-        this.btnAjouterPanierRecherche = new Button("Ajouter au panier");
-        this.recherche = new Button("Rechercher");
-        this.recherche.setOnAction(e -> affichePageClient());
-        this.txtRecherche = new TextField();
-        this.txtRecherche.setPromptText("Entrez le nom d'un livre");
-        this.txtRecherche.setMaxWidth(Double.MAX_VALUE);
-        this.catalogue = new ListView<>();
-        this.listeRecherche = new ListView<>();
-        this.filtreTheme = new ComboBox<>();
-        this.filtreTheme.getItems().addAll("Tout", "Arts et Loisirs", "Histoire et Géographie",
-                "Informatique, généralités", "Langues", "Littérature", "Philosophie et psychologie", "Religion",
-                "Science naturelles et mathématiques", "Sciences sociales", "Technologie et sciences appliqués");
-        this.filtreTheme.setValue("Tout");
-        this.filtreTheme.setOnAction(e -> affichePageClient());
-        this.filtreFiltre = new ComboBox<>();
-        this.filtreFiltre.getItems().addAll("Par défaut", "Popularité", "Prix croissant", "Prix décroissant");
-        this.filtreFiltre.setValue("Par défaut");
-        this.filtreFiltre.setOnAction(e -> affichePageClient());
+        
+
         this.qteClient = new ComboBox<>();
         this.qteClient.getItems().addAll(1, 2, 3, 4, 5);
         this.qteClient.setValue(1);
         this.qteCatalogue = new ComboBox<>();
         this.qteCatalogue.getItems().addAll(1, 2, 3, 4, 5);
         this.qteCatalogue.setValue(1);
+        this.qteRecom = new ComboBox<>();
+        this.qteRecom.getItems().addAll(1, 2, 3, 4, 5);
+        this.qteRecom.setValue(1);
+
+        this.recherche = new Button("Rechercher");
+        this.recherche.setOnAction(e -> affichePageClient());
+
+        this.txtRecherche = new TextField();
+        this.txtRecherche.setPromptText("Entrez le nom d'un livre");
+        this.txtRecherche.setMaxWidth(Double.MAX_VALUE);
+
+        this.listeRecherche = new ListView<>();
+        this.catalogue = new ListView<>();
+        this.recommande = new ListView<>();
+
+
+        this.filtreTheme = new ComboBox<>();
+        this.filtreTheme.getItems().addAll("Tout", "Arts et Loisirs", "Histoire et Géographie",
+                "Informatique, généralités", "Langues", "Littérature", "Philosophie et psychologie", "Religion",
+                "Science naturelles et mathématiques", "Sciences sociales", "Technologie et sciences appliqués");
+        this.filtreTheme.setValue("Tout");
+        this.filtreTheme.setOnAction(e -> affichePageClient());
+
+        this.filtreFiltre = new ComboBox<>();
+        this.filtreFiltre.getItems().addAll("Par défaut", "Popularité", "Prix croissant", "Prix décroissant");
+        this.filtreFiltre.setValue("Par défaut");
+        this.filtreFiltre.setOnAction(e -> affichePageClient());
+
+        this.ajouteRecherche = new Button("Ajouter au panier");
         this.ajouteCatalogue = new Button("Ajouter au panier");
+
+        this.ajouteRecom = new Button("Ajouter au panier");
+        
+        this.ajouteRecherche.setOnAction(e -> {
+            Livre livre = this.listeRecherche.getSelectionModel().getSelectedItem();
+            Integer quantite = this.qteClient.getValue();
+            ControleurAcheter controleur = new ControleurAcheter(this, quantite, livre);
+            controleur.handle(e);
+        });
+        this.ajouteCatalogue.setOnAction(e -> {
+            Livre livre = this.catalogue.getSelectionModel().getSelectedItem();
+            Integer quantite = this.qteCatalogue.getValue();
+            ControleurAcheter controleur = new ControleurAcheter(this, quantite, livre);
+            controleur.handle(e);
+        });
+        this.ajouteRecom.setOnAction(e -> {
+            Livre livre = this.recommande.getSelectionModel().getSelectedItem();
+            Integer quantite = this.qteRecom.getValue();
+            ControleurAcheter controleur = new ControleurAcheter(this, quantite, livre);
+            controleur.handle(e);
+        });
+
+        this.boutonPanier = new Button("Panier");
+        this.boutonPanier.setOnAction(e -> affichePagePanier());
+        this.boutonRetourClient = new Button("Retour");
+        this.boutonRetourClient.setOnAction(e -> affichePageClient());
+
+        this.btnCommander = new Button("Finaliser la commande");
+        this.btnCommander.setOnAction(new ControleurCommander(this));
+        this.btnSupprSel = new Button("Supprimer la séléction");
+        this.btnSupprSel.setOnAction(new ControleurSupprSel(this));
+        this.btnViderPanier = new Button("Tout supprimer");
+        this.btnViderPanier.setOnAction(e -> {
+            this.panier = new Commande('0', '0', null, utilisateur);
+            this.listeArticles = new ListView<>();
+            this.listeArticles.getItems().addAll(this.getPanier().getDetailsCommande());
+            this.affichePagePanier();
+        });
+
+        this.listeArticles = new ListView<>();
+
+
+        this.livraisonDomicile = new RadioButton("Livraison à domicile");
+        this. retraitMagasin = new RadioButton("Retrait en magasin");
+
+        this.modeLivraison = new ToggleGroup();
+        this.livraisonDomicile.setToggleGroup(this.modeLivraison);
+        this.retraitMagasin.setToggleGroup(this.modeLivraison);
+        
+
         this.ajouteCatalogue.setOnAction(new ControleurBoutonCatalogue(this, this.qteCatalogue.getValue(),
                 this.catalogue.getSelectionModel().getSelectedItem()));
 
@@ -160,6 +247,7 @@ public class LivreExpress extends Application {
         this.btnTransfert = new Button("transférer un livre d’une autre librairie");
         this.listeRechercheVendeur = new ListView<>();
         this.rechercheV = new Button("Rechercher");
+
 
         // ============ADMINISTRATEUR===============
 
@@ -212,14 +300,24 @@ public class LivreExpress extends Application {
             this.catalogue = this.clientBD.getCatalogue(this.filtreTheme.getSelectionModel().getSelectedItem(),
                     this.filtreFiltre.getSelectionModel().getSelectedItem());
             this.listeRecherche = this.clientBD.getRecherche(this.txtRecherche.getText());
-            Pane root = new PageClient(boutonDeconnexion, recherche, btnAjouterPanierRecherche, ajouteCatalogue,
-                    txtRecherche, listeRecherche, catalogue, filtreTheme, filtreFiltre, qteClient, qteCatalogue);
+
+            this.recommande = this.clientBD.onVousRecommandeIHM(this.utilisateur.getIdCli());
+            Pane root = new PageClient(this);
+
             this.scene.setRoot(root);
-            this.stage.setWidth(1550);
-            this.stage.setHeight(850);
+            this.stage.setWidth(1450);
+            this.stage.setHeight(800);
         } catch (SQLException e) {
             System.out.println("erreur");
         }
+    }
+
+    public void affichePagePanier() {
+        this.listeArticles.getItems().addAll(this.getPanier().getDetailsCommande());
+        Pane root = new PagePanierClient(this);
+        this.scene.setRoot(root);
+        this.stage.setWidth(750);
+        this.stage.setHeight(550);
     }
 
     public void affichePageAdmin() {
@@ -287,6 +385,11 @@ public class LivreExpress extends Application {
                 throw new SQLException();
             }
             this.clientBD = new ClientBD(laConnexion);
+
+            this.commandeBD = new CommandeBD(laConnexion);
+            this.magasinBD = new MagasinBD(laConnexion);
+            this.CBMagasins = new ComboBox<>();
+            this.CBMagasins.getItems().addAll(this.magasinBD.listeDesMagasins());
             this.vendeurBD = new VendeurBD(laConnexion);
         } catch (ClassNotFoundException e) {
             System.out.println("classe non trouvé");
@@ -325,8 +428,260 @@ public class LivreExpress extends Application {
         this.panier.setLivraison(livraison);
     }
 
+    public Magasin getMagasin() {
+        return this.getPanier().getMagasin();
+    }
+
     public void setMagasin(Magasin magasin) {
         this.panier.setMagasin(magasin);
+    }
+
+    public AdminBD getAdminBD() {
+        return adminBD;
+    }
+
+    public MagasinBD getMagasinBD() {
+        return magasinBD;
+    }
+
+    public Button getBoutonConnexion() {
+        return boutonConnexion;
+    }
+
+    public Button getBoutonDeconnexion() {
+        return boutonDeconnexion;
+    }
+
+    public Button getBoutonCreerUnCompte() {
+        return boutonCreerUnCompte;
+    }
+
+    public Button getBoutonCreerLeCompte() {
+        return boutonCreerLeCompte;
+    }
+
+    public TextField getIdentifiant() {
+        return identifiant;
+    }
+
+    public PasswordField getMdp() {
+        return mdp;
+    }
+
+    public TextField getMdpText() {
+        return mdpText;
+    }
+
+    public TextField getNom() {
+        return nom;
+    }
+
+    public TextField getPrenom() {
+        return prenom;
+    }
+
+    public TextField getAdresse() {
+        return adresse;
+    }
+
+    public TextField getVille() {
+        return ville;
+    }
+
+    public TextField getCodePostal() {
+        return codePostal;
+    }
+
+    public Label getTextErreurConnexion() {
+        return textErreurConnexion;
+    }
+
+    public Label getTextErreurCreerCompte() {
+        return textErreurCreerCompte;
+    }
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public Client getUtilisateur() {
+        return utilisateur;
+    }
+
+    public String getCompte() {
+        return compte;
+    }
+
+    public ConnexionMySQL getLaConnexion() {
+        return laConnexion;
+    }
+
+    public Button getAjouteRecherche() {
+        return ajouteRecherche;
+    }
+
+    public Button getAjouteCatalogue() {
+        return ajouteCatalogue;
+    }
+
+    public Button getAjouteRecom() {
+        return ajouteRecom;
+    }
+
+    public Button getRecherche() {
+        return recherche;
+    }
+
+    public ListView<Livre> getListeRecherche() {
+        return listeRecherche;
+    }
+
+    public ListView<Livre> getCatalogue() {
+        return catalogue;
+    }
+
+    public ListView<Livre> getRecommande() {
+        return recommande;
+    }
+
+    public ComboBox<String> getFiltreTheme() {
+        return filtreTheme;
+    }
+
+    public ComboBox<String> getFiltreFiltre() {
+        return filtreFiltre;
+    }
+
+    public ComboBox<Integer> getQteCatalogue() {
+        return qteCatalogue;
+    }
+
+    public ComboBox<Integer> getQteClient() {
+        return qteClient;
+    }
+
+    public ComboBox<Integer> getQteRecom() {
+        return qteRecom;
+    }
+
+    public TextField getTxtRecherche() {
+        return txtRecherche;
+    }
+
+    public Button getBtnAjout() {
+        return btnAjout;
+    }
+
+    public Button getBtnStock() {
+        return btnStock;
+    }
+
+    public Button getBtnTransfert() {
+        return btnTransfert;
+    }
+
+    public Button getAjouter() {
+        return ajouter;
+    }
+
+    public Button getFinaliserCommande() {
+        return finaliserCommande;
+    }
+
+    public Label getBonjour() {
+        return bonjour;
+    }
+
+    public int getIdMag() {
+        return idMag;
+    }
+
+    public TextField getIdAjouter() {
+        return idAjouter;
+    }
+
+    public Button getBtnRetourAdmin() {
+        return btnRetourAdmin;
+    }
+
+    public Button getBtnLib() {
+        return btnLib;
+    }
+
+    public Button getBtnAddLib() {
+        return btnAddLib;
+    }
+
+    public Button getBtnSuppLib() {
+        return btnSuppLib;
+    }
+
+    public Button getBtnVend() {
+        return btnVend;
+    }
+
+    public Button getBtnAddVendeur() {
+        return btnAddVendeur;
+    }
+
+    public Button getBtnSuppVendeur() {
+        return btnSuppVendeur;
+    }
+
+    public Button getBtnStats() {
+        return btnStats;
+    }
+
+    public Button getBoutonPanier() {
+        return boutonPanier;
+    }
+
+    public Button getBoutonRetourClient() {
+        return boutonRetourClient;
+    }
+
+    public Button getBtnCommander() {
+        return btnCommander;
+    }
+
+    public Button getBtnSupprSel() {
+        return btnSupprSel;
+    }
+
+    public Button getBtnViderPanier() {
+        return btnViderPanier;
+    }
+
+    public ListView<DetailCommande> getListeArticles() {
+        return listeArticles;
+    }
+
+    public CommandeBD getCommandeBD() {
+        return commandeBD;
+    }
+
+    public void nouveauPanier() {
+        this.panier = new Commande('0', '0', null, utilisateur);
+    }
+
+    public ComboBox<Magasin> getCBMagasins() {
+        return CBMagasins;
+    }
+
+    public ToggleGroup getModeLivraison() {
+        return modeLivraison;
+    }
+
+    public RadioButton getLivraisonDomicile() {
+        return livraisonDomicile;
+    }
+
+    public RadioButton getRetraitMagasin() {
+        return retraitMagasin;
     }
 
 }
