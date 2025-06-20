@@ -89,12 +89,15 @@ public class LivreExpress extends Application {
     private Button btnAjout;
     private Button btnStock;
     private Button btnTransfert;
-    private Button ajouter;
-    private Button finaliserCommande;
     private int idMag;
-    private TextField idAjouter;
     private ListView<String> listeRechercheVendeur;
     private Button rechercheV;
+
+    private TextField idAjout;
+    private Button ajouter;
+    private Button finaliser;
+    private Button supprimer;
+    private ListView<String> resumeCommande;
 
     // ============ADMIN===============
 
@@ -357,9 +360,19 @@ public class LivreExpress extends Application {
             this.btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.laConnexion));
             this.btnStock.setOnAction(new ControleurVendeurMajQte(idMag, this.laConnexion));
             this.listeRechercheVendeur = this.vendeurBD.getRecherche(this.txtRecherche.getText(), idMag);
-            Pane root = new PageVendeur(this.boutonDeconnexion, this.btnAjout, this.btnStock, this.btnTransfert,
-                    this.idAjouter, this.ajouter, this.finaliserCommande, this.rechercheV, this.txtRecherche,
-                    this.listeRechercheVendeur);
+            Pane root = new PageVendeur(this.boutonDeconnexion, 
+            this.btnAjout, 
+            this.btnStock, 
+            this.btnTransfert, 
+            this.rechercheV, 
+            this.txtRecherche,
+            this.listeRechercheVendeur,
+            this.resumeCommande,
+            this.supprimer,
+            this.idAjout,
+            this.ajouter,
+            this.finaliser);
+
             this.scene.setRoot(root);
             this.stage.setWidth(1500);
             this.stage.setHeight(1000);
@@ -584,16 +597,8 @@ public class LivreExpress extends Application {
         return ajouter;
     }
 
-    public Button getFinaliserCommande() {
-        return finaliserCommande;
-    }
-
     public int getIdMag() {
         return idMag;
-    }
-
-    public TextField getIdAjouter() {
-        return idAjouter;
     }
 
     public Button getBtnRetourAdmin() {
