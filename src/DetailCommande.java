@@ -29,7 +29,7 @@ public class DetailCommande {
 
     @Override
     public String toString() {
-        return this.livre.getIsbn() + " " + this.qte + " " + this.prixVente;
+        return this.livre.getTitre() + " " + this.qte + " " + this.prixVente;
     }
 
 }
