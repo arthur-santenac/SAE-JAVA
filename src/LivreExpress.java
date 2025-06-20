@@ -662,6 +662,7 @@ public class LivreExpress extends Application {
 
     public void nouveauPanier() {
         this.panier = new Commande('0', '0', null, utilisateur);
+        this.listeArticles = new ListView<>();
     }
 
     public ComboBox<Magasin> getCBMagasins() {
