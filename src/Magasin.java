@@ -96,7 +96,7 @@ public class Magasin {
 
     @Override
     public String toString(){
-        return AppLibrairie.ljust(nomMag, 30) + this.villeMag;
+        return nomMag + " " + this.villeMag;
     }
 
 }

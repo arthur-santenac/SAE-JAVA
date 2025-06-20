@@ -25,12 +25,12 @@ public class VendeurBD {
 		if (!verif.next()) {
 			this.st.executeUpdate(
 					"INSERT INTO POSSEDER(idmag, isbn, qte) VALUES ('" + idmag + "', '" + isbn + "', " + qte + ");");
-			Menu.vendeurModifReussi();
+			
 			// mode terminal : System.console().readLine();
 			return true;
 		} else {
 
-			Menu.vendeurErreurAjout();
+			
 			// mode terminal : System.console().readLine();
 			new Alert(Alert.AlertType.INFORMATION, "Modification echec").showAndWait();
 			return false;
@@ -42,23 +42,12 @@ public class VendeurBD {
 		this.st = this.laConnexion.createStatement();
 		ResultSet verif = this.st.executeQuery(
 				"SELECT * FROM POSSEDER WHERE idmag = '" + idmag + "' AND isbn = '" + isbn + "';");
-
 		if (verif.next()) {
 			this.st.executeUpdate(
 					"UPDATE POSSEDER SET qte = qte + " + qte +
 							" WHERE isbn = '" + isbn + "' AND idmag = " + idmag + " AND qte + " + qte + " >= 0;");
-			if (afficheMenu) {
-				Menu.vendeurModifReussi();
-				// System.console().readLine();
-			}
-
 			return true;
 		} else {
-			if (afficheMenu) {
-				Menu.vendeurErreurModif();
-				// System.console().readLine();
-			}
-
 			return false;
 		}
 	}
@@ -72,18 +61,8 @@ public class VendeurBD {
 						+ ");");
 
 		if (verif.next()) {
-			if (afficheMenu) {
-				Menu.vendeurDispo(verif.getInt(1));
-				// System.console().readLine();
-			}
-
 			return true;
 		} else {
-			if (afficheMenu) {
-				Menu.vendeurPasDispo(quantite);
-				// System.console().readLine();
-			}
-
 			return false;
 		}
 	}
@@ -102,12 +81,8 @@ public class VendeurBD {
 				majQte(idMagDestination, isbn, quantite, false);
 			}
 			majQte(idMag, isbn, -quantite, false);
-			Menu.tranfertReussi();
-			// System.console().readLine();
 			return true;
 		} else {
-			Menu.transferFail();
-			// System.console().readLine();
 			return false;
 		}
 	}
