@@ -12,10 +12,6 @@ public class Livre {
 
     private double prix;
 
-    private List<Auteur> auteurs;
-
-    private List<Editeur> editeurs;
-
     private int qte;
 
     public Livre(String isbn, String titre, int nbPages, int datePubli, double prix){
@@ -55,31 +51,6 @@ public class Livre {
 
     public double getPrix(){
         return this.prix;
-    }
-
-    public List<Auteur> getAuteurs(){
-        return this.auteurs;
-    }
-
-    public List<Editeur> getEditeurs(){
-        return this.editeurs;
-    }
-
-    public boolean ajouterAuteur(Auteur a){
-        if(!this.auteurs.contains(a)){
-            this.auteurs.add(a);
-            return true;
-        }
-        return false;
-    }
-
-
-    public boolean ajouterEditeur(Editeur e){
-        if(!this.editeurs.contains(e)){
-            this.editeurs.add(e);
-            return true;
-        }
-        return false;
     }
 
     @Override

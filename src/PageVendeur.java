@@ -15,16 +15,32 @@ public class PageVendeur extends BorderPane {
     private Button btnAjout;
     private Button btnStock;
     private Button btnTransfert;
-    private TextField idAjout;
-    private Button ajouter;
-    private Button finaliser;
+
+
 
     private Button recherche;
     private ListView<String> listeRecherche;
     private TextField txtRecherche;
 
-    public PageVendeur(Button deconnexion,  Button btnAjout, Button btnStock, Button btnTransfert,
-            TextField idAjout, Button ajouter, Button finaliser, Button recherche, TextField txtRecherche, ListView<String> listeRecherche) {
+    private TextField idAjout;
+    private Button ajouter;
+    private Button finaliser;
+    private Button supprimer;
+    private ListView<String> resumeCommande;
+
+    public PageVendeur(Button deconnexion,  
+    
+    Button btnAjout, 
+    Button btnStock, 
+    Button btnTransfert,
+    Button recherche, 
+    TextField txtRecherche, 
+    ListView<String> listeRecherche, 
+    ListView<String> resumeCommande,  
+    Button supprimer , 
+    TextField idAjout, 
+    Button ajouter, 
+    Button finaliser) {
 
         super();
         this.deconnexion = deconnexion;
@@ -37,6 +53,11 @@ public class PageVendeur extends BorderPane {
         this.recherche = recherche;
         this.txtRecherche = txtRecherche;
         this. listeRecherche = listeRecherche;
+
+        this.idAjout = idAjout;
+        this.ajouter = ajouter;
+        this.finaliser = finaliser;
+        this.resumeCommande = resumeCommande;
 
         this.setTop(this.top());
         this.setLeft(this.left());

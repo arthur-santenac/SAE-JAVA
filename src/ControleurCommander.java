@@ -1,7 +1,10 @@
 import java.sql.SQLException;
+import java.util.Optional;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextInputDialog;
 
 
 public class ControleurCommander implements EventHandler<ActionEvent>{
@@ -15,19 +18,30 @@ public class ControleurCommander implements EventHandler<ActionEvent>{
     @Override
     public void handle(ActionEvent e){
         if (this.appli.getPanier().size() == 0) {
-
-        } else if (this.appli.getModeLivraison().getSelectedToggle() == null) {
-
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Vous n'avez rien dans votre panier");
+            alert.showAndWait();
         } else if (this.appli.getCBMagasins().getValue() == null) {
-
-        } else {
-            System.out.println(this.appli.getModeLivraison().getSelectedToggle());
-            this.appli.setEnLigne('1');
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Vous n'avez pas choisi de magasin");
+            alert.showAndWait();
+        } else if (this.appli.getModeLivraison().getSelectedToggle() == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Vous n'avez pas choisi de mode de livraison");
+            alert.showAndWait();
+        }  else {
+            this.appli.setEnLigne('O');
             this.appli.setMagasin(this.appli.getCBMagasins().getValue());
-            if (true) {
-                this.appli.setLivraison('1');
+            if (this.appli.getModeLivraison().getSelectedToggle().equals(this.appli.getLivraisonDomicile())) {
+                this.appli.setLivraison('C');
             } else {
-                this.appli.setLivraison('0');
+                this.appli.setLivraison('M');
             }
             try {
                 int maxNumCom = this.appli.getCommandeBD().maxNumCom() + 1;
@@ -39,7 +53,13 @@ public class ControleurCommander implements EventHandler<ActionEvent>{
                             this.appli.getPanier().getDetailsCommande().get(i).getPrixVente(),
                             this.appli.getPanier().getDetailsCommande().get(i).getLivre().getIsbn());
                 }
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Opération");
+                alert.setHeaderText(null);
+                alert.setContentText("Votre commande est en cours de livraison");
+                alert.showAndWait();
                 this.appli.nouveauPanier();
+                this.appli.affichePageClient();
             } catch (SQLException ex) {
                 System.out.println("erreur sql");
                 System.console().readLine();
