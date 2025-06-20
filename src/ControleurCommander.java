@@ -53,7 +53,13 @@ public class ControleurCommander implements EventHandler<ActionEvent>{
                             this.appli.getPanier().getDetailsCommande().get(i).getPrixVente(),
                             this.appli.getPanier().getDetailsCommande().get(i).getLivre().getIsbn());
                 }
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Opération");
+                alert.setHeaderText(null);
+                alert.setContentText("Votre commande est en cours de livraison");
+                alert.showAndWait();
                 this.appli.nouveauPanier();
+                this.appli.affichePageClient();
             } catch (SQLException ex) {
                 System.out.println("erreur sql");
                 System.console().readLine();
