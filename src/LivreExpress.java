@@ -97,7 +97,7 @@ public class LivreExpress extends Application {
     private Button ajouter;
     private Button finaliser;
     private Button supprimer;
-    private ListView<String> resumeCommande;
+    private ListView<DetailCommande> resumeCommande;
 
     // ============ADMIN===============
 
@@ -152,8 +152,6 @@ public class LivreExpress extends Application {
 
         // ============CLIENT===============
 
-        
-
         this.qteClient = new ComboBox<>();
         this.qteClient.getItems().addAll(1, 2, 3, 4, 5);
         this.qteClient.setValue(1);
@@ -175,7 +173,6 @@ public class LivreExpress extends Application {
         this.catalogue = new ListView<>();
         this.recommande = new ListView<>();
 
-
         this.filtreTheme = new ComboBox<>();
         this.filtreTheme.getItems().addAll("Tout", "Arts et Loisirs", "Histoire et Géographie",
                 "Informatique, généralités", "Langues", "Littérature", "Philosophie et psychologie", "Religion",
@@ -192,7 +189,7 @@ public class LivreExpress extends Application {
         this.ajouteCatalogue = new Button("Ajouter au panier");
 
         this.ajouteRecom = new Button("Ajouter au panier");
-        
+
         this.ajouteRecherche.setOnAction(e -> {
             Livre livre = this.listeRecherche.getSelectionModel().getSelectedItem();
             Integer quantite = this.qteClient.getValue();
@@ -231,14 +228,13 @@ public class LivreExpress extends Application {
 
         this.listeArticles = new ListView<>();
 
-
         this.livraisonDomicile = new RadioButton("Livraison à domicile");
-        this. retraitMagasin = new RadioButton("Retrait en magasin");
+        this.retraitMagasin = new RadioButton("Retrait en magasin");
 
         this.modeLivraison = new ToggleGroup();
         this.livraisonDomicile.setToggleGroup(this.modeLivraison);
         this.retraitMagasin.setToggleGroup(this.modeLivraison);
-        
+
         // ============VENDEUR===============
 
         this.btnAjout = new Button("ajouter un livre à la librairie");
@@ -247,6 +243,11 @@ public class LivreExpress extends Application {
         this.listeRechercheVendeur = new ListView<>();
         this.rechercheV = new Button("Rechercher");
 
+        this.idAjout = new TextField();
+        this.ajouter = new Button("ajouter à la commande");
+        this.finaliser = new Button("finaliser la commande");
+        this.supprimer = new Button("supprimer l'article");
+        this.resumeCommande = new ListView<>();
 
         // ============ADMINISTRATEUR===============
 
@@ -358,19 +359,35 @@ public class LivreExpress extends Application {
             this.btnTransfert.setOnAction(new ControleurVendeurTransfert(idMag, this.laConnexion));
             this.btnAjout.setOnAction(new ControleurVendeurAjoute(idMag, this.laConnexion));
             this.btnStock.setOnAction(new ControleurVendeurMajQte(idMag, this.laConnexion));
+            this.finaliser.setOnAction(new ControleurCommanderVendeur(idMag, this, this.laConnexion));
+
+            this.ajouter.setOnAction(e -> {
+                try {
+                    Livre livre = this.vendeurBD.getLivreBD(this.idAjout.getText(), idMag);
+                    ControleurAcheterVendeur controleur = new ControleurAcheterVendeur(this, 1, livre);
+                    controleur.handle(e);
+                } catch (SQLException ex) {
+                    System.out.println("erreur");
+                }
+                
+            });
+
+            this.resumeCommande.getItems().addAll(this.getPanier().getDetailsCommande());
+
             this.listeRechercheVendeur = this.vendeurBD.getRecherche(this.txtRecherche.getText(), idMag);
-            Pane root = new PageVendeur(this.boutonDeconnexion, 
-            this.btnAjout, 
-            this.btnStock, 
-            this.btnTransfert, 
-            this.rechercheV, 
-            this.txtRecherche,
-            this.listeRechercheVendeur,
-            this.resumeCommande,
-            this.supprimer,
-            this.idAjout,
-            this.ajouter,
-            this.finaliser);
+
+            Pane root = new PageVendeur(this.boutonDeconnexion,
+                    this.btnAjout,
+                    this.btnStock,
+                    this.btnTransfert,
+                    this.rechercheV,
+                    this.txtRecherche,
+                    this.listeRechercheVendeur,
+                    this.resumeCommande,
+                    this.supprimer,
+                    this.idAjout,
+                    this.ajouter,
+                    this.finaliser);
 
             this.scene.setRoot(root);
             this.stage.setWidth(1500);
@@ -658,6 +675,9 @@ public class LivreExpress extends Application {
 
     public CommandeBD getCommandeBD() {
         return commandeBD;
+    }
+        public ListView<DetailCommande> getResumeCommande() {
+        return resumeCommande;
     }
 
     public void nouveauPanier() {

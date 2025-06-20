@@ -26,7 +26,7 @@ public class PageVendeur extends BorderPane {
     private Button ajouter;
     private Button finaliser;
     private Button supprimer;
-    private ListView<String> resumeCommande;
+    private ListView<DetailCommande> resumeCommande;
 
     public PageVendeur(Button deconnexion,  
     
@@ -36,7 +36,7 @@ public class PageVendeur extends BorderPane {
     Button recherche, 
     TextField txtRecherche, 
     ListView<String> listeRecherche, 
-    ListView<String> resumeCommande,  
+    ListView<DetailCommande> resumeCommande,  
     Button supprimer , 
     TextField idAjout, 
     Button ajouter, 
@@ -57,6 +57,7 @@ public class PageVendeur extends BorderPane {
         this.idAjout = idAjout;
         this.ajouter = ajouter;
         this.finaliser = finaliser;
+        this.supprimer = supprimer;
         this.resumeCommande = resumeCommande;
 
         this.setTop(this.top());
@@ -102,29 +103,25 @@ public class PageVendeur extends BorderPane {
     }
 
     public VBox right() {
-        TextField champId = new TextField();
-        champId.setPromptText("id de l’article à ajouter");
-        champId.setPrefWidth(200);
-
-        Button btnAjouterArticle = new Button("ajouter");
-        HBox ajoutZone = new HBox(10, champId, btnAjouterArticle);
+        TextField champId = this.idAjout;
+        HBox ajoutZone = new HBox(champId, this.ajouter);
         ajoutZone.setAlignment(Pos.CENTER_RIGHT);
 
         Label resumeTitre = new Label("Résumé de la commande");
         resumeTitre.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-padding: 5;");
-        ListView<String> listeCommande = new ListView<>();
+        ListView<DetailCommande> listeCommande = this.resumeCommande;
 
         VBox resumeBox = new VBox(resumeTitre, listeCommande);
         resumeBox.setStyle("-fx-border-color: black;");
         resumeBox.setPrefSize(300, 400);
 
-        Button btnFinaliser = new Button("finaliser commande");
+        Button btnFinaliser = this.finaliser;
         btnFinaliser.setStyle("-fx-background-color: #666; -fx-text-fill: white;");
 
-        Button btnSupprimer = new Button("finaliser commande");
+        Button btnSupprimer = this.supprimer;
         btnFinaliser.setStyle("-fx-background-color: #666; -fx-text-fill: white;");
 
-        VBox rightPanel = new VBox(15, ajoutZone, resumeBox, btnFinaliser);
+        VBox rightPanel = new VBox(ajoutZone, resumeBox, btnSupprimer, btnFinaliser);
         rightPanel.setPadding(new Insets(20));
         rightPanel.setAlignment(Pos.TOP_RIGHT);
         return rightPanel;
