@@ -150,4 +150,16 @@ public class VendeurBD {
 		return listeLivre;
 	}
 
+	public Livre getLivreBD(String isbn, int idMag) throws SQLException {
+		this.st = this.laConnexion.createStatement();
+		Livre res = null;
+
+		ResultSet verif = this.st.executeQuery(
+				"SELECT * FROM POSSEDER WHERE isbn = '" + isbn + "' AND idmag = "+ idMag);
+
+		if (verif.next()) {
+			res = new Livre(isbn, verif.getString(4), verif.getInt(5), verif.getInt(6), verif.getDouble(7));
+		}
+		return res;
+	}
 }
