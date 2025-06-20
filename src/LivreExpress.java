@@ -184,7 +184,7 @@ public class LivreExpress extends Application {
         this.filtreTheme.setOnAction(e -> affichePageClient());
 
         this.filtreFiltre = new ComboBox<>();
-        this.filtreFiltre.getItems().addAll("Par défaut", "Popularité", "Prix croissant", "Prix décroissant");
+        this.filtreFiltre.getItems().addAll("Par défaut", "Prix croissant", "Prix décroissant");
         this.filtreFiltre.setValue("Par défaut");
         this.filtreFiltre.setOnAction(e -> affichePageClient());
 
@@ -312,6 +312,7 @@ public class LivreExpress extends Application {
     }
 
     public void affichePagePanier() {
+        this.listeArticles = new ListView<>();
         this.listeArticles.getItems().addAll(this.getPanier().getDetailsCommande());
         Pane root = new PagePanierClient(this);
         this.scene.setRoot(root);
@@ -662,7 +663,6 @@ public class LivreExpress extends Application {
 
     public void nouveauPanier() {
         this.panier = new Commande('0', '0', null, utilisateur);
-        this.listeArticles = new ListView<>();
     }
 
     public ComboBox<Magasin> getCBMagasins() {
