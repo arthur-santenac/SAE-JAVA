@@ -1,4 +1,5 @@
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
@@ -24,6 +26,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.Pair;
 
 public class PageAdminStats extends BorderPane{
     
@@ -85,9 +88,9 @@ public class PageAdminStats extends BorderPane{
         Map<String, Double> caParTheme = new HashMap<>();
         ObservableList<PieChart.Data> pieChartCA = FXCollections.observableArrayList();
         PieChart pieChart = new PieChart(pieChartCA);
-        pieChart.setPrefSize(300, 300);
-        pieChart.setMinSize(400, 400);
-        pieChart.setMaxSize(200, 200);
+        pieChart.setPrefSize(250, 250);
+        pieChart.setMinSize(250, 250);
+        pieChart.setMaxSize(250, 250);
         pieChart.setLabelsVisible(false);
         choixAnnee.setOnAction(new ControleurAdminAnnee(choixAnnee, pieChartCA, this.adminBD));
         String anneeChoisie = choixAnnee.getValue();
@@ -117,11 +120,43 @@ public class PageAdminStats extends BorderPane{
         stats2.getChildren().addAll(titrePie, choixAnnee, pieChart);
         stats2.setAlignment(Pos.CENTER);
         
+        VBox stats3 = new VBox(10);
+        Label titreTopAuteur = new Label("Auteur le plus vendu par année (hors 2025)");
+        titreTopAuteur.setAlignment(Pos.BASELINE_CENTER);
+        titreTopAuteur.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        titreTopAuteur.setPadding(new Insets(10));
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setLabel("Année");
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Nombre de livres vendus");
+        BarChart<String, Number> barChartPalmares = new BarChart<>(xAxis, yAxis);
+        barChartPalmares.setLegendVisible(false); // Pas besoin de légende pour une seule série
+        try {
+            List<String> palmares = this.adminBD.palmares();
+            XYChart.Series<String, Number> serie = new XYChart.Series<>();
+            for (String ligne : palmares) {
+            String[] parties = ligne.split(" ");
+            int taille = parties.length;
+            String annee = parties[taille - 2];
+            int ventes = Integer.parseInt(parties[taille - 1]);
+            String nomAuteur = String.join(" ", Arrays.copyOfRange(parties, 0, taille - 2));
+            XYChart.Data<String, Number> data = new XYChart.Data<>(annee, ventes);
+            serie.getData().add(data);
+            
+        }
+            barChartPalmares.getData().add(serie);
+            stats3.getChildren().addAll(titreTopAuteur, barChartPalmares);
+        } catch (SQLException e) {
+            System.out.println("Erreur lors du chargement du palmarès ");
+        }
+
 
         stats1.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: lightgray; -fx-border-radius: 10;");
         stats2.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: lightgray; -fx-border-radius: 10;");
-        centre.add(stats1, 0, 0, 2, 3);
-        centre.add(stats2, 2, 0, 3, 3);
+        stats3.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: lightgray; -fx-border-radius: 10;");
+        centre.add(stats1, 0, 0, 2, 1);
+        centre.add(stats2, 2, 0, 2, 1);
+        centre.add(stats3, 0, 1, 4, 1);
         centre.setHgap(20);
         centre.setVgap(20);
         root.getChildren().addAll(titre, centre);

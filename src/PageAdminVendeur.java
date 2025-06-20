@@ -21,17 +21,14 @@ import javafx.scene.text.Text;
 public class PageAdminVendeur extends BorderPane{
     
 
-    private Button retour;
+    private LivreExpress app;
     private ClientBD clientBD;
-    private  Button addVendeur;
-    private  Button suppVendeur;
 
 
-    public PageAdminVendeur(Button retour, Button addVendeur,  Button suppVendeur, ClientBD clientBD, ConnexionMySQL laConnexion){
-        this.retour = retour;
-        this.addVendeur = addVendeur;
-        this.suppVendeur = suppVendeur;
-        this.clientBD = new ClientBD(laConnexion);
+
+    public PageAdminVendeur(LivreExpress app){
+        this.app =app;
+        this.clientBD = new ClientBD(this.app.getLaConnexion());
         this.setTop(this.entete());
         this.setCenter(this.centre());
     }
@@ -42,7 +39,7 @@ public class PageAdminVendeur extends BorderPane{
         titre.setStyle("-fx-text-fill: white;");
         titre.setFont(Font.font("Arial", FontWeight.BOLD, 32));
         entete.setLeft(titre);
-        entete.setRight(this.retour);
+        entete.setRight(this.app.getBtnRetourAdmin());
         entete.setPadding(new Insets(10));
         entete.setBackground( new Background(new BackgroundFill(Color.GRAY,null,null)));
         return entete;
@@ -52,11 +49,11 @@ public class PageAdminVendeur extends BorderPane{
         BorderPane root = new BorderPane();
         VBox marge = new VBox(10);
         marge.setPadding(new Insets(0, 0, 0, 20));
-        marge.getChildren().addAll(this.addVendeur, this.suppVendeur);
-        this.addVendeur.setPrefHeight(60);
-        this.addVendeur.setPrefWidth(200);
-        this.suppVendeur.setPrefHeight(60);
-        this.suppVendeur.setPrefWidth(200);
+        marge.getChildren().addAll(this.app.getBtnAddVendeur(), this.app.getBtnSuppVendeur());
+        this.app.getBtnAddVendeur().setPrefHeight(60);
+        this.app.getBtnAddVendeur().setPrefWidth(200);
+        this.app.getBtnSuppVendeur().setPrefHeight(60);
+        this.app.getBtnSuppVendeur().setPrefWidth(200);
         VBox centre = new VBox(10);
         centre.setPadding(new Insets(0, 20, 0, 0));
         Label titreV = new Label("Vendeur");
