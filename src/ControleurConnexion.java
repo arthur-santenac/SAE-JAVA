@@ -25,7 +25,7 @@ public class ControleurConnexion implements EventHandler<ActionEvent> {
         Button button = (Button) (event.getSource());
         if (this.appli.getConnexion() == null || !this.appli.getConnexion().isConnecte()) {
             try {
-                this.appli.setConnexion(email.getText(), mdp.getText(), "localhost", "DB" + email.getText());
+                this.appli.setConnexion(email.getText(), mdp.getText(), "servinfo-maria", "DB" + email.getText());
                 this.appli.afficheConnexion();
             } catch (SQLException e) {
                 this.appli.mauvaisMdp();

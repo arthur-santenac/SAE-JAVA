@@ -1,6 +1,8 @@
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +24,10 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Pair;
@@ -67,7 +71,7 @@ public class PageAdminStats extends BorderPane{
         titre.getChildren().add(dash);
         GridPane centre = new GridPane();
         VBox stats1 = new VBox(10);
-        Label titreBar = new Label("Nombre de livres vendus par magasin");
+        Label titreBar = new Label("Nombre de livres vendus \n par magasin");
         titreBar.setAlignment(Pos.BASELINE_CENTER);
         titreBar.setFont(Font.font("Arial", FontWeight.BOLD, 26));
         titreBar.setPadding(new Insets(10));
@@ -110,8 +114,8 @@ public class PageAdminStats extends BorderPane{
                         pieChartCA.add(new PieChart.Data(label, value));
                     }
                 }
-            } catch (SQLException e) {
-                System.out.println("Erreur à la récupération du CA pour l'année " + anneeChoisie);
+            } catch (SQLException ex) {
+                System.out.println("Erreur SQL lors du changement d'année : " + anneeChoisie);
             }
         }   
         titrePie.setFont(Font.font("Arial", FontWeight.BOLD, 26));
@@ -121,42 +125,108 @@ public class PageAdminStats extends BorderPane{
         stats2.setAlignment(Pos.CENTER);
         
         VBox stats3 = new VBox(10);
-        Label titreTopAuteur = new Label("Auteur le plus vendu par année (hors 2025)");
+        Label titreTopAuteur = new Label("Auteur ayant le plus vendu par année \n (hors 2025)");
         titreTopAuteur.setAlignment(Pos.BASELINE_CENTER);
         titreTopAuteur.setFont(Font.font("Arial", FontWeight.BOLD, 26));
         titreTopAuteur.setPadding(new Insets(10));
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setLabel("Année");
+        xAxis.setCategories(FXCollections.observableArrayList("2020", "2021", "2022", "2023", "2024"));
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Nombre de livres vendus");
         BarChart<String, Number> barChartPalmares = new BarChart<>(xAxis, yAxis);
-        barChartPalmares.setLegendVisible(false); // Pas besoin de légende pour une seule série
+        barChartPalmares.setLegendVisible(false); 
+        XYChart.Series<String, Number> serieUnique = new XYChart.Series<>();
+        Map<String, String> auteurParAnnee = new LinkedHashMap<>();
+        Map<String, Color> couleurParAuteur = new LinkedHashMap<>();
         try {
             List<String> palmares = this.adminBD.palmares();
-            XYChart.Series<String, Number> serie = new XYChart.Series<>();
             for (String ligne : palmares) {
-            String[] parties = ligne.split(" ");
-            int taille = parties.length;
-            String annee = parties[taille - 2];
-            int ventes = Integer.parseInt(parties[taille - 1]);
-            String nomAuteur = String.join(" ", Arrays.copyOfRange(parties, 0, taille - 2));
-            XYChart.Data<String, Number> data = new XYChart.Data<>(annee, ventes);
-            serie.getData().add(data);
-            
-        }
-            barChartPalmares.getData().add(serie);
-            stats3.getChildren().addAll(titreTopAuteur, barChartPalmares);
+                String[] parties = ligne.split(" ");
+                int ventes = Integer.parseInt(parties[parties.length - 1]);
+                String annee = parties[parties.length - 2];
+                String nomAuteur = ligne.substring(0, ligne.lastIndexOf(" ", ligne.lastIndexOf(" ") - 1));
+                auteurParAnnee.put(annee, nomAuteur);
+                XYChart.Data<String, Number> data = new XYChart.Data<>(annee, ventes);
+                serieUnique.getData().add(data);
+                couleurParAuteur.putIfAbsent(nomAuteur, Color.color(Math.random(), Math.random(), Math.random()));
+                data.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                    if (newNode != null) {
+                        Color couleur = couleurParAuteur.get(nomAuteur);
+                        String style = String.format("-fx-bar-fill: rgb(%d,%d,%d);",
+                                (int) (couleur.getRed() * 255),
+                                (int) (couleur.getGreen() * 255),
+                                (int) (couleur.getBlue() * 255));
+                        newNode.setStyle(style);
+                        Tooltip.install(newNode, new Tooltip(nomAuteur + " : " + ventes + " ventes"));
+                    }
+                });
+            }
+            barChartPalmares.getData().add(serieUnique);
+            HBox legende = new HBox(10);
+            legende.setPadding(new Insets(10));
+            for (Map.Entry<String, Color> entry : couleurParAuteur.entrySet()) {
+                String nomAuteur = entry.getKey();
+                Color color = entry.getValue();
+                Rectangle rect = new Rectangle(15, 15, color);
+                Label label = new Label(nomAuteur);
+                HBox item = new HBox(5, rect, label);
+                legende.getChildren().add(item);
+            }
+            stats3.getChildren().addAll(titreTopAuteur, barChartPalmares, legende);
         } catch (SQLException e) {
-            System.out.println("Erreur lors du chargement du palmarès ");
+            System.out.println("Erreur lors du chargement du palmarès");
         }
 
 
+        VBox stats4 = new VBox(10);
+        Label titreTopEditeur = new Label("10 éditeurs ayant le plus d'auteurs");
+        titreTopEditeur.setAlignment(Pos.BASELINE_CENTER);
+        titreTopEditeur.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        titreTopEditeur.setPadding(new Insets(10));
+        CategoryAxis x = new CategoryAxis();
+        x.setLabel("Éditeur");
+        NumberAxis y = new NumberAxis();
+        y.setLabel("Nombre d'auteurs distincts");
+        BarChart<String, Number> barChartEdit = new BarChart<>(x, y);
+        barChartEdit.setLegendVisible(false);
+        XYChart.Series<String, Number> serieEdit = new XYChart.Series<>();
+        Map<String, Color> couleurParEditeur = new LinkedHashMap<>();
+        try {
+            List<String> meilleurs = this.adminBD.meilleursEdit(); 
+            for (String ligne : meilleurs) {
+                String[] parties = ligne.split(" : ");
+                String nomEditeur = parties[0].trim();
+                int nbAuteurs = Integer.parseInt(parties[1].trim());
+                XYChart.Data<String, Number> data = new XYChart.Data<>(nomEditeur, nbAuteurs);
+                serieEdit.getData().add(data);
+                Color couleur = Color.color(Math.random(), Math.random(), Math.random());
+                couleurParEditeur.put(nomEditeur, couleur);
+                data.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                    if (newNode != null) {
+                        Color c = couleurParEditeur.get(nomEditeur);
+                        String style = String.format("-fx-bar-fill: rgb(%d,%d,%d);",
+                                (int) (c.getRed() * 255),
+                                (int) (c.getGreen() * 255),
+                                (int) (c.getBlue() * 255));
+                        newNode.setStyle(style);
+                        Tooltip.install(newNode, new Tooltip(nomEditeur + " : " + nbAuteurs + " auteurs"));
+                    }
+                });
+            }
+            barChartEdit.getData().add(serieEdit);
+            stats4.getChildren().addAll(titreTopEditeur, barChartEdit);
+        } catch (SQLException e) {
+            System.out.println("Erreur lors du chargement des meilleurs éditeurs");
+        }
         stats1.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: lightgray; -fx-border-radius: 10;");
         stats2.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: lightgray; -fx-border-radius: 10;");
         stats3.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: lightgray; -fx-border-radius: 10;");
-        centre.add(stats1, 0, 0, 2, 1);
-        centre.add(stats2, 2, 0, 2, 1);
-        centre.add(stats3, 0, 1, 4, 1);
+        stats4.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: lightgray; -fx-border-radius: 10;");
+        centre.add(stats1, 0, 0, 5, 4);
+        centre.add(stats2, 5, 0, 7, 4);
+        centre.add(stats3, 0, 5, 4, 3);
+        centre.add(stats4, 4, 5, 8, 3);
         centre.setHgap(20);
         centre.setVgap(20);
         root.getChildren().addAll(titre, centre);
